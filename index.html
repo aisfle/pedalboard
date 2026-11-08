@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedalboard Dashboard & Signal Chain</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Pedal & UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cb: '#c29b38',
+                            obne: '#a855f7',
+                            strymon: '#0284c7',
+                            walrus: '#059669',
+                            dark: '#0f172a',
+                            panel: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- TOP NAV BAR -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 z-20 shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-compact-disc text-slate-950 text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    Rig Dashboard <span id="total-count-badge" class="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-slate-800 text-amber-400 border border-slate-700">0 Pedales</span>
+                </h1>
+                <p class="text-xs text-slate-400">Control de Cadena de Señal, Fuentes de Alimentación, Ruteo & Manuales PDF Directos</p>
+            </div>
+        </div>
+
+        <!-- Global Quick Stats & Action Controls -->
+        <div class="flex items-center gap-4 text-sm font-mono flex-wrap">
+            <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                <span class="text-slate-400 text-xs block">Consumo Total (+30%):</span>
+                <span id="total-ma" class="text-emerald-400 font-bold text-base">0 mA</span>
+            </div>
+            
+            <!-- UNDO BUTTON -->
+            <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all active:scale-95">
+                <i class="fa-solid fa-rotate-left text-amber-400"></i> Undo <span class="hidden sm:inline text-[10px] text-slate-400">(Ctrl+Z)</span>
+            </button>
+
+            <!-- SAVE FAVORITE CHAIN BUTTON -->
+            <button onclick="openSaveFavoriteModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-lg text-xs flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all active:scale-95">
+                <i class="fa-solid fa-bookmark"></i> Guardar Cadena
+            </button>
+        </div>
+    </header>
+
+    <!-- FAVORITE CHAINS SECTION -->
+    <section class="bg-slate-900/60 border-b border-slate-800 px-6 py-3">
+        <div class="flex items-center justify-between gap-3 overflow-x-auto py-1">
+            <div class="flex items-center gap-3 overflow-x-auto">
+                <span class="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5">
+                    <i class="fa-solid fa-star text-amber-400"></i> Cadenas Favoritas:
+                </span>
+                <div id="favorites-bar" class="flex items-center gap-2 overflow-x-auto">
+                    <!-- Injected Favorites Badges via JS -->
+                </div>
+            </div>
+
+            <!-- RESET / NEW BLANK CHAIN BUTTON -->
+            <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 border border-slate-700 hover:border-amber-500/50 px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all shrink-0 active:scale-95 shadow-sm">
+                <i class="fa-solid fa-plus text-xs"></i> Nueva cadena
+            </button>
+        </div>
+    </section>
+
+    <!-- Duplicate Alert Banner (Hidden by default) -->
+    <div id="duplicate-warning" class="hidden bg-rose-500/10 border-b border-rose-500/30 px-6 py-3 flex items-center justify-between gap-4 text-rose-300 text-xs font-mono z-30">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation text-rose-500 text-base"></i>
+            <span id="duplicate-msg">¡Error! Tienes pedales duplicados en la cadena de señal.</span>
+        </div>
+        <span class="text-[11px] text-rose-400">Recuerda que solo posees 1 unidad física de cada pedal.</span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+
+        <!-- LEFT/TOP MAIN CONTENT: Signal Chain & Catalog -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-8">
+            
+            <!-- SECTION 1: SIGNAL CHAIN -->
+            <section class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <div>
+                        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-diagram-project text-sky-400"></i> Cadena de Señal Interactiva
+                        </h2>
+                        <p class="text-xs text-slate-400">Selecciona, cambia o arrastra (Drag & Drop) cualquier pedal para reordenar tu rig.</p>
+                    </div>
+                </div>
+
+                <!-- Signal Chain Grid -->
+                <div id="chain-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                    <!-- Dynamic slots injected via JS -->
+                </div>
+            </section>
+
+            <!-- SECTION 2: PEDAL CATALOG -->
+            <section class="space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-amber-400"></i> Catálogo de Pedales por Marca
+                        </h2>
+                        <p class="text-xs text-slate-400">Haz clic en cualquier pedal para ver especificaciones de energía, fuente enlazada y manuales PDF.</p>
+                    </div>
+
+                    <!-- Brand Filters -->
+                    <div id="brand-filters" class="flex flex-wrap gap-1.5 text-xs font-medium">
+                        <!-- Filter buttons injected via JS -->
+                    </div>
+                </div>
+
+                <!-- SUBSECTION: PEDALES DE EFECTO -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-guitar"></i> Pedales de Efecto
+                    </h3>
+                    <div id="effects-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <!-- Effect Pedal cards injected via JS -->
+                    </div>
+                </div>
+
+                <!-- SUBSECTION: PEDALES DE UTILIDAD -->
+                <div class="space-y-3 pt-4">
+                    <h3 class="text-sm font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Pedales de Utilidad
+                    </h3>
+                    <div id="utility-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <!-- Utility Pedal cards injected via JS -->
+                    </div>
+                </div>
+
+                <!-- SUBSECTION: FUENTES DE ALIMENTACIÓN -->
+                <div class="space-y-3 pt-4">
+                    <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-bolt"></i> Fuentes de Alimentación
+                    </h3>
+                    <div id="power-supplies-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <!-- Power Supplies injected via JS -->
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS: REGISTER PEDAL OR POWER SUPPLY -->
+                <div class="pt-4 flex flex-wrap justify-center gap-4">
+                    <button onclick="openNewPowerSupplyModal()" class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-dashed border-slate-700 hover:border-emerald-500/50 px-5 py-2.5 rounded-xl text-xs font-medium flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-plus text-emerald-400"></i> Registrar Nueva Fuente de Alimentación
+                    </button>
+                    <button onclick="openNewPedalModal()" class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-dashed border-slate-700 hover:border-amber-500/50 px-5 py-2.5 rounded-xl text-xs font-medium flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-plus text-amber-400"></i> Registrar Nuevo Pedal al Catálogo
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- RIGHT SIDEBAR: INSPECTOR -->
+        <aside id="inspector-panel" class="w-full lg:w-96 bg-slate-900 border-t lg:border-t-0 lg:border-l border-slate-800 p-6 flex flex-col overflow-y-auto shrink-0">
+            <div id="inspector-content" class="space-y-6">
+                <!-- Injected via JS -->
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- REGISTER NEW PEDAL MODAL -->
+    <div id="new-pedal-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-amber-400"></i> Registrar Nuevo Pedal al Catálogo
+                </h3>
+                <button onclick="closeNewPedalModal()" class="text-slate-500 hover:text-slate-300 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Nombre del Pedal *</label>
+                    <input type="text" id="np-name" placeholder="Ej: OD-2 TURBO OverDrive" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Marca / Fabricante *</label>
+                    <input type="text" id="np-brand" placeholder="Ej: Boss" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Consumo (mA) *</label>
+                    <input type="number" id="np-mabase" value="20" placeholder="20" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Arquitectura E/S *</label>
+                    <select id="np-io-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 font-mono text-xs">
+                        <option value="STEREO">Stereo I/O (Soporta Mono/Stereo)</option>
+                        <option value="MONO">Mono I/O Solamente (Bloqueado)</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Tipo de Unidad *</label>
+                    <select id="np-category-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 font-mono text-xs">
+                        <option value="EFFECT">Efecto</option>
+                        <option value="UTILITY">Utilidad</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-slate-400 block font-mono">Efecto/s del pedal *</label>
+                <input type="text" id="np-category" placeholder="Ej: Analog Overdrive / Distortion / Swells" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-slate-400 block font-mono">URL Manual / Documentación (Opcional)</label>
+                <input type="text" id="np-manual-url" placeholder="https://drive.google.com/file/d/..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+            </div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                <button onclick="closeNewPedalModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all">
+                    Cancelar
+                </button>
+                <button onclick="executeRegisterNewPedal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
+                    Guardar Pedal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAVE FAVORITE CHAIN MODAL -->
+    <div id="save-fav-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-bookmark text-amber-400"></i> Guardar Cadena Favorita
+                </h3>
+                <button onclick="closeSaveFavoriteModal()" class="text-slate-500 hover:text-slate-300 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- TAB SELECTOR FOR SAVE MODE -->
+            <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono text-center">
+                <button id="tab-mode-new" onclick="setSaveFavMode('NEW')" class="py-2 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all">
+                    Nueva Cadena
+                </button>
+                <button id="tab-mode-overwrite" onclick="setSaveFavMode('OVERWRITE')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">
+                    Sobrescribir Existente
+                </button>
+            </div>
+
+            <!-- FORM: NEW PRESET NAME -->
+            <div id="fav-form-new" class="space-y-2">
+                <label class="text-xs text-slate-400 block font-mono">Nombre del Preset / Cadena *</label>
+                <input type="text" id="fav-name-input" placeholder="Ej: Preset Wet-Dry Shoegaze" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+            </div>
+
+            <!-- FORM: OVERWRITE EXISTING PRESET -->
+            <div id="fav-form-overwrite" class="space-y-2 hidden">
+                <label class="text-xs text-slate-400 block font-mono">Selecciona la Cadena a Reemplazar *</label>
+                <select id="fav-overwrite-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 font-mono text-xs">
+                    <!-- Dynamic options injected via JS -->
+                </select>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                <button onclick="closeSaveFavoriteModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all">
+                    Cancelar
+                </button>
+                <button onclick="executeSaveFavorite()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
+                    Guardar Favorito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER NEW POWER SUPPLY MODAL -->
+    <div id="new-power-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-emerald-400"></i> Registrar Fuente de Alimentación
+                </h3>
+                <button onclick="closeNewPowerSupplyModal()" class="text-slate-500 hover:text-slate-300 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Modelo *</label>
+                    <input type="text" id="nps-model" placeholder="Ej: Zuma" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-slate-400 block font-mono">Marca / Fabricante *</label>
+                    <input type="text" id="nps-brand" placeholder="Ej: Strymon" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-slate-400 block font-mono">Cantidad de Salidas *</label>
+                <input type="number" id="nps-outlets" value="9" placeholder="9" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-slate-400 block font-mono">Detalles / Especificaciones de las Salidas</label>
+                <textarea id="nps-details" rows="3" placeholder="Ej: Tiene 9 salidas aisladas de 9V DC a 500mA cada una." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 resize-none font-sans"></textarea>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-slate-400 block font-mono">URL Manual / Documentación (Opcional)</label>
+                <input type="text" id="nps-manual-url" placeholder="https://drive.google.com/file/d/..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                <button onclick="closeNewPowerSupplyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all">
+                    Cancelar
+                </button>
+                <button onclick="executeRegisterNewPowerSupply()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-all shadow-lg shadow-emerald-500/20">
+                    Guardar Fuente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT MANUAL MODAL -->
+    <div id="edit-manual-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-amber-400"></i> Enlazar Manual / Documentación
+                </h3>
+                <button onclick="closeEditManualModal()" class="text-slate-500 hover:text-slate-300 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs text-slate-400 block font-mono">URL del Manual (PDF / Google Drive / Web)</label>
+                <input type="text" id="manual-url-input" placeholder="https://drive.google.com/file/d/..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="closeEditManualModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700">
+                    Cancelar
+                </button>
+                <button onclick="saveItemManualUrl()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-amber-500 hover:bg-amber-400">
+                    Guardar Manual
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE PEDAL CONFIRMATION MODAL -->
+    <div id="delete-pedal-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-rose-400 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Confirmar Eliminación
+                </h3>
+                <button onclick="closeDeletePedalModal()" class="text-slate-500 hover:text-slate-300 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2 py-2">
+                <p class="text-sm font-semibold text-white">¿Desea eliminar el pedal definitivamente?</p>
+                <p id="delete-pedal-target-name" class="text-xs font-mono text-amber-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800"></p>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2 border-t border-slate-800">
+                <button onclick="closeDeletePedalModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all">
+                    Cancelar
+                </button>
+                <button onclick="executeDeletePedal()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 transition-all shadow-lg shadow-rose-600/20">
+                    Afirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE POWER SUPPLY CONFIRMATION MODAL -->
+    <div id="delete-power-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-rose-400 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Confirmar Eliminación
+                </h3>
+                <button onclick="closeDeletePowerSupplyModal()" class="text-slate-500 hover:text-slate-300 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2 py-2">
+                <p class="text-sm font-semibold text-white">¿Desea eliminar la fuente de alimentación?</p>
+                <p id="delete-power-target-name" class="text-xs font-mono text-emerald-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800"></p>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2 border-t border-slate-800">
+                <button onclick="closeDeletePowerSupplyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all">
+                    Cancelar
+                </button>
+                <button onclick="executeDeletePowerSupply()" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 transition-all shadow-lg shadow-rose-600/20">
+                    Afirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const powerSuppliesDatabase = [
+            {
+                id: 'strymon-zuma',
+                model: 'Zuma',
+                brand: 'Strymon',
+                outlets: 9,
+                details: '9 salidas aisladas de alta corriente de 9V DC @ 500mA cada una (2 de ellas conmutables a 9V, 12V o 18V).',
+                manualUrl: null,
+                notes: ''
+            },
+            {
+                id: 'cioks-7',
+                model: 'Cioks 7',
+                brand: 'CIOKS',
+                outlets: 7,
+                details: '7 salidas aisladas configurables de 660mA @ 9V (con selector para 9, 12, 15 o 18V por salida).',
+                manualUrl: null,
+                notes: ''
+            }
+        ];
+
+        const pedalDatabase = [
+            // UTILITIES
+            {
+                id: 'obne-expression-ramper',
+                name: 'Expression Ramper',
+                brand: 'OBNE',
+                category: 'Utilidad / Expression LFO',
+                maBase: 50,
+                maWithMargin: 65,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: false,
+                desc: 'Dispositivo utilitario que crea movimiento continuo de expresión LFO entre los puntos A y B.',
+                manualUrl: 'https://drive.google.com/file/d/1TDDtKxZDqYf-zOvswV_9ESFDt2PL_m32/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'boss-ls2-util',
+                name: 'LS-2 Line Selector',
+                brand: 'Boss',
+                category: 'Utilidad / Line Switcher',
+                maBase: 30,
+                maWithMargin: 39,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: false,
+                desc: 'Conmutador utilitario para mezclar o alternar bucles A/B.',
+                manualUrl: 'https://drive.google.com/file/d/16j7NmsVKyYJOBM-JYPvv3ICflKvcVD1a/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-faves',
+                name: 'Faves',
+                brand: 'Chase Bliss',
+                category: 'Utilidad / Preset Switcher',
+                maBase: 20,
+                maWithMargin: 26,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: false,
+                desc: 'Acceso a 6 presets vía MIDI TRS para pedales Chase Bliss.',
+                manualUrl: 'https://drive.google.com/file/d/1eAAsB7FGl9t8vrpGPiSyndUiCNyjf9Q0/view?usp=drive_link',
+                notes: ''
+            },
+            // EFFECTS
+            {
+                id: 'cb-clean',
+                name: 'Clean',
+                brand: 'Chase Bliss',
+                category: 'Compressor + Swells',
+                maBase: 300,
+                maWithMargin: 390,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Compresor y procesador dinámico táctil con envelope y swells.',
+                manualUrl: 'https://drive.google.com/file/d/1lRoJ2UX6YAbD7S0ELAGds_aZMCq4_GVF/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-brothers-am',
+                name: 'Brothers AM',
+                brand: 'Chase Bliss',
+                category: 'Boost / Overdrive / Fuzz',
+                maBase: 200,
+                maWithMargin: 260,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: false,
+                desc: 'Boost de agudos, gain de germanio y drive analógico dual en colaboración con Analog Man.',
+                manualUrl: 'https://drive.google.com/file/d/1mzFhxUuOeulUHjaYW0TNHXBcgZBIDShW/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'ye-defiant-jazz',
+                name: 'Defiant Jazz',
+                brand: 'Yesterday Effects',
+                category: 'Pre-Amp / Drive',
+                maBase: 100,
+                maWithMargin: 130,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: false,
+                desc: 'Pre-amp analógico boutique inspirado en tonos discretos vintage.',
+                manualUrl: 'https://drive.google.com/file/d/1Wb113-Kg1B69lu4AZdlTTFPIBN1QIENm/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-blooper',
+                name: 'Blooper',
+                brand: 'Chase Bliss',
+                category: 'Bottomless Looper',
+                maBase: 150,
+                maWithMargin: 195,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: false,
+                desc: 'Looper creativo con capas destructivas y modificadores digitales.',
+                manualUrl: 'https://drive.google.com/file/d/1JyHz7ewxT6VAFD1cqgjUd1eLqYRNjL3C/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-habit',
+                name: 'Habit',
+                brand: 'Chase Bliss',
+                category: 'Echo Collector / Delay',
+                maBase: 150,
+                maWithMargin: 195,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: false,
+                desc: 'Delay creativo con memoria continua de 3 minutos e inspección por Scan.',
+                manualUrl: 'https://drive.google.com/file/d/1wJTEvMjWXWpcMY8iFm07rb5-gqGe1JP6/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-lost-found',
+                name: 'Lost + Found',
+                brand: 'Chase Bliss',
+                category: 'Multi-Effect Stereo Engine',
+                maBase: 200,
+                maWithMargin: 260,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Sintetizadores, modulaciones complejas y arquitectura estéreo dual.',
+                manualUrl: 'https://drive.google.com/file/d/1iQNzidBkiL2prBBViaXHJhSbEEOWgwrd/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'rp-radius',
+                name: 'Radius',
+                brand: 'Red Panda',
+                category: 'Ring Modulator / Frequency Shifter',
+                maBase: 200,
+                maWithMargin: 260,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Ring Modulator y Frequency Shifter estéreo con modulador por pasos.',
+                manualUrl: 'https://drive.google.com/file/d/1xlUQspfU7Z-J6x1fN72caLhtOe8DnVe1/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-reverse-mode-c',
+                name: 'Reverse Mode C',
+                brand: 'Chase Bliss',
+                category: 'Reverse Delay / Modulator',
+                maBase: 270,
+                maWithMargin: 351,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Reverse delay multidireccional con secuenciador y modulador en capas.',
+                manualUrl: 'https://drive.google.com/file/d/1-cabRvptSLSVw-T5h8F9eYE6Vds2Nixh/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-bad-mood',
+                name: 'Bad Mood',
+                brand: 'Chase Bliss',
+                category: 'Micro-Looper / Delay / Reverb',
+                maBase: 200,
+                maWithMargin: 260,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Colaboración de canal de efectos Wet con Micro-Looper dinámico.',
+                manualUrl: 'https://drive.google.com/file/d/1zhEWs2pa618BL271mIGfhkITsPdfeQfG/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-onward',
+                name: 'Onward',
+                brand: 'Chase Bliss',
+                category: 'Dynamic Sustainer / Glitch',
+                maBase: 200,
+                maWithMargin: 260,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Sostenidos armónicos orgánicos y ráfagas dinámicas de glitch.',
+                manualUrl: 'https://drive.google.com/file/d/1gkY2czKGtP5bAYq4tzP1JLnSAbWjRMl_/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'obne-dark-star',
+                name: 'Dark Star Stereo V3',
+                brand: 'OBNE',
+                category: 'Pad Reverb / Pitch / Delay',
+                maBase: 350,
+                maWithMargin: 455,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Reverb estéreo atmosférico con modulaciones de Pitch, Delay y Bitcrush.',
+                manualUrl: 'https://drive.google.com/file/d/1xEb9jFBV3gE2Fk_qL9f5jLo6LHupWNhi/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'obne-sunlight',
+                name: 'Sunlight Stereo V2',
+                brand: 'OBNE',
+                category: 'Dynamic Stereo Reverb',
+                maBase: 350,
+                maWithMargin: 455,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Reverb dinámico sensible a la intensidad de toque con congelado dinámico.',
+                manualUrl: 'https://drive.google.com/file/d/1OhW9M9ts0TAjobzIpr3BLY4WM67U0oj8/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-lossy',
+                name: 'Lossy',
+                brand: 'Chase Bliss',
+                category: 'Digital Artifacts & Loss',
+                maBase: 400,
+                maWithMargin: 520,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 exclusivamente',
+                isStereo: true,
+                desc: 'Simulación de compresión MP3, audio de baja fidelidad y degradación digital.',
+                manualUrl: 'https://drive.google.com/file/d/1YbhUB4F_ALIcZcqofFrvgQGZrWoqoH-d/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-mood-mkii',
+                name: 'Mood MKII',
+                brand: 'Chase Bliss',
+                category: 'Micro-Looper / Spatial Reverb',
+                maBase: 270,
+                maWithMargin: 351,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Micro-looper estéreo, delay granular y generador espacial ambiente.',
+                manualUrl: 'https://drive.google.com/file/d/1j_DwuFe-HiePnED_oqcF_dG0dvAr-1oj/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-gen-loss-mkii',
+                name: 'Gen Loss MKII',
+                brand: 'Chase Bliss',
+                category: 'VHS Tape Degenerator',
+                maBase: 250,
+                maWithMargin: 325,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Emulador analógico/digital de imperfecciones de cinta de video VHS y cassette.',
+                manualUrl: 'https://drive.google.com/file/d/1krQ2-EComTzO9oQZrKpZ61p1FU_nyv9u/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'kino-ghosts',
+                name: 'Ghosts',
+                brand: 'Kinotone',
+                category: 'Polyphonic Resonator',
+                maBase: 220,
+                maWithMargin: 286,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Resonador físico polifónico con filtro de desplazamiento espectral.',
+                manualUrl: 'https://drive.google.com/file/d/1NrRJBqEqnA1p7owQJIlIf7Qf0lPMevUs/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'wa-canvas-rehearsal',
+                name: 'Canvas Rehearsal',
+                brand: 'Walrus Audio',
+                category: 'Rehearsal Engine / DI',
+                maBase: 300,
+                maWithMargin: 390,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Solución de ensayo final de cadena con salida de auriculares y entrada Aux Bluetooth.',
+                manualUrl: 'https://drive.google.com/file/d/1Rb5pR8jCFmcqxZeH24ljymFD3lzAgWfF/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'wa-acs1-mkii',
+                name: 'ACS1 MKII',
+                brand: 'Walrus Audio',
+                category: 'Amp + Cab Simulator',
+                maBase: 300,
+                maWithMargin: 390,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Simulador estéreo de amplificadores e impulsos de pantalla IR.',
+                manualUrl: 'https://drive.google.com/file/d/1uUQtd1LrsD7R9q_M2Z5KBwjb_1UCAA5n/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'wa-xero',
+                name: 'Xero Polylooper',
+                brand: 'Walrus Audio',
+                category: 'Dual Stereo Looper',
+                maBase: 300,
+                maWithMargin: 390,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Looper polifónico de doble canal estéreo con sincronización MIDI.',
+                manualUrl: 'https://drive.google.com/file/d/1Td9dJGVjlaQE4gJGbQPlWcYM6-T7T2Mm/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'boss-ce2w',
+                name: 'CE-2w Waza Craft',
+                brand: 'Boss',
+                category: 'Analog Chorus',
+                maBase: 25,
+                maWithMargin: 33,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Chorus analógico BBD con circuito premium Waza Craft.',
+                manualUrl: 'https://drive.google.com/file/d/1clcBozuQXblnUrtt3b4ZOtKRK3jU2hFa/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'boss-rc5',
+                name: 'RC-5 Loop Station',
+                brand: 'Boss',
+                category: 'Compact Phrase Looper',
+                maBase: 170,
+                maWithMargin: 221,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Looper avanzado de 32 bits con ritmos de batería integrados.',
+                manualUrl: 'https://drive.google.com/file/d/1TQyct7cMQGchPGQtiNURP71a4cKAG7o3/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'boss-te2',
+                name: 'Tera Echo TE-2',
+                brand: 'Boss',
+                category: 'Stereo Echo / Ambience',
+                maBase: 53,
+                maWithMargin: 69,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Procesador dinámico de reverberación ambiental y echo MDP.',
+                manualUrl: 'https://drive.google.com/file/d/1rx6NSaQIJKNBSgIkHiykNZQwRdFM7Gt1/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-dark-world',
+                name: 'Dark World',
+                brand: 'Chase Bliss',
+                category: 'Dual Channel Reverb',
+                maBase: 150,
+                maWithMargin: 195,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: false,
+                desc: 'Reverb dual con algoritmos atmosféricos de Cooper FX y salas de Keeley.',
+                manualUrl: 'https://drive.google.com/file/d/1RKQasjD7WKuBxLkThxRuqmlMtO41y_BE/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'cb-warped-vinyl',
+                name: 'Warped Vinyl HiFi',
+                brand: 'Chase Bliss',
+                category: 'Analog Vibrato / Chorus',
+                maBase: 70,
+                maWithMargin: 91,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: false,
+                desc: 'Simulador de vinilo desafinado con ruta analógica BBD.',
+                manualUrl: 'https://drive.google.com/file/d/157RDnY3wptCgfhZ5Nb-evLcerQCBqb0n/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'obne-beamsplitter',
+                name: 'Beamsplitter V2',
+                brand: 'OBNE',
+                category: 'Triple Tracking Overdrive',
+                maBase: 350,
+                maWithMargin: 455,
+                assignedPowerSupply: 'cioks-7',
+                powerSource: 'CIOKS 7 / Strymon Zuma',
+                isStereo: true,
+                desc: 'Triple overdrive analógico paralelo con micro-desfase para sonido masivo.',
+                manualUrl: 'https://drive.google.com/file/d/1V24uuITYGCTLAHr91n6OKVTBgGTJRWqw/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'strymon-cloudburst',
+                name: 'Cloudburst',
+                brand: 'Strymon',
+                category: 'Ambient Reverb',
+                maBase: 250,
+                maWithMargin: 325,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Reverb ambiental de amplio espacio con generador armónico Ensemble.',
+                manualUrl: 'https://drive.google.com/file/d/1H0WI1SgSqePig_1Qy8tz8cu9XDrp142v/view?usp=drive_link',
+                notes: ''
+            },
+            {
+                id: 'strymon-nightsky',
+                name: 'Nightsky',
+                brand: 'Strymon',
+                category: 'Time-Warped Reverberator',
+                maBase: 300,
+                maWithMargin: 390,
+                assignedPowerSupply: 'strymon-zuma',
+                powerSource: 'Strymon Zuma / CIOKS 7',
+                isStereo: true,
+                desc: 'Síntesis de reverb experimental con secuenciador por pasos e intervalos armónicos.',
+                manualUrl: 'https://drive.google.com/file/d/1Apy_9ksj-tDJMfST_8hCFpLupifoRnr-/view?usp=drive_link',
+                notes: ''
+            }
+        ];
+
+        let currentChainIds = [
+            'cb-clean', 'cb-brothers-am', 'ye-defiant-jazz', 'cb-blooper', 'cb-habit',
+            'cb-lost-found', 'rp-radius', 'cb-reverse-mode-c', 'cb-bad-mood', 'cb-onward',
+            'obne-dark-star', 'obne-sunlight', 'cb-lossy', 'cb-mood-mkii', 'cb-gen-loss-mkii',
+            'kino-ghosts', 'wa-canvas-rehearsal'
+        ];
+
+        let slotModes = Array(currentChainIds.length).fill('STEREO');
+        currentChainIds.forEach((id, idx) => {
+            const p = pedalDatabase.find(item => item.id === id);
+            if (p && p.isStereo === false) {
+                slotModes[idx] = 'MONO';
+            }
+        });
+
+        let favorites = [
+            { id: 'fav-base', name: 'Cadena Base Estándar', chain: [...currentChainIds], modes: [...slotModes] }
+        ];
+
+        let undoStack = [];
+        let activeInspectorId = 'cb-clean';
+        let dragSourceIndex = null;
+        let favSaveMode = 'NEW';
+        let pedalToDeleteId = null;
+        let powerSupplyToDeleteId = null;
+
+        let manualEditType = null;
+        let manualEditTargetId = null;
+
+        function loadSavedState() {
+            try {
+                const savedFavs = localStorage.getItem('pedalboard_favorites');
+                if (savedFavs) {
+                    const parsed = JSON.parse(savedFavs);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        favorites = parsed;
+                    }
+                }
+                const savedPedals = localStorage.getItem('pedalboard_pedals_db');
+                if (savedPedals) {
+                    const parsedPedals = JSON.parse(savedPedals);
+                    if (Array.isArray(parsedPedals) && parsedPedals.length > 0) {
+                        pedalDatabase.length = 0;
+                        parsedPedals.forEach(p => pedalDatabase.push(p));
+                    }
+                }
+                const savedPowers = localStorage.getItem('pedalboard_powers_db');
+                if (savedPowers) {
+                    const parsedPowers = JSON.parse(savedPowers);
+                    if (Array.isArray(parsedPowers) && parsedPowers.length > 0) {
+                        powerSuppliesDatabase.length = 0;
+                        parsedPowers.forEach(ps => powerSuppliesDatabase.push(ps));
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not parse saved storage:', e);
+            }
+        }
+
+        function saveDatabasesToStorage() {
+            try {
+                localStorage.setItem('pedalboard_pedals_db', JSON.stringify(pedalDatabase));
+                localStorage.setItem('pedalboard_powers_db', JSON.stringify(powerSuppliesDatabase));
+            } catch (e) {
+                console.warn('Could not save databases:', e);
+            }
+        }
+
+        function createNewBlankChain() {
+            pushUndoState();
+            currentChainIds = [];
+            slotModes = [];
+            activeInspectorId = null;
+            renderSignalChain();
+            renderInspector();
+        }
+
+        function pushUndoState() {
+            if (undoStack.length > 20) undoStack.shift();
+            undoStack.push({
+                chain: [...currentChainIds],
+                modes: [...slotModes],
+                db: JSON.parse(JSON.stringify(pedalDatabase)),
+                powerDb: JSON.parse(JSON.stringify(powerSuppliesDatabase))
+            });
+        }
+
+        function undoChainState() {
+            if (undoStack.length === 0) return;
+            const previous = undoStack.pop();
+            currentChainIds = [...previous.chain];
+            slotModes = [...previous.modes];
+            
+            if (previous.db) {
+                pedalDatabase.length = 0;
+                previous.db.forEach(item => pedalDatabase.push(item));
+            }
+            if (previous.powerDb) {
+                powerSuppliesDatabase.length = 0;
+                previous.powerDb.forEach(item => powerSuppliesDatabase.push(item));
+            }
+
+            renderAll();
+            renderInspector();
+        }
+
+        function renderAll() {
+            renderBrandFilters();
+            renderCatalog('ALL');
+            renderPowerSupplies();
+            renderSignalChain();
+            renderFavoritesBar();
+        }
+
+        function renderBrandFilters() {
+            const container = document.getElementById('brand-filters');
+            if (!container) return;
+            const brands = ['ALL', ...new Set(pedalDatabase.map(p => p.brand).filter(Boolean))].sort();
+
+            container.innerHTML = brands.map(b => `
+                <button onclick="filterCatalog('${b}')" class="px-3 py-1 rounded-lg border text-xs font-medium transition-all ${
+                    b === 'ALL' 
+                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 font-bold' 
+                    : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                }" data-brand="${b}">
+                    ${b}
+                </button>
+            `).join('');
+        }
+
+        function renderCatalog(filterBrand = 'ALL') {
+            const effectsContainer = document.getElementById('effects-catalog-grid');
+            const utilityContainer = document.getElementById('utility-catalog-grid');
+            if (!effectsContainer || !utilityContainer) return;
+
+            effectsContainer.innerHTML = '';
+            utilityContainer.innerHTML = '';
+
+            let filtered = pedalDatabase;
+            if (filterBrand !== 'ALL') {
+                filtered = pedalDatabase.filter(p => p.brand === filterBrand);
+            }
+
+            filtered = [...filtered].sort((a, b) => {
+                if (a.brand !== b.brand) return (a.brand || '').localeCompare(b.brand || '');
+                return (a.name || '').localeCompare(b.name || '');
+            });
+
+            filtered.forEach(pedal => {
+                const assignedPS = powerSuppliesDatabase.find(ps => ps.id === pedal.assignedPowerSupply);
+                const psName = assignedPS ? `${assignedPS.brand} ${assignedPS.model}` : 'Sin fuente enlazada';
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative";
+                card.onclick = () => inspectPedal(pedal.id);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2 pr-6">
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                                ${pedal.brand}
+                            </span>
+                            <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                                ${pedal.maWithMargin || 0} mA
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-base text-white group-hover:text-amber-400 transition-colors">${pedal.name}</h3>
+                        <p class="text-xs text-slate-400 mt-1">${pedal.category}</p>
+                    </div>
+
+                    <button onclick="promptDeletePedal('${pedal.id}', event)" title="Eliminar pedal definitivamente del catálogo" class="absolute top-3 right-3 text-slate-600 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-800 transition-all z-10">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+                        <span class="truncate text-[11px] ${assignedPS ? 'text-amber-400 font-semibold' : 'text-slate-500 italic'}">
+                            <i class="fa-solid fa-plug ${assignedPS ? 'text-amber-400' : 'text-slate-600'} mr-1"></i>${psName}
+                        </span>
+                        <i class="fa-solid fa-circle-info group-hover:text-amber-400 transition-colors"></i>
+                    </div>
+                `;
+
+                if (pedal.category && pedal.category.includes('Utilidad')) {
+                    utilityContainer.appendChild(card);
+                } else {
+                    effectsContainer.appendChild(card);
+                }
+            });
+
+            if (effectsContainer.children.length === 0) {
+                effectsContainer.innerHTML = `<span class="text-xs text-slate-500 italic col-span-full py-4 text-center">No hay pedales de efecto cargados.</span>`;
+            }
+            if (utilityContainer.children.length === 0) {
+                utilityContainer.innerHTML = `<span class="text-xs text-slate-500 italic col-span-full py-4 text-center">No hay pedales de utilidad cargados.</span>`;
+            }
+        }
+
+        function filterCatalog(brand) {
+            document.querySelectorAll('#brand-filters button').forEach(btn => {
+                if (btn.dataset.brand === brand) {
+                    btn.className = "px-3 py-1 rounded-lg border text-xs font-medium bg-amber-500/10 border-amber-500/30 text-amber-400 font-bold";
+                } else {
+                    btn.className = "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 px-3 py-1 rounded-lg border text-xs font-medium";
+                }
+            });
+            renderCatalog(brand);
+        }
+
+        function renderPowerSupplies() {
+            const container = document.getElementById('power-supplies-grid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            powerSuppliesDatabase.forEach(ps => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-xl p-4 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative";
+                card.onclick = () => inspectPowerSupply(ps.id);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2 pr-6">
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                ${ps.brand}
+                            </span>
+                            <span class="text-[10px] font-mono text-slate-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
+                                ${ps.outlets} Salidas
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-base text-white group-hover:text-emerald-400 transition-colors">${ps.model}</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">${ps.details}</p>
+                    </div>
+
+                    <button onclick="promptDeletePowerSupply('${ps.id}', event)" title="Eliminar fuente definitivamente" class="absolute top-3 right-3 text-slate-600 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-800 transition-all z-10">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+                        <span class="truncate text-[11px]"><i class="fa-solid fa-bolt text-emerald-400 mr-1"></i>Fuente de Alimentación</span>
+                        <i class="fa-solid fa-circle-info group-hover:text-emerald-400 transition-colors"></i>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (powerSuppliesDatabase.length === 0) {
+                container.innerHTML = `<span class="text-xs text-slate-500 italic col-span-full py-4 text-center">No hay fuentes de alimentación registradas.</span>`;
+            }
+        }
+
+        function renderSignalChain() {
+            const container = document.getElementById('chain-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let totalMaSum = 0;
+            const idCounts = {};
+            currentChainIds.forEach(id => {
+                if (id && id !== 'EMPTY') idCounts[id] = (idCounts[id] || 0) + 1;
+            });
+
+            const duplicatedIds = Object.keys(idCounts).filter(id => idCounts[id] > 1);
+            const warningBanner = document.getElementById('duplicate-warning');
+            const warningMsg = document.getElementById('duplicate-msg');
+            
+            if (warningBanner && warningMsg) {
+                if (duplicatedIds.length > 0) {
+                    const names = duplicatedIds.map(id => {
+                        const p = pedalDatabase.find(x => x.id === id);
+                        return p ? p.name : id;
+                    }).join(', ');
+                    warningMsg.textContent = `¡Atención! Pedales duplicados: ${names}.`;
+                    warningBanner.classList.remove('hidden');
+                } else {
+                    warningBanner.classList.add('hidden');
+                }
+            }
+
+            let activeCount = 0;
+
+            currentChainIds.forEach((pedalId, index) => {
+                const pedal = pedalDatabase.find(p => p.id === pedalId);
+                const slotNum = index + 1;
+                const isDuplicated = pedalId && pedalId !== 'EMPTY' && idCounts[pedalId] > 1;
+                
+                const isPedalMonoOnly = pedal && pedal.isStereo === false;
+                let slotMode = isPedalMonoOnly ? 'MONO' : (slotModes[index] || 'STEREO');
+                slotModes[index] = slotMode;
+
+                if (pedal && pedalId !== 'EMPTY') {
+                    activeCount++;
+                    if (!isDuplicated) totalMaSum += (pedal.maWithMargin || 0);
+                }
+
+                const card = document.createElement('div');
+                card.dataset.index = index;
+                card.draggable = true;
+                card.className = `chain-card rounded-xl p-3 flex flex-col justify-between transition-all relative group cursor-grab active:cursor-grabbing ${
+                    !pedal || pedalId === 'EMPTY' ? 'bg-slate-900/50 border-2 border-dashed border-slate-800' : 
+                    (isDuplicated ? 'border-2 border-rose-500 bg-rose-950/20 shadow-lg shadow-rose-950/50 animate-pulse' : 
+                    (slotMode === 'STEREO' ? 'bg-slate-800/90 border border-purple-500/30 hover:border-purple-400' : 'bg-slate-800/90 border border-blue-500/30 hover:border-blue-400'))
+                }`;
+
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('dragleave', handleDragLeave);
+                card.addEventListener('drop', handleDrop);
+                card.addEventListener('dragend', handleDragEnd);
+
+                if (!pedal || pedalId === 'EMPTY') {
+                    card.innerHTML = `
+                        <button onclick="removeSlot(${index}, event)" class="absolute top-2 right-2 text-slate-600 hover:text-rose-400 text-xs w-5 h-5 flex items-center justify-center rounded-full hover:bg-slate-800 transition-all z-10">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <div class="flex items-center justify-between gap-1 mb-2 pr-6">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-grip-vertical text-slate-600 text-[10px]"></i>
+                                <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">#${slotNum}</span>
+                                <select onchange="changeSlotMode(${index}, this.value)" onclick="event.stopPropagation()" class="bg-slate-950 text-slate-300 rounded border border-slate-800 px-1 py-0.5 text-[9px] font-mono font-bold">
+                                    <option value="MONO" ${slotMode === 'MONO' ? 'selected' : ''}>MONO</option>
+                                    <option value="STEREO" ${slotMode === 'STEREO' ? 'selected' : ''}>STEREO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="my-3 text-center">
+                            <span class="text-xs text-slate-500 italic">--- Espacio Vacío ---</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                            <span>0 mA</span>
+                            <select onchange="swapPedalViaSelect(${index}, this.value)" onclick="event.stopPropagation()" class="bg-slate-950 text-slate-400 rounded border border-slate-800 px-1 py-0.5 text-[10px] focus:outline-none max-w-[120px] truncate">
+                                ${generateGroupedOptions(null)}
+                            </select>
+                        </div>
+                    `;
+                } else {
+                    card.onclick = (e) => {
+                        if (e.target.tagName !== 'SELECT' && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                            inspectPedal(pedal.id, slotMode);
+                        }
+                    };
+
+                    card.innerHTML = `
+                        <button onclick="removeSlot(${index}, event)" class="absolute top-2 right-2 text-slate-500 hover:text-rose-400 text-xs w-5 h-5 flex items-center justify-center rounded-full hover:bg-slate-700/80 transition-all z-10">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <div class="flex items-center justify-between gap-1 mb-2 pr-6">
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-grip-vertical text-slate-500 text-[10px]"></i>
+                                <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                                    isDuplicated ? 'bg-rose-900 text-rose-200' : (slotMode === 'STEREO' ? 'bg-purple-900/50 text-purple-300' : 'bg-blue-900/50 text-blue-300')
+                                }">#${slotNum}</span>
+                                <select onchange="changeSlotMode(${index}, this.value)" onclick="event.stopPropagation()" ${isPedalMonoOnly ? 'disabled title="Este pedal es Hardware Mono únicamente"' : ''} class="bg-slate-900 text-slate-200 rounded border border-slate-700 px-1 py-0.5 text-[9px] font-mono font-bold focus:outline-none ${isPedalMonoOnly ? 'opacity-60 cursor-not-allowed' : ''}">
+                                    <option value="MONO" ${slotMode === 'MONO' ? 'selected' : ''}>MONO</option>
+                                    ${!isPedalMonoOnly ? `<option value="STEREO" ${slotMode === 'STEREO' ? 'selected' : ''}>STEREO</option>` : ''}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1 my-1">
+                            <h4 class="font-bold text-sm ${isDuplicated ? 'text-rose-300' : 'text-white'} group-hover:text-amber-400 transition-colors flex items-center justify-between pr-4">
+                                ${pedal.name}
+                                <i class="fa-solid fa-angle-right text-xs text-slate-600 group-hover:text-amber-400"></i>
+                            </h4>
+                            <p class="text-[11px] text-slate-400 line-clamp-1">${pedal.category || ''}</p>
+                        </div>
+                        <div class="pt-2 border-t border-slate-700/50 flex items-center justify-between text-[10px] font-mono text-slate-400 mt-2">
+                            <span class="${isDuplicated ? 'text-rose-400 font-bold' : ''}">${pedal.maWithMargin || 0}mA</span>
+                            <select onchange="swapPedalViaSelect(${index}, this.value)" onclick="event.stopPropagation()" class="bg-slate-900 text-slate-300 rounded border border-slate-700 px-1 py-0.5 text-[10px] focus:outline-none max-w-[120px] truncate">
+                                ${generateGroupedOptions(pedal.id)}
+                            </select>
+                        </div>
+                    `;
+                }
+
+                container.appendChild(card);
+            });
+
+            const addCard = document.createElement('div');
+            addCard.className = `border-2 border-dashed border-slate-800 hover:border-amber-500/60 bg-slate-900/30 hover:bg-amber-500/5 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all min-h-[120px] group`;
+            addCard.onclick = addExtraSlot;
+            addCard.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-slate-800 group-hover:bg-amber-500 text-slate-400 group-hover:text-slate-950 flex items-center justify-center transition-all mb-2">
+                    <i class="fa-solid fa-plus text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-slate-400 group-hover:text-amber-400 transition-colors">Agregar Slot</span>
+            `;
+            container.appendChild(addCard);
+
+            const totalMaEl = document.getElementById('total-ma');
+            const totalCountBadgeEl = document.getElementById('total-count-badge');
+            if (totalMaEl) totalMaEl.textContent = `${totalMaSum} mA`;
+            if (totalCountBadgeEl) totalCountBadgeEl.textContent = `${activeCount} Pedales`;
+        }
+
+        function generateGroupedOptions(selectedPedalId) {
+            const grouped = {};
+            pedalDatabase.forEach(p => {
+                if (!grouped[p.brand]) grouped[p.brand] = [];
+                grouped[p.brand].push(p);
+            });
+
+            const sortedBrands = Object.keys(grouped).sort();
+            let html = `<option value="EMPTY" ${!selectedPedalId ? 'selected' : ''}>--- Vaciar Espacio ---</option>`;
+
+            sortedBrands.forEach(brand => {
+                const pedals = grouped[brand].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+                html += `<optgroup label="--- ${brand} ---">`;
+                pedals.forEach(p => {
+                    html += `<option value="${p.id}" ${p.id === selectedPedalId ? 'selected' : ''}>${p.name}</option>`;
+                });
+                html += `</optgroup>`;
+            });
+
+            return html;
+        }
+
+        function changeSlotMode(slotIndex, newMode) {
+            pushUndoState();
+            slotModes[slotIndex] = newMode;
+            renderSignalChain();
+        }
+
+        function swapPedalViaSelect(index, newId) {
+            pushUndoState();
+            currentChainIds[index] = newId;
+            renderSignalChain();
+        }
+
+        function addExtraSlot() {
+            pushUndoState();
+            currentChainIds.push('EMPTY');
+            slotModes.push('STEREO');
+            renderSignalChain();
+        }
+
+        function removeSlot(index, e) {
+            if (e) e.stopPropagation();
+            pushUndoState();
+            currentChainIds.splice(index, 1);
+            slotModes.splice(index, 1);
+            renderSignalChain();
+        }
+
+        // DRAG & DROP HANDLERS
+        function handleDragStart(e) {
+            dragSourceIndex = parseInt(e.currentTarget.dataset.index);
+            e.dataTransfer.effectAllowed = 'move';
+            e.currentTarget.classList.add('opacity-40');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragLeave(e) {}
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const targetCard = e.currentTarget.closest('.chain-card');
+            if (!targetCard) return;
+            const dropIndex = parseInt(targetCard.dataset.index);
+
+            if (!isNaN(dragSourceIndex) && !isNaN(dropIndex) && dragSourceIndex !== dropIndex) {
+                pushUndoState();
+                const movedPedal = currentChainIds.splice(dragSourceIndex, 1)[0];
+                const movedMode = slotModes.splice(dragSourceIndex, 1)[0];
+                currentChainIds.splice(dropIndex, 0, movedPedal);
+                slotModes.splice(dropIndex, 0, movedMode);
+                renderSignalChain();
+            }
+            dragSourceIndex = null;
+        }
+
+        function handleDragEnd(e) {
+            e.currentTarget.classList.remove('opacity-40');
+            dragSourceIndex = null;
+        }
+
+        function renderFavoritesBar() {
+            const container = document.getElementById('favorites-bar');
+            if (!container) return;
+
+            if (favorites.length === 0) {
+                container.innerHTML = `<span class="text-xs text-slate-500 italic">No hay cadenas guardadas.</span>`;
+                return;
+            }
+
+            container.innerHTML = favorites.map((fav, idx) => {
+                const count = fav.chain ? fav.chain.filter(id => id && id !== 'EMPTY').length : 0;
+                let maSum = 0;
+                if (fav.chain) {
+                    fav.chain.forEach(id => {
+                        const p = pedalDatabase.find(x => x.id === id);
+                        if (p) maSum += (p.maWithMargin || 0);
+                    });
+                }
+
+                return `
+                    <div onclick="loadFavoriteChain(${idx})" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-amber-500/50 px-3 py-1 rounded-lg text-xs font-mono flex items-center gap-2 cursor-pointer transition-all shrink-0 group">
+                        <span class="font-bold group-hover:text-amber-400">${fav.name}</span>
+                        <span class="text-[10px] text-slate-400">(${count} pds • ${maSum}mA)</span>
+                        <button onclick="deleteFavoriteChain(${idx}, event)" class="text-slate-500 hover:text-rose-400 text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadFavoriteChain(idx) {
+            if (favorites[idx]) {
+                pushUndoState();
+                currentChainIds = [...favorites[idx].chain];
+                slotModes = [...favorites[idx].modes];
+                renderSignalChain();
+            }
+        }
+
+        function deleteFavoriteChain(idx, e) {
+            if (e) e.stopPropagation();
+            favorites.splice(idx, 1);
+            try {
+                localStorage.setItem('pedalboard_favorites', JSON.stringify(favorites));
+            } catch (err) {}
+            renderFavoritesBar();
+        }
+
+        function openSaveFavoriteModal() {
+            favSaveMode = 'NEW';
+            document.getElementById('fav-name-input').value = `Mi Preset ${favorites.length + 1}`;
+            
+            const select = document.getElementById('fav-overwrite-select');
+            select.innerHTML = favorites.map((f, i) => `<option value="${i}">${f.name}</option>`).join('');
+
+            setSaveFavMode('NEW');
+            document.getElementById('save-fav-modal').classList.remove('hidden');
+        }
+
+        function closeSaveFavoriteModal() {
+            document.getElementById('save-fav-modal').classList.add('hidden');
+        }
+
+        function setSaveFavMode(mode) {
+            favSaveMode = mode;
+            const btnNew = document.getElementById('tab-mode-new');
+            const btnOver = document.getElementById('tab-mode-overwrite');
+            const formNew = document.getElementById('fav-form-new');
+            const formOver = document.getElementById('fav-form-overwrite');
+
+            if (mode === 'NEW') {
+                btnNew.className = "py-2 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all";
+                btnOver.className = "py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+                formNew.classList.remove('hidden');
+                formOver.classList.add('hidden');
+            } else {
+                btnOver.className = "py-2 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all";
+                btnNew.className = "py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+                formOver.classList.remove('hidden');
+                formNew.classList.add('hidden');
+            }
+        }
+
+        function executeSaveFavorite() {
+            if (favSaveMode === 'NEW') {
+                const name = document.getElementById('fav-name-input').value.trim();
+                if (!name) return;
+                favorites.push({
+                    id: 'fav-' + Date.now(),
+                    name: name,
+                    chain: [...currentChainIds],
+                    modes: [...slotModes]
+                });
+            } else {
+                const idx = parseInt(document.getElementById('fav-overwrite-select').value);
+                if (!isNaN(idx) && favorites[idx]) {
+                    favorites[idx].chain = [...currentChainIds];
+                    favorites[idx].modes = [...slotModes];
+                }
+            }
+
+            try {
+                localStorage.setItem('pedalboard_favorites', JSON.stringify(favorites));
+            } catch (e) {}
+
+            renderFavoritesBar();
+            closeSaveFavoriteModal();
+        }
+
+        function openNewPedalModal() {
+            document.getElementById('np-name').value = '';
+            document.getElementById('np-brand').value = '';
+            document.getElementById('np-mabase').value = '20';
+            document.getElementById('np-category').value = '';
+            document.getElementById('np-manual-url').value = '';
+            document.getElementById('new-pedal-modal').classList.remove('hidden');
+        }
+
+        function closeNewPedalModal() {
+            document.getElementById('new-pedal-modal').classList.add('hidden');
+        }
+
+        function executeRegisterNewPedal() {
+            const name = document.getElementById('np-name').value.trim();
+            const brand = document.getElementById('np-brand').value.trim();
+            const maBase = parseInt(document.getElementById('np-mabase').value) || 20;
+            const ioType = document.getElementById('np-io-type').value;
+            const categoryType = document.getElementById('np-category-type').value;
+            const categoryText = document.getElementById('np-category').value.trim();
+            const manualUrl = document.getElementById('np-manual-url').value.trim();
+
+            if (!name || !brand) return;
+
+            const id = `${brand.toLowerCase().replace(/\s+/g, '-')}-${name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+            const newPedal = {
+                id,
+                name,
+                brand,
+                category: (categoryType === 'UTILITY' ? 'Utilidad / ' : '') + (categoryText || 'Efecto Custom'),
+                maBase,
+                maWithMargin: Math.round(maBase * 1.3),
+                assignedPowerSupply: powerSuppliesDatabase.length > 0 ? powerSuppliesDatabase[0].id : '',
+                powerSource: 'Fuente de Alimentación Externa',
+                isStereo: ioType === 'STEREO',
+                desc: 'Pedal registrado por el usuario.',
+                manualUrl: manualUrl || null,
+                notes: ''
+            };
+
+            pushUndoState();
+            pedalDatabase.push(newPedal);
+            saveDatabasesToStorage();
+            renderAll();
+            closeNewPedalModal();
+            inspectPedal(newPedal.id);
+        }
+
+        function promptDeletePedal(id, event) {
+            if (event) event.stopPropagation();
+            const pedal = pedalDatabase.find(p => p.id === id);
+            if (!pedal) return;
+
+            pedalToDeleteId = id;
+            document.getElementById('delete-pedal-target-name').textContent = `${pedal.brand} - ${pedal.name}`;
+            document.getElementById('delete-pedal-modal').classList.remove('hidden');
+        }
+
+        function closeDeletePedalModal() {
+            pedalToDeleteId = null;
+            document.getElementById('delete-pedal-modal').classList.add('hidden');
+        }
+
+        function executeDeletePedal() {
+            if (!pedalToDeleteId) return;
+
+            pushUndoState();
+            const idx = pedalDatabase.findIndex(p => p.id === pedalToDeleteId);
+            if (idx !== -1) pedalDatabase.splice(idx, 1);
+
+            currentChainIds = currentChainIds.map(id => id === pedalToDeleteId ? 'EMPTY' : id);
+            saveDatabasesToStorage();
+            renderAll();
+            closeDeletePedalModal();
+            renderInspector();
+        }
+
+        function openNewPowerSupplyModal() {
+            document.getElementById('nps-model').value = '';
+            document.getElementById('nps-brand').value = '';
+            document.getElementById('nps-outlets').value = '9';
+            document.getElementById('nps-details').value = '';
+            document.getElementById('nps-manual-url').value = '';
+            document.getElementById('new-power-modal').classList.remove('hidden');
+        }
+
+        function closeNewPowerSupplyModal() {
+            document.getElementById('new-power-modal').classList.add('hidden');
+        }
+
+        function executeRegisterNewPowerSupply() {
+            const model = document.getElementById('nps-model').value.trim();
+            const brand = document.getElementById('nps-brand').value.trim();
+            const outlets = parseInt(document.getElementById('nps-outlets').value) || 9;
+            const details = document.getElementById('nps-details').value.trim();
+            const manualUrl = document.getElementById('nps-manual-url').value.trim();
+
+            if (!model || !brand) return;
+
+            const id = `power-${brand.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+            const newPower = {
+                id,
+                model,
+                brand,
+                outlets,
+                details: details || `${outlets} salidas aisladas de alimentación.`,
+                manualUrl: manualUrl || null,
+                notes: ''
+            };
+
+            pushUndoState();
+            powerSuppliesDatabase.push(newPower);
+            saveDatabasesToStorage();
+            renderAll();
+            closeNewPowerSupplyModal();
+            inspectPowerSupply(newPower.id);
+        }
+
+        function promptDeletePowerSupply(id, event) {
+            if (event) event.stopPropagation();
+            const ps = powerSuppliesDatabase.find(p => p.id === id);
+            if (!ps) return;
+
+            powerSupplyToDeleteId = id;
+            document.getElementById('delete-power-target-name').textContent = `${ps.brand} - ${ps.model}`;
+            document.getElementById('delete-power-modal').classList.remove('hidden');
+        }
+
+        function closeDeletePowerSupplyModal() {
+            powerSupplyToDeleteId = null;
+            document.getElementById('delete-power-modal').classList.add('hidden');
+        }
+
+        function executeDeletePowerSupply() {
+            if (!powerSupplyToDeleteId) return;
+
+            pushUndoState();
+            const idx = powerSuppliesDatabase.findIndex(p => p.id === powerSupplyToDeleteId);
+            if (idx !== -1) powerSuppliesDatabase.splice(idx, 1);
+
+            pedalDatabase.forEach(p => {
+                if (p.assignedPowerSupply === powerSupplyToDeleteId) p.assignedPowerSupply = '';
+            });
+
+            saveDatabasesToStorage();
+            renderAll();
+            closeDeletePowerSupplyModal();
+            renderInspector();
+        }
+
+        function openEditManualModal(type, id) {
+            manualEditType = type;
+            manualEditTargetId = id;
+            let currentUrl = '';
+
+            if (type === 'PEDAL') {
+                const pedal = pedalDatabase.find(p => p.id === id);
+                if (pedal) currentUrl = pedal.manualUrl || '';
+            } else if (type === 'POWER') {
+                const ps = powerSuppliesDatabase.find(p => p.id === id);
+                if (ps) currentUrl = ps.manualUrl || '';
+            }
+
+            document.getElementById('manual-url-input').value = currentUrl;
+            document.getElementById('edit-manual-modal').classList.remove('hidden');
+        }
+
+        function closeEditManualModal() {
+            manualEditType = null;
+            manualEditTargetId = null;
+            document.getElementById('edit-manual-modal').classList.add('hidden');
+        }
+
+        function saveItemManualUrl() {
+            const url = document.getElementById('manual-url-input').value.trim();
+            if (manualEditType === 'PEDAL') {
+                const pedal = pedalDatabase.find(p => p.id === manualEditTargetId);
+                if (pedal) {
+                    pedal.manualUrl = url || null;
+                    inspectPedal(pedal.id);
+                }
+            } else if (manualEditType === 'POWER') {
+                const ps = powerSuppliesDatabase.find(p => p.id === manualEditTargetId);
+                if (ps) {
+                    ps.manualUrl = url || null;
+                    inspectPowerSupply(ps.id);
+                }
+            }
+            saveDatabasesToStorage();
+            closeEditManualModal();
+            renderCatalog('ALL');
+            renderPowerSupplies();
+        }
+
+        function updatePedalPowerSupply(pedalId, psId) {
+            const pedal = pedalDatabase.find(p => p.id === pedalId);
+            if (pedal) {
+                pushUndoState();
+                pedal.assignedPowerSupply = psId;
+                saveDatabasesToStorage();
+                renderCatalog('ALL');
+                inspectPedal(pedalId);
+            }
+        }
+
+        function saveItemNotes(type, id) {
+            const textarea = document.getElementById('item-notes-textarea');
+            if (!textarea) return;
+            const text = textarea.value.trim();
+
+            if (type === 'PEDAL') {
+                const pedal = pedalDatabase.find(p => p.id === id);
+                if (pedal) {
+                    pedal.notes = text;
+                    inspectPedal(id);
+                }
+            } else if (type === 'POWER') {
+                const ps = powerSuppliesDatabase.find(p => p.id === id);
+                if (ps) {
+                    ps.notes = text;
+                    inspectPowerSupply(id);
+                }
+            }
+            saveDatabasesToStorage();
+        }
+
+        function inspectPedal(pedalId, currentSlotMode = null) {
+            activeInspectorId = pedalId;
+            renderInspector(currentSlotMode);
+        }
+
+        function inspectPowerSupply(psId) {
+            activeInspectorId = psId;
+            renderInspector();
+        }
+
+        function renderInspector(currentSlotMode = null) {
+            const container = document.getElementById('inspector-content');
+            if (!container) return;
+
+            if (!activeInspectorId) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-500">
+                        <i class="fa-solid fa-sliders text-4xl mb-3 block"></i>
+                        <p class="text-xs">Selecciona un pedal o fuente de alimentación para ver sus detalles en el inspector.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const pedal = pedalDatabase.find(p => p.id === activeInspectorId);
+            const ps = powerSuppliesDatabase.find(p => p.id === activeInspectorId);
+
+            if (pedal) {
+                const isMonoOnly = pedal.isStereo === false;
+                const modeToDisplay = isMonoOnly ? 'MONO' : (currentSlotMode || (pedal.isStereo ? 'STEREO' : 'MONO'));
+
+                let powerOptions = `<option value="">--- Sin fuente asignada ---</option>`;
+                powerSuppliesDatabase.forEach(pSupply => {
+                    const selected = pedal.assignedPowerSupply === pSupply.id ? 'selected' : '';
+                    powerOptions += `<option value="${pSupply.id}" ${selected}>${pSupply.brand} - ${pSupply.model}</option>`;
+                });
+
+                container.innerHTML = `
+                    <div class="space-y-2 border-b border-slate-800 pb-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                ${pedal.brand}
+                            </span>
+                            <div class="flex items-center gap-1 font-mono text-xs">
+                                <span class="text-slate-400 text-[10px]">Seteo I/O:</span>
+                                <select onchange="toggleInspectorPedalStereo('${pedal.id}', this.value)" ${isMonoOnly ? 'disabled title="Este pedal es Hardware Mono únicamente"' : ''} class="bg-slate-800 text-slate-200 border border-slate-700 rounded px-2 py-0.5 text-xs font-bold focus:outline-none ${isMonoOnly ? 'opacity-60 cursor-not-allowed' : ''}">
+                                    <option value="MONO" ${modeToDisplay === 'MONO' ? 'selected' : ''}>Mono I/O</option>
+                                    ${!isMonoOnly ? `<option value="STEREO" ${modeToDisplay === 'STEREO' ? 'selected' : ''}>Stereo I/O</option>` : ''}
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">${pedal.name}</h2>
+                        <p class="text-xs text-slate-400">${pedal.category}</p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2 font-mono text-xs">
+                        <h4 class="font-sans text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-bolt"></i> Energía & Fuente
+                        </h4>
+                        <div class="flex justify-between text-slate-300">
+                            <span>Consumo Base:</span>
+                            <span>${pedal.maBase || 0} mA</span>
+                        </div>
+                        <div class="flex justify-between text-amber-400 font-bold">
+                            <span>Recomendado (+30%):</span>
+                            <span>${pedal.maWithMargin || 0} mA</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
+                            <label class="block text-slate-400 text-[10px] font-sans font-semibold">Fuente de Alimentación Asignada:</label>
+                            <select onchange="updatePedalPowerSupply('${pedal.id}', this.value)" class="w-full bg-slate-900 text-amber-400 border border-slate-700 rounded-lg px-2 py-1 text-xs font-bold focus:outline-none">
+                                ${powerOptions}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- MANUAL SECTION & BUTTON -->
+                    <div class="space-y-2 pt-1">
+                        ${pedal.manualUrl ? `
+                        <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
+                            <i class="fa-solid fa-file-pdf"></i> Abrir Manual / Documentación PDF
+                        </a>
+                        <button onclick="openEditManualModal('PEDAL', '${pedal.id}')" class="w-full text-slate-500 hover:text-slate-300 text-[11px] font-mono text-center block pt-1">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i>Editar URL del Manual
+                        </button>
+                        ` : `
+                        <button onclick="openEditManualModal('PEDAL', '${pedal.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-plus text-amber-400"></i> Agregar URL del Manual / Documentación
+                        </button>
+                        `}
+                    </div>
+
+                    <!-- ADDITIONAL CUSTOM NOTES SECTION -->
+                    <div class="space-y-2 border-t border-slate-800 pt-4">
+                        <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                            <span><i class="fa-solid fa-note-sticky text-amber-400 mr-1.5"></i>Notas / Texto Adicional</span>
+                        </h4>
+                        <textarea id="item-notes-textarea" rows="16" placeholder="Escribe notas personalizadas sobre este pedal (ej: presets favoritos, parches, etc.)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-amber-500 resize-y font-sans min-h-[300px] leading-relaxed">${pedal.notes || ''}</textarea>
+                        <div class="flex justify-end">
+                            <button onclick="saveItemNotes('PEDAL', '${pedal.id}')" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/40 rounded-lg text-xs font-semibold transition-all">
+                                Guardar Notas
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (ps) {
+                container.innerHTML = `
+                    <div class="space-y-2 border-b border-slate-800 pb-4">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            ${ps.brand}
+                        </span>
+                        <h2 class="text-2xl font-bold text-white">${ps.model}</h2>
+                        <p class="text-xs text-slate-400 font-mono">${ps.outlets} Salidas Aisladas de Alimentación</p>
+                    </div>
+
+                    <div class="space-y-1">
+                        <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Detalles de Especificación</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono">${ps.details}</p>
+                    </div>
+
+                    <!-- MANUAL SECTION & BUTTON -->
+                    <div class="space-y-2 pt-1">
+                        ${ps.manualUrl ? `
+                        <a href="${ps.manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
+                            <i class="fa-solid fa-file-pdf"></i> Abrir Manual / Documentación PDF
+                        </a>
+                        <button onclick="openEditManualModal('POWER', '${ps.id}')" class="w-full text-slate-500 hover:text-slate-300 text-[11px] font-mono text-center block pt-1">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i>Editar URL del Manual
+                        </button>
+                        ` : `
+                        <button onclick="openEditManualModal('POWER', '${ps.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-plus text-emerald-400"></i> Agregar URL del Manual / Documentación
+                        </button>
+                        `}
+                    </div>
+
+                    <!-- ADDITIONAL CUSTOM NOTES SECTION -->
+                    <div class="space-y-2 border-t border-slate-800 pt-4">
+                        <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                            <span><i class="fa-solid fa-note-sticky text-emerald-400 mr-1.5"></i>Notas / Texto Adicional</span>
+                        </h4>
+                        <textarea id="item-notes-textarea" rows="16" placeholder="Escribe notas personalizadas sobre esta fuente (ej: cables requeridos, mods, etc.)..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 resize-y font-sans min-h-[300px] leading-relaxed">${ps.notes || ''}</textarea>
+                        <div class="flex justify-end">
+                            <button onclick="saveItemNotes('POWER', '${ps.id}')" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 rounded-lg text-xs font-semibold transition-all">
+                                Guardar Notas
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-500">
+                        <i class="fa-solid fa-sliders text-4xl mb-3 block"></i>
+                        <p class="text-xs">Elemento no encontrado en el registro actual.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleInspectorPedalStereo(pedalId, newMode) {
+            renderInspector(newMode);
+        }
+
+        window.onload = function() {
+            loadSavedState();
+            renderAll();
+            renderInspector();
+            
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                    e.preventDefault();
+                    undoChainState();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
