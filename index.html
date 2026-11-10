@@ -63,12 +63,17 @@
     <!-- TOP HEADER & MAIN NAVIGATION TABS -->
     <header class="bg-[#1C1E24] border-b border-[#2A2D36] px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 z-20 shrink-0">
         <!-- 1. OFFICIAL LOGO IMAGE DIRECT TAG + SUBTITLE ONLY -->
-        <div class="flex items-center gap-4">
-            <img src="My Pedal Rig v2_4.jpg" alt="My Pedal Rig" class="h-10 sm:h-12 w-auto object-contain shrink-0" onerror="this.onerror=null; this.src='My_Pedal_Rig_v2.jpg';">
-            <div class="h-6 w-px bg-[#2A2D36] hidden sm:block"></div>
-            <p class="text-xs sm:text-sm font-medium text-[#9CA3AF]">El centro de mando para tu sonido</p>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-sliders text-slate-950 text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    MY PEDAL RIG
+                </h1>
+                <p class="text-xs text-slate-400">El centro de mando para tu sonido</p>
+            </div>
         </div>
-
         <!-- SPA NAVIGATION TABS -->
         <nav class="flex items-center gap-2 bg-[#121316] p-1.5 rounded-2xl border border-[#2A2D36]">
             <button id="tab-btn-catalog" onclick="switchTab('catalog')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2">
