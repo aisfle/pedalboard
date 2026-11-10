@@ -125,7 +125,7 @@
             </div>
             <!-- BRAND FILTERS & PEDALS CATALOG -->
             <section class="space-y-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#2A2D36] pb-3">
+                <div class="space-y-2 border-b border-[#2A2D36] pb-3 mb-4">
                     <h3 class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-filter text-[#F15A24]"></i> FILTRO POR MARCA
                     </h3>
@@ -359,9 +359,9 @@
                 <option value="Delay & Eco">Delay & Eco (Digital / Analógico BBD)</option>
                 <option value="Reverb & Ambiente">Reverb & Ambiente (Hall / Ambient / Shimmer)</option>
                 <option value="Modulación">Modulación (Chorus / Phaser / Flanger / Tremolo)</option>
-                <option value="Lo-Fi & Cinta">Lo-Fi & Cinta (Tape Echo / VHS / Gen Loss / Lossy)</option>
+                <option value="Lo-Fi & Glitch">Lo-Fi & Glitch (Tape Echo / VHS / Gen Loss / Lossy)</option>
                 <option value="Pitch & Synth">Pitch & Synth (Octavador / Sintetizador / Pitch Shift)</option>
-                <option value="Preamp & Dinámica">Preamp & Dinámica (Amp Sim / Compresor / EQ)</option>
+                <option value="Preamps & Compresores">Preamps & Compresores (Amp Sim / Compresor / EQ)</option>
                 <option value="Varios & Multi-FX">Varios & Multi-FX (Looper / Procesador Combinado)</option>
                 <option value="Utilidad & Ruteo">Utilidad & Ruteo (Afinador / Switcher / Noise Gate)</option>
             </select>
@@ -651,43 +651,192 @@ let currentCategoryFilter = 'ALL';
 
 function getEffectCategory(p) {
     if (!p) return 'Varios & Multi-FX';
+    
+    // Explicit taxonomy lookup dictionary
+    const explicitMap = {
+        "cb-onward": "Lo-Fi & Glitch",
+        "rp-particle-v2": "Lo-Fi & Glitch",
+        "cb-gen-loss-mkii": "Lo-Fi & Glitch",
+        "cb-lossy": "Lo-Fi & Glitch",
+        "rp-bitmap-v2": "Lo-Fi & Glitch",
+        "strymon-deco-v2": "Modulación",
+        "cb-bad-mood": "Reverb & Ambiente",
+        "eqd-avalanche-run-v2": "Reverb & Ambiente",
+        "obne-dark-star-stereo-v3": "Reverb & Ambiente",
+        "cb-dark-world": "Reverb & Ambiente",
+        "cb-mood-mkii": "Reverb & Ambiente",
+        "strymon-cloudburst": "Reverb & Ambiente",
+        "strymon-nightsky": "Reverb & Ambiente",
+        "strymon-bigsky": "Reverb & Ambiente",
+        "strymon-flint-v2": "Reverb & Ambiente",
+        "obne-sunlight-stereo-v2": "Reverb & Ambiente",
+        "obne-procession": "Reverb & Ambiente",
+        "walrus-slo": "Reverb & Ambiente",
+        "walrus-sloe-r": "Reverb & Ambiente",
+        "walrus-mako-r1": "Reverb & Ambiente",
+        "eqd-astral-destiny": "Reverb & Ambiente",
+        "eqd-afterneath-v3": "Reverb & Ambiente",
+        "boss-rv6": "Reverb & Ambiente",
+        "boss-rv500": "Reverb & Ambiente",
+        "ehx-oceans-11": "Reverb & Ambiente",
+        "ehx-oceans-12": "Reverb & Ambiente",
+        "tc-hall-of-fame-2": "Reverb & Ambiente",
+        "mxr-m300-reverb": "Reverb & Ambiente",
+        "dba-rooms": "Reverb & Ambiente",
+        "cb-reverse-mode-c": "Delay & Eco",
+        "boss-re202": "Delay & Eco",
+        "strymon-el-capistan-v2": "Delay & Eco",
+        "strymon-volante": "Delay & Eco",
+        "walrus-arp87": "Delay & Eco",
+        "dba-echo-dream-2": "Delay & Eco",
+        "cb-habit": "Delay & Eco",
+        "cb-thermae": "Delay & Eco",
+        "cb-tonal-recall-rkm": "Delay & Eco",
+        "rp-raster-v2": "Delay & Eco",
+        "rp-tensor": "Delay & Eco",
+        "strymon-timeline": "Delay & Eco",
+        "obne-black-fountain-v3": "Delay & Eco",
+        "obne-minim": "Delay & Eco",
+        "obne-dweller": "Delay & Eco",
+        "walrus-mako-d1-v2": "Delay & Eco",
+        "eqd-dispatch-master-v3": "Delay & Eco",
+        "boss-te2": "Delay & Eco",
+        "boss-dd8": "Delay & Eco",
+        "boss-dd200": "Delay & Eco",
+        "boss-dd3t": "Delay & Eco",
+        "boss-dd7": "Delay & Eco",
+        "boss-dm2w": "Delay & Eco",
+        "tc-flashback-2": "Delay & Eco",
+        "mxr-carbon-copy": "Delay & Eco",
+        "mxr-carbon-copy-deluxe": "Delay & Eco",
+        "dba-space-bender": "Delay & Eco",
+        "mxr-ten-band-eq": "Preamps & Compresores",
+        "boss-ge7": "Preamps & Compresores",
+        "walrus-acs1-mkii": "Preamps & Compresores",
+        "cb-clean": "Preamps & Compresores",
+        "cb-condor": "Preamps & Compresores",
+        "cb-preamp-mkii": "Preamps & Compresores",
+        "strymon-iridium": "Preamps & Compresores",
+        "strymon-compadre": "Preamps & Compresores",
+        "walrus-deep-six-v4": "Preamps & Compresores",
+        "boss-cp1x": "Preamps & Compresores",
+        "boss-ir2": "Preamps & Compresores",
+        "jhs-pulp-n-peel-v4": "Preamps & Compresores",
+        "yesterday-defiant-jazz": "Preamps & Compresores",
+        "walrus-canvas-rehearsal": "Utilidad & Ruteo",
+        "cb-faves": "Utilidad & Ruteo",
+        "obne-exp-ramper": "Utilidad & Ruteo",
+        "obne-signal-blender": "Utilidad & Ruteo",
+        "boss-ls2-util": "Utilidad & Ruteo",
+        "boss-tu3": "Utilidad & Ruteo",
+        "boss-ns2": "Utilidad & Ruteo",
+        "boss-ms3": "Utilidad & Ruteo",
+        "tc-polytune-3": "Utilidad & Ruteo",
+        "kinotone-ghosts": "Varios & Multi-FX",
+        "cb-blooper": "Varios & Multi-FX",
+        "cb-lost-found": "Varios & Multi-FX",
+        "walrus-xero-polylooper": "Varios & Multi-FX",
+        "walrus-lore": "Varios & Multi-FX",
+        "eqd-spatial-delivery-v3": "Varios & Multi-FX",
+        "boss-rc5": "Varios & Multi-FX",
+        "boss-rc1": "Varios & Multi-FX",
+        "tc-ditto-stereo-looper": "Varios & Multi-FX",
+        "tc-plethora-x5": "Varios & Multi-FX",
+        "eqd-rainbow-machine-v2": "Pitch & Synth",
+        "eqd-life-pedal-v3": "Pitch & Synth",
+        "boss-sy1": "Pitch & Synth",
+        "boss-oc5": "Pitch & Synth",
+        "ehx-pitch-fork": "Pitch & Synth",
+        "ehx-nano-pog": "Pitch & Synth",
+        "cb-warped-vinyl": "Modulaci\u00f3n",
+        "rp-radius": "Modulaci\u00f3n",
+        "strymon-mobius": "Modulaci\u00f3n",
+        "strymon-zelzah": "Modulaci\u00f3n",
+        "walrus-julianna": "Modulaci\u00f3n",
+        "boss-ce2w": "Modulaci\u00f3n",
+        "boss-dc2w": "Modulaci\u00f3n",
+        "boss-ch1": "Modulaci\u00f3n",
+        "boss-ce5": "Modulaci\u00f3n",
+        "boss-tr2": "Modulaci\u00f3n",
+        "boss-bf3": "Modulaci\u00f3n",
+        "boss-ph3": "Modulaci\u00f3n",
+        "boss-sl2": "Modulaci\u00f3n",
+        "mxr-phase-90": "Modulaci\u00f3n",
+        "obne-visitor": "Modulaci\u00f3n",
+        "boss-bd2w": "Drive & Ganancia",
+        "boss-ds1": "Drive & Ganancia",
+        "boss-ds2": "Drive & Ganancia",
+        "boss-fz1w": "Drive & Ganancia",
+        "boss-hm2w": "Drive & Ganancia",
+        "boss-mt2": "Drive & Ganancia",
+        "boss-od3": "Drive & Ganancia",
+        "boss-sd1": "Drive & Ganancia",
+        "cb-brothers-am": "Drive & Ganancia",
+        "dba-fuzz-war": "Drive & Ganancia",
+        "eqd-hizumitas": "Drive & Ganancia",
+        "eqd-hoof": "Drive & Ganancia",
+        "eqd-plumes": "Drive & Ganancia",
+        "ehx-big-muff": "Drive & Ganancia",
+        "ehx-soul-food": "Drive & Ganancia",
+        "jhs-angry-charlie-v3": "Drive & Ganancia",
+        "jhs-bonsai": "Drive & Ganancia",
+        "jhs-morning-glory-v4": "Drive & Ganancia",
+        "jhs-muffuletta": "Drive & Ganancia",
+        "jhs-packrat": "Drive & Ganancia",
+        "obne-alpha-haunt-v2": "Drive & Ganancia",
+        "obne-beamsplitter-v2": "Drive & Ganancia",
+        "strymon-riverside": "Drive & Ganancia",
+        "strymon-sunset": "Drive & Ganancia",
+        "walrus-eras": "Drive & Ganancia"
+};
+
+    if (p.id && explicitMap[p.id]) {
+        return explicitMap[p.id];
+    }
+
     const cat = (p.category || '').toLowerCase();
     const name = (p.name || '').toLowerCase();
-    const desc = (p.desc || p.description || '').toLowerCase();
     const pType = (p.type || '').toLowerCase();
-    const text = `${cat} ${name} ${desc}`;
 
-    if (pType === 'utilidad' || cat.includes('utilidad') || cat.includes('utility') || cat.includes('tuner') || cat.includes('line switcher') || cat.includes('noise reduction') || cat.includes('preset switcher') || cat.includes('expression lfo') || cat.includes('loop switcher')) {
+    if (pType === 'utilidad' || ['utilidad', 'utility', 'tuner', 'line switcher', 'noise reduction', 'preset switcher', 'expression lfo', 'loop switcher', 'rehearsal'].some(k => cat.includes(k))) {
         return 'Utilidad & Ruteo';
     }
-    if (text.includes('gen loss') || text.includes('lossy') || text.includes('vhs') || text.includes('lo-fi') || text.includes('lofi') || text.includes('bitcrusher') || text.includes('rate reducer') || text.includes('tape saturation') || text.includes('tape degenerator') || text.includes('digital artifacts') || text.includes('tape echo') || text.includes('space echo') || text.includes('deco') || text.includes('vhs tape')) {
-        return 'Lo-Fi & Cinta';
+
+    if (['preamp', 'pre-amp', 'amp & cab', 'ir cab', 'compressor', 'compresor', 'equalizer', 'eq', 'graphic eq'].some(k => cat.includes(k))) {
+        return 'Preamps & Compresores';
     }
-    if (text.includes('overdrive') || text.includes('distortion') || text.includes('fuzz') || text.includes('boost') || text.includes('saturator') || text.includes('fuzzes') || text.includes('screamer') || text.includes('muff') || text.includes('rat') || text.includes('gain') || text.includes('drive') || text.includes('distorsión') || text.includes('sustainer')) {
+
+    if (['gen loss', 'lossy', 'vhs', 'bitcrusher', 'rate reducer', 'digital artifacts', 'tape degenerator', 'glitch'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Lo-Fi & Glitch';
+    }
+
+    if (['overdrive', 'distortion', 'fuzz', 'boost', 'saturator', 'screamer', 'muff', 'rat', 'gain', 'drive', 'distorsión', 'sustainer'].some(k => cat.includes(k))) {
         return 'Drive & Ganancia';
     }
-    if (text.includes('delay') || text.includes('eco') || text.includes('echo') || text.includes('repeat') || text.includes('repeater')) {
+
+    if (['delay', 'eco', 'echo', 'space echo', 'tape echo'].some(k => cat.includes(k) || name.includes(k))) {
         return 'Delay & Eco';
     }
-    if (text.includes('reverb') || text.includes('reverberator') || text.includes('reverberation') || text.includes('ambience') || text.includes('ambiente') || text.includes('spatial') || text.includes('cloudburst') || text.includes('nightsky') || text.includes('bigsky')) {
+
+    if (['reverb', 'reverberator', 'reverberation', 'ambience', 'ambiente', 'cloudburst', 'nightsky', 'bigsky'].some(k => cat.includes(k) || name.includes(k))) {
         return 'Reverb & Ambiente';
     }
-    if (text.includes('chorus') || text.includes('phaser') || text.includes('flanger') || text.includes('tremolo') || text.includes('vibrato') || text.includes('dimension') || text.includes('slicer') || text.includes('modulator') || text.includes('modulation') || text.includes('modulada')) {
+
+    if (['chorus', 'phaser', 'flanger', 'tremolo', 'vibrato', 'slicer', 'ring mod', 'modulation', 'dimension'].some(k => cat.includes(k) || name.includes(k))) {
         return 'Modulación';
     }
-    if (text.includes('synth') || text.includes('octave') || text.includes('octaver') || text.includes('pitch') || text.includes('resonator') || text.includes('polyphonic') || text.includes('harmonizer') || text.includes('ring mod')) {
+
+    if (['synth', 'octave', 'octaver', 'pitch', 'resonator', 'polyphonic', 'pog'].some(k => cat.includes(k) || name.includes(k))) {
         return 'Pitch & Synth';
     }
-    if (text.includes('preamp') || text.includes('pre-amp') || text.includes('ir cab') || text.includes('amp & cab') || text.includes('compressor') || text.includes('compresor') || text.includes('equalizer') || text.includes('eq') || text.includes('graphic eq')) {
-        return 'Preamp & Dinámica';
-    }
+
     return 'Varios & Multi-FX';
 }
 
 function renderCategoryFilters() {
     const container = document.getElementById('category-filters');
     if (!container) return;
-    const categories = ['ALL', 'Drive & Ganancia', 'Delay & Eco', 'Reverb & Ambiente', 'Modulación', 'Lo-Fi & Cinta', 'Pitch & Synth', 'Preamp & Dinámica', 'Varios & Multi-FX', 'Utilidad & Ruteo'];
+    const categories = ['ALL', 'Drive & Ganancia', 'Delay & Eco', 'Reverb & Ambiente', 'Modulación', 'Lo-Fi & Glitch', 'Pitch & Synth', 'Preamps & Compresores', 'Varios & Multi-FX', 'Utilidad & Ruteo'];
     container.innerHTML = categories.map(c => `
         <button onclick="filterCatalogByCategory('${c}')" class="px-3 py-1 rounded-lg border text-xs font-medium transition-all ${
             c === currentCategoryFilter 
