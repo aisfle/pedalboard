@@ -334,7 +334,7 @@
         </main>
 
         <!-- RIGHT SIDEBAR: DYNAMIC INSPECTOR PANEL -->
-        <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#2A2D36] p-6 flex flex-col overflow-y-auto shrink-0">
+        <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#F15A24] p-6 flex flex-col overflow-y-auto shrink-0">
             <div id="inspector-content" class="space-y-6">
                 <!-- Injected via JS -->
             </div>
@@ -664,7 +664,8 @@
             const viewChain = document.getElementById('view-chain');
             const btnCatalog = document.getElementById('tab-btn-catalog');
             const btnChain = document.getElementById('tab-btn-chain');
-
+            const inspector = document.getElementById('inspector-panel');
+            
             if (tab === 'catalog') {
                 viewCatalog.classList.remove('hidden');
                 viewChain.classList.add('hidden');
@@ -673,7 +674,9 @@
                 btnChain.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
                 renderPowerSupplies();
                 renderCatalog('ALL');
+                if (inspector) inspector.style.borderColor = '#F15A24';
             } else {
+                if (inspector) inspector.style.borderColor = '#00A8CC';
                 viewCatalog.classList.add('hidden');
                 viewChain.classList.remove('hidden');
                 // Pestaña 2 ACTIVA: Azul Turquesa / Cian (#00A8CC) con texto blanco (#FFFFFF) en negrita
