@@ -2477,10 +2477,20 @@ function saveStateToLocalStorage() {
     try {
         localStorage.setItem('pedal_db', JSON.stringify(pedalDatabase));
         localStorage.setItem('power_db', JSON.stringify(powerSuppliesDatabase));
-        localStorage.setItem('current_chain', JSON.stringify(currentChainIds));
-        localStorage.setItem('chain_modes', JSON.stringify(chainSlotModes));
-        localStorage.setItem('current_power_assignments', JSON.stringify(currentPowerAssignments));
-        localStorage.setItem('current_chain_power_supplies', JSON.stringify(currentChainPowerSupplyIds));
+        
+        const activePedals = currentChainIds.filter(id => id && id !== 'EMPTY');
+        if (activePedals.length >= 2) {
+            localStorage.setItem('current_chain', JSON.stringify(currentChainIds));
+            localStorage.setItem('chain_modes', JSON.stringify(chainSlotModes));
+            localStorage.setItem('current_power_assignments', JSON.stringify(currentPowerAssignments));
+            localStorage.setItem('current_chain_power_supplies', JSON.stringify(currentChainPowerSupplyIds));
+        } else {
+            localStorage.removeItem('current_chain');
+            localStorage.removeItem('chain_modes');
+            localStorage.removeItem('current_power_assignments');
+            localStorage.removeItem('current_chain_power_supplies');
+        }
+        
         localStorage.setItem('rig_favorites', JSON.stringify(favoriteChains));
     } catch (e) {
         console.error("Error al guardar en localStorage", e);
@@ -2500,19 +2510,29 @@ function loadSavedState() {
             JSON.parse(psDb).forEach(ps => powerSuppliesDatabase.push(ps));
         }
         const cChain = localStorage.getItem('current_chain');
-        if (cChain) currentChainIds = JSON.parse(cChain);
-        else currentChainIds = [];
+        if (cChain) {
+            const parsedChain = JSON.parse(cChain);
+            const activePedals = parsedChain.filter(id => id && id !== 'EMPTY');
+            if (activePedals.length >= 2) {
+                currentChainIds = parsedChain;
+            } else {
+                currentChainIds = [];
+                localStorage.removeItem('current_chain');
+            }
+        } else {
+            currentChainIds = [];
+        }
         const cModes = localStorage.getItem('chain_modes');
-        if (cModes) chainSlotModes = JSON.parse(cModes);
+        if (cModes && currentChainIds.length > 0) chainSlotModes = JSON.parse(cModes);
         else chainSlotModes = {};
         const cPower = localStorage.getItem('current_power_assignments');
-        if (cPower) {
+        if (cPower && currentChainIds.length > 0) {
             currentPowerAssignments = JSON.parse(cPower);
         } else {
             currentPowerAssignments = {};
         }
         const cPsChain = localStorage.getItem('current_chain_power_supplies');
-        if (cPsChain) {
+        if (cPsChain && currentChainIds.length > 0) {
             currentChainPowerSupplyIds = JSON.parse(cPsChain);
         } else {
             currentChainPowerSupplyIds = [];
@@ -4248,6 +4268,17 @@ function toggleSaveFavTag(tag) {
 }
 
 function openSaveFavoriteModal() {
+    const activePedals = currentChainIds.filter(id => id && id !== 'EMPTY');
+    const activePowers = currentChainPowerSupplyIds.filter(id => id && id !== 'EMPTY');
+    
+    if (activePedals.length < 2 || activePowers.length < 1) {
+        let msg = "⚠️ No se puede guardar la cadena:\n\n";
+        if (activePedals.length < 2) msg += "• Debes incorporar al menos 2 pedales en tu cadena.\n";
+        if (activePowers.length < 1) msg += "• Debes agregar al menos 1 fuente de alimentación.\n";
+        alert(msg);
+        return;
+    }
+
     document.getElementById('fav-name-input').value = `Preset ${favoriteChains.length + 1}`;
     const overwriteSelect = document.getElementById('fav-overwrite-select');
     overwriteSelect.innerHTML = favoriteChains.map((fav, i) => `
