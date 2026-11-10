@@ -3547,8 +3547,8 @@ function renderInspector(itemId, currentSlotMode = null) {
                     <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/20">
                         ${pedal.brand}
                     </span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#F15A24]/10 text-[#F15A24] border border-[#F15A24] px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95">
+                    <div class="flex items-center gap-4">
+                        <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#F15A24]/10 text-[#F15A24] border border-[#F15A24] px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 mr-2">
                             <i class="fa-solid fa-pen-to-square"></i> Editar
                         </button>
                         <div class="flex items-center gap-1 font-mono text-xs">
@@ -4221,6 +4221,7 @@ window.onload = async () => {
     renderFavoriteBadges();
     renderSignalChain();
     renderBrandFilters();
+    renderCategoryFilters();
     renderCatalog('ALL');
     renderPowerSupplies();
     if (currentChainIds.length > 0 && currentChainIds[0] !== 'EMPTY' && pedalDatabase.some(p => p.id === currentChainIds[0])) {
