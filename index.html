@@ -217,15 +217,24 @@
                 </div>
             </div>
 
-            <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] px-5 py-3 shadow-md">
-                <div class="flex items-center justify-between gap-3 overflow-x-auto">
-                    <div class="flex items-center gap-3 overflow-x-auto">
-                        <span class="text-xs font-mono font-bold text-[#F15A24] uppercase tracking-wider shrink-0 flex items-center gap-1.5">
-                            <i class="fa-solid fa-star text-[#F15A24]"></i> Cadenas Favoritas:
-                        </span>
-                        <div id="favorites-bar" class="flex items-center gap-2 overflow-x-auto"></div>
-                    </div>
+            <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-4 shadow-md space-y-3">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#2A2D36] pb-2">
+                    <span class="text-xs font-mono font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-star text-[#F15A24]"></i> Cadenas Favoritas / Presets Guardados
+                    </span>
+                    <button onclick="openSaveFavoriteModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95">
+                        <i class="fa-solid fa-bookmark"></i> Guardar Preset Actual
+                    </button>
                 </div>
+
+                <div class="space-y-1.5">
+                    <span class="text-[11px] font-mono text-[#9CA3AF] flex items-center gap-1.5">
+                        <i class="fa-solid fa-tags text-[#00A8CC]"></i> Filtrar Presets por Estilo Musical:
+                    </span>
+                    <div id="preset-tag-filters" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs"></div>
+                </div>
+
+                <div id="favorites-bar" class="flex flex-wrap gap-2.5 pt-1"></div>
             </section>
 
             <div id="safety-alert-banner" class="hidden bg-[#F15A24]/10 border border-[#F15A24]/30 p-4 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[#F15A24] text-xs font-mono pulse-critical">
@@ -389,10 +398,10 @@
 
 <!-- SAVE FAVORITE CHAIN MODAL -->
 <div id="save-fav-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-bookmark text-[#F15A24]"></i> Guardar Cadena Favorita
+                <i class="fa-solid fa-bookmark text-[#F15A24]"></i> Guardar Cadena Favorita / Preset
             </h3>
             <button onclick="closeSaveFavoriteModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm">
                 <i class="fa-solid fa-xmark"></i>
@@ -415,7 +424,15 @@
 
         <div id="fav-form-overwrite" class="space-y-2 hidden">
             <label class="text-xs text-[#9CA3AF] block font-mono">Selecciona la Cadena a Reemplazar *</label>
-            <select id="fav-overwrite-select" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] font-mono text-xs"></select>
+            <select id="fav-overwrite-select" onchange="onOverwriteSelectChange()" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] font-mono text-xs"></select>
+        </div>
+
+        <div class="space-y-2 pt-1 border-t border-[#2A2D36]/60">
+            <div class="flex justify-between items-center text-xs font-mono">
+                <label class="text-[#9CA3AF]">Estilos Musicales (1 a 4 opcionales):</label>
+                <span id="fav-tag-count-label" class="text-[11px] text-[#F15A24] font-bold">0 / 4 seleccionados</span>
+            </div>
+            <div id="fav-tags-selector" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-2 bg-[#121316] border border-[#2A2D36] rounded-xl text-xs scrollbar-thin"></div>
         </div>
 
         <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
@@ -861,6 +878,16 @@ function filterCatalogByCategory(category) {
 }
 
 
+const ALL_GENRE_TAGS = [
+    "Ambient", "Shoegaze", "Dream Pop", "Post-Rock", "Prog Rock", "Alt. Rock", 
+    "Grunge", "Punk", "Stoner", "Garage Rock", "Post-Punk", "Psych Rock", 
+    "Post-Hardcore", "Surf Rock", "Math Rock", "Indie Rock", "Hard Rock", 
+    "Metal", "Thrash Metal", "Power Metal", "Prog Metal", "Nu Metal", 
+    "Blues", "Funk", "Pop", "Soul / R&B", "Jazz", "Folk", "Reggae", 
+    "Instrumental", "Noise", "No Wave", "Clásica", "Otros"
+];
+let selectedSaveFavTags = [];
+let currentTagFilter = 'ALL';
 let favoriteChains = JSON.parse(localStorage.getItem('rig_favorites')) || [];
 let currentSaveMode = 'NEW';
 let pedalToDeleteId = null;
@@ -4188,14 +4215,59 @@ function executeDeletePowerSupply() {
     closeDeletePowerSupplyModal();
 }
 
+function renderSaveFavTagsSelector() {
+    const container = document.getElementById('fav-tags-selector');
+    const label = document.getElementById('fav-tag-count-label');
+    if (!container) return;
+    if (label) label.textContent = `${selectedSaveFavTags.length} / 4 seleccionados`;
+    container.innerHTML = ALL_GENRE_TAGS.map(tag => {
+        const isSelected = selectedSaveFavTags.includes(tag);
+        return `
+            <button type="button" onclick="toggleSaveFavTag('${tag}')" class="px-2.5 py-1 rounded-lg font-mono text-xs font-semibold transition-all ${
+                isSelected 
+                ? 'bg-[#F15A24] text-[#FFFFFF] shadow-md border border-[#F15A24]' 
+                : 'bg-[#1C1E24] border border-[#2A2D36] text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#20232B]'
+            }">
+                ${isSelected ? '✓ ' : ''}${tag}
+            </button>
+        `;
+    }).join('');
+}
+
+function toggleSaveFavTag(tag) {
+    if (selectedSaveFavTags.includes(tag)) {
+        selectedSaveFavTags = selectedSaveFavTags.filter(t => t !== tag);
+    } else {
+        if (selectedSaveFavTags.length >= 4) {
+            alert('Puedes seleccionar como máximo 4 estilos musicales por preset.');
+            return;
+        }
+        selectedSaveFavTags.push(tag);
+    }
+    renderSaveFavTagsSelector();
+}
+
 function openSaveFavoriteModal() {
     document.getElementById('fav-name-input').value = `Preset ${favoriteChains.length + 1}`;
     const overwriteSelect = document.getElementById('fav-overwrite-select');
     overwriteSelect.innerHTML = favoriteChains.map((fav, i) => `
-        <option value="${i}">${fav.name} (${fav.slots.filter(x => x && x !== 'EMPTY').length} pedales)</option>
+        <option value="${i}">${fav.name} (${fav.slots ? fav.slots.filter(x => x && x !== 'EMPTY').length : 0} pedales)</option>
     `).join('');
+    selectedSaveFavTags = [];
     setSaveFavMode('NEW');
+    renderSaveFavTagsSelector();
     document.getElementById('save-fav-modal').classList.remove('hidden');
+}
+
+function onOverwriteSelectChange() {
+    if (currentSaveMode === 'OVERWRITE') {
+        const select = document.getElementById('fav-overwrite-select');
+        const idx = parseInt(select.value);
+        if (!isNaN(idx) && favoriteChains[idx]) {
+            selectedSaveFavTags = favoriteChains[idx].tags ? [...favoriteChains[idx].tags] : [];
+            renderSaveFavTagsSelector();
+        }
+    }
 }
 
 function closeSaveFavoriteModal() {
@@ -4213,12 +4285,15 @@ function setSaveFavMode(mode) {
         tabOverwrite.className = "py-2 rounded-lg text-[#9CA3AF] hover:text-[#FFFFFF] transition-all";
         formNew.classList.remove('hidden');
         formOverwrite.classList.add('hidden');
+        selectedSaveFavTags = [];
     } else {
         tabOverwrite.className = "py-2 rounded-lg bg-[#F15A24] text-[#FFFFFF] font-bold transition-all";
         tabNew.className = "py-2 rounded-lg text-[#9CA3AF] hover:text-[#FFFFFF] transition-all";
         formOverwrite.classList.remove('hidden');
         formNew.classList.add('hidden');
+        onOverwriteSelectChange();
     }
+    renderSaveFavTagsSelector();
 }
 
 function executeSaveFavorite() {
@@ -4230,7 +4305,8 @@ function executeSaveFavorite() {
             slots: [...currentChainIds],
             slotModes: JSON.parse(JSON.stringify(chainSlotModes)),
             powerAssignments: JSON.parse(JSON.stringify(currentPowerAssignments)),
-            chainPowerSupplies: [...currentChainPowerSupplyIds]
+            chainPowerSupplies: [...currentChainPowerSupplyIds],
+            tags: [...selectedSaveFavTags]
         });
     } else {
         const select = document.getElementById('fav-overwrite-select');
@@ -4240,6 +4316,7 @@ function executeSaveFavorite() {
             favoriteChains[idx].slotModes = JSON.parse(JSON.stringify(chainSlotModes));
             favoriteChains[idx].powerAssignments = JSON.parse(JSON.stringify(currentPowerAssignments));
             favoriteChains[idx].chainPowerSupplies = [...currentChainPowerSupplyIds];
+            favoriteChains[idx].tags = [...selectedSaveFavTags];
         }
     }
     renderFavoriteBadges();
@@ -4266,27 +4343,80 @@ function deleteFavorite(index, e) {
     saveStateToLocalStorage();
 }
 
+function renderPresetTagFilters() {
+    const container = document.getElementById('preset-tag-filters');
+    if (!container) return;
+    const activeTags = ALL_GENRE_TAGS.filter(tag => favoriteChains.some(fav => fav.tags && fav.tags.includes(tag)));
+    const filterOptions = ['ALL', ...activeTags];
+    
+    container.innerHTML = filterOptions.map(tag => {
+        const isSelected = currentTagFilter === tag;
+        return `
+            <button type="button" onclick="filterPresetsByTag('${tag}')" class="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold transition-all shrink-0 ${
+                isSelected 
+                ? 'bg-[#F15A24]/10 border border-[#F15A24]/40 text-[#F15A24] font-bold' 
+                : 'bg-[#121316] border border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
+            }">
+                ${tag === 'ALL' ? 'Todos los Estilos' : tag}
+            </button>
+        `;
+    }).join('');
+}
+
+function filterPresetsByTag(tag) {
+    currentTagFilter = tag;
+    renderPresetTagFilters();
+    renderFavoriteBadges();
+}
+
 function renderFavoriteBadges() {
+    renderPresetTagFilters();
     const container = document.getElementById('favorites-bar');
     if (!container) return;
+    
+    const filteredFavs = favoriteChains.filter(fav => {
+        if (currentTagFilter === 'ALL') return true;
+        return fav.tags && fav.tags.includes(currentTagFilter);
+    });
+
     if (favoriteChains.length === 0) {
-        container.innerHTML = `<span class="text-xs text-[#9CA3AF] italic">No hay cadenas guardadas.</span>`;
+        container.innerHTML = `<span class="text-xs text-[#9CA3AF] italic">No hay cadenas guardadas. Haz clic en "Guardar Preset Actual" para guardar la tuya.</span>`;
         return;
     }
-    container.innerHTML = favoriteChains.map((fav, i) => {
-        const count = fav.slots.filter(id => id && id !== 'EMPTY').length;
+    
+    if (filteredFavs.length === 0) {
+        container.innerHTML = `<span class="text-xs text-[#9CA3AF] italic">No hay presets guardados con el estilo "${currentTagFilter}".</span>`;
+        return;
+    }
+
+    container.innerHTML = filteredFavs.map((fav) => {
+        const i = favoriteChains.indexOf(fav);
+        const count = fav.slots ? fav.slots.filter(id => id && id !== 'EMPTY').length : 0;
         let ma = 0;
-        fav.slots.forEach(id => {
-            const p = pedalDatabase.find(x => x.id === id);
-            if (p) ma += p.maWithMargin;
-        });
+        if (fav.slots) {
+            fav.slots.forEach(id => {
+                const p = pedalDatabase.find(x => x.id === id);
+                if (p) ma += p.maWithMargin;
+            });
+        }
+        const tagsHtml = (fav.tags && fav.tags.length > 0) ? `
+            <div class="flex flex-wrap gap-1 mt-1">
+                ${fav.tags.map(t => `<span class="text-[9px] bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/30 px-1.5 py-0.5 rounded font-mono">${t}</span>`).join('')}
+            </div>
+        ` : '';
+
         return `
-            <div onclick="loadFavorite(${i})" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 px-3 py-1 rounded-lg text-xs font-mono flex items-center gap-2 cursor-pointer transition-all shrink-0 group">
-                <span class="font-bold group-hover:text-[#F15A24]">${fav.name}</span>
-                <span class="text-[10px] text-[#9CA3AF]">(${count} pds • ${ma}mA)</span>
-                <button onclick="deleteFavorite(${i}, event)" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+            <div onclick="loadFavorite(${i})" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 p-3 rounded-xl text-xs font-mono flex flex-col justify-between gap-1.5 cursor-pointer transition-all shrink-0 group min-w-[210px] shadow-sm">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="font-bold text-xs text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors">${fav.name}</span>
+                    <button onclick="deleteFavorite(${i}, event)" title="Eliminar preset" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs p-0.5">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="text-[10px] text-[#9CA3AF]">
+                    ${count} pedales • <span class="text-[#00A8CC]">${ma} mA</span>
+                </div>
+                ${tagsHtml}
             </div>
         `;
     }).join('');
