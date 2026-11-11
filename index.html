@@ -235,17 +235,19 @@
                             <i class="fa-solid fa-wand-magic-sparkles text-[#00A8CC]"></i> Controles:
                         </span>
                     </div>
-                    <div class="flex items-center gap-2 text-xs font-mono flex-wrap justify-end">
-                        <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
-                            <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
-                        </button>
-                        <button onclick="redoChainState()" title="Rehacer cambio (Ctrl+Y / Ctrl+Shift+Z)" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
-                            <i class="fa-solid fa-rotate-right text-[#00A8CC]"></i> Redo
-                        </button>
-                        <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
-                            <i class="fa-solid fa-plus text-xs"></i> Nueva cadena
-                        </button>
-                        <button onclick="openSaveFavoriteModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                    <div class="flex items-center gap-2 text-xs font-mono flex-wrap w-full sm:w-auto justify-end">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                                <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
+                            </button>
+                            <button onclick="redoChainState()" title="Rehacer cambio (Ctrl+Y / Ctrl+Shift+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                                <i class="fa-solid fa-rotate-right text-[#00A8CC]"></i> Redo
+                            </button>
+                            <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
+                                <i class="fa-solid fa-plus text-xs"></i> Nueva cadena
+                            </button>
+                        </div>
+                        <button onclick="openSaveFavoriteModal()" class="w-full sm:w-auto justify-center bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg transition-all active:scale-95">
                             <i class="fa-solid fa-bookmark"></i> Guardar Preset
                         </button>
                     </div>
@@ -753,60 +755,98 @@ function getEffectCategory(p) {
     
     // Explicit taxonomy lookup dictionary
     const explicitMap = {
-        
-        "ibanez-ts9": "Drive & Ganancia",
-        "klon-centaur": "Drive & Ganancia",
-        "proco-rat-2": "Drive & Ganancia",
-        "line6-dl4": "Delay & Eco",
+        // Dinámica & Modelado
+        "cb-clean": "Dinámica & Modelado",
+        "cb-preamp-mkii": "Dinámica & Modelado",
+        "cb-condor": "Dinámica & Modelado",
+        "strymon-iridium": "Dinámica & Modelado",
+        "strymon-compadre": "Dinámica & Modelado",
+        "wa-acs1-mkii": "Dinámica & Modelado",
+        "wa-deep-six-v4": "Dinámica & Modelado",
+        "boss-ge7": "Dinámica & Modelado",
+        "boss-cp1x": "Dinámica & Modelado",
+        "boss-ir2": "Dinámica & Modelado",
+        "jhs-pulp-n-peel-v4": "Dinámica & Modelado",
+        "mxr-ten-band-eq": "Dinámica & Modelado",
+        "mxr-dyna-comp": "Dinámica & Modelado",
+        "ye-defiant-jazz": "Dinámica & Modelado",
+
+        // Saturación & Ganancia
+        "ibanez-ts9": "Saturación & Ganancia",
+        "klon-centaur": "Saturación & Ganancia",
+        "proco-rat-2": "Saturación & Ganancia",
+        "boss-bd2w": "Saturación & Ganancia",
+        "boss-ds1": "Saturación & Ganancia",
+        "boss-ds2": "Saturación & Ganancia",
+        "boss-fz1w": "Saturación & Ganancia",
+        "boss-hm2w": "Saturación & Ganancia",
+        "boss-mt2": "Saturación & Ganancia",
+        "boss-od3": "Saturación & Ganancia",
+        "boss-sd1": "Saturación & Ganancia",
+        "cb-brothers-am": "Saturación & Ganancia",
+        "dba-fuzz-war": "Saturación & Ganancia",
+        "eqd-hizumitas": "Saturación & Ganancia",
+        "eqd-hoof": "Saturación & Ganancia",
+        "eqd-life-pedal-v3": "Saturación & Ganancia",
+        "eqd-plumes": "Saturación & Ganancia",
+        "ehx-big-muff": "Saturación & Ganancia",
+        "ehx-soul-food": "Saturación & Ganancia",
+        "jhs-angry-charlie-v3": "Saturación & Ganancia",
+        "jhs-bonsai": "Saturación & Ganancia",
+        "jhs-morning-glory-v4": "Saturación & Ganancia",
+        "jhs-muffuletta": "Saturación & Ganancia",
+        "jhs-packrat": "Saturación & Ganancia",
+        "obne-alpha-haunt-v2": "Saturación & Ganancia",
+        "obne-beamsplitter-v2": "Saturación & Ganancia",
+        "strymon-riverside": "Saturación & Ganancia",
+        "strymon-sunset": "Saturación & Ganancia",
+        "walrus-eras": "Saturación & Ganancia",
+
+        // Pitch & Sintetizador
+        "boss-sy1": "Pitch & Sintetizador",
+        "boss-oc5": "Pitch & Sintetizador",
+        "digitech-whammy-5": "Pitch & Sintetizador",
+        "ehx-pitch-fork": "Pitch & Sintetizador",
+        "ehx-nano-pog": "Pitch & Sintetizador",
+        "rp-radius": "Pitch & Sintetizador",
+        "eqd-rainbow-machine-v2": "Pitch & Sintetizador",
+
+        // Modulación
         "ehx-small-clone": "Modulación",
-        "digitech-whammy-5": "Pitch & Synth",
         "dunlop-cry-baby": "Modulación",
-        "mxr-dyna-comp": "Preamps & Compresores",
-        "cb-onward": "Lo-Fi & Glitch",
-        "rp-particle-v2": "Lo-Fi & Glitch",
-        "cb-gen-loss-mkii": "Lo-Fi & Glitch",
-        "cb-lossy": "Lo-Fi & Glitch",
-        "rp-bitmap-v2": "Lo-Fi & Glitch",
         "strymon-deco-v2": "Modulación",
-        "cb-bad-mood": "Reverb & Ambiente",
-        "eqd-avalanche-run-v2": "Reverb & Ambiente",
-        "obne-dark-star-stereo-v3": "Reverb & Ambiente",
-        "cb-dark-world": "Reverb & Ambiente",
-        "cb-mood-mkii": "Reverb & Ambiente",
-        "strymon-cloudburst": "Reverb & Ambiente",
-        "strymon-nightsky": "Reverb & Ambiente",
-        "strymon-bigsky": "Reverb & Ambiente",
-        "strymon-flint-v2": "Reverb & Ambiente",
-        "obne-sunlight-stereo-v2": "Reverb & Ambiente",
-        "obne-procession": "Reverb & Ambiente",
-        "walrus-slo": "Reverb & Ambiente",
-        "walrus-sloe-r": "Reverb & Ambiente",
-        "walrus-mako-r1": "Reverb & Ambiente",
-        "eqd-astral-destiny": "Reverb & Ambiente",
-        "eqd-afterneath-v3": "Reverb & Ambiente",
-        "boss-rv6": "Reverb & Ambiente",
-        "boss-rv500": "Reverb & Ambiente",
-        "ehx-oceans-11": "Reverb & Ambiente",
-        "ehx-oceans-12": "Reverb & Ambiente",
-        "tc-hall-of-fame-2": "Reverb & Ambiente",
-        "mxr-m300-reverb": "Reverb & Ambiente",
-        "dba-rooms": "Reverb & Ambiente",
+        "strymon-mobius": "Modulación",
+        "strymon-zelzah": "Modulación",
+        "walrus-julianna": "Modulación",
+        "boss-ce2w": "Modulación",
+        "boss-dc2w": "Modulación",
+        "boss-ch1": "Modulación",
+        "boss-ce5": "Modulación",
+        "boss-tr2": "Modulación",
+        "boss-bf3": "Modulación",
+        "boss-ph3": "Modulación",
+        "mxr-phase-90": "Modulación",
+        "obne-visitor": "Modulación",
+    "obne-excess-v2": "Modulación",
+        "obne-dweller": "Modulación",
+        "cb-warped-vinyl": "Modulación",
+
+        // Delay & Eco
         "cb-reverse-mode-c": "Delay & Eco",
+        "dba-echo-dream-2": "Delay & Eco",
+        "line6-dl4": "Delay & Eco",
         "boss-re202": "Delay & Eco",
         "strymon-el-capistan-v2": "Delay & Eco",
         "strymon-volante": "Delay & Eco",
+        "strymon-timeline": "Delay & Eco",
         "walrus-arp87": "Delay & Eco",
-        "dba-echo-dream-2": "Delay & Eco",
+        "walrus-mako-d1-v2": "Delay & Eco",
         "cb-habit": "Delay & Eco",
         "cb-thermae": "Delay & Eco",
         "cb-tonal-recall-rkm": "Delay & Eco",
         "rp-raster-v2": "Delay & Eco",
-        "rp-tensor": "Delay & Eco",
-        "strymon-timeline": "Delay & Eco",
         "obne-black-fountain-v3": "Delay & Eco",
         "obne-minim": "Delay & Eco",
-        "obne-dweller": "Delay & Eco",
-        "walrus-mako-d1-v2": "Delay & Eco",
         "eqd-dispatch-master-v3": "Delay & Eco",
         "boss-te2": "Delay & Eco",
         "boss-dd8": "Delay & Eco",
@@ -818,19 +858,52 @@ function getEffectCategory(p) {
         "mxr-carbon-copy": "Delay & Eco",
         "mxr-carbon-copy-deluxe": "Delay & Eco",
         "dba-space-bender": "Delay & Eco",
-        "mxr-ten-band-eq": "Preamps & Compresores",
-        "boss-ge7": "Preamps & Compresores",
-        "walrus-acs1-mkii": "Preamps & Compresores",
-        "cb-clean": "Preamps & Compresores",
-        "cb-condor": "Preamps & Compresores",
-        "cb-preamp-mkii": "Preamps & Compresores",
-        "strymon-iridium": "Preamps & Compresores",
-        "strymon-compadre": "Preamps & Compresores",
-        "walrus-deep-six-v4": "Preamps & Compresores",
-        "boss-cp1x": "Preamps & Compresores",
-        "boss-ir2": "Preamps & Compresores",
-        "jhs-pulp-n-peel-v4": "Preamps & Compresores",
-        "yesterday-defiant-jazz": "Preamps & Compresores",
+
+        // Reverberación & Espacio
+        "cb-dark-world": "Reverberación & Espacio",
+        "strymon-cloudburst": "Reverberación & Espacio",
+        "strymon-nightsky": "Reverberación & Espacio",
+        "strymon-bigsky": "Reverberación & Espacio",
+        "strymon-flint-v2": "Reverberación & Espacio",
+        "obne-sunlight-v1": "Reverberación & Espacio",
+        "obne-sunlight-v2": "Reverberación & Espacio",
+        "obne-procession": "Reverberación & Espacio",
+        "obne-dark-star-v3": "Reverberación & Espacio",
+        "walrus-slo": "Reverberación & Espacio",
+        "walrus-sloeer": "Reverberación & Espacio",
+        "walrus-mako-r1": "Reverberación & Espacio",
+        "eqd-astral-destiny": "Reverberación & Espacio",
+        "eqd-afterneath-v3": "Reverberación & Espacio",
+        "eqd-avalanche-run-v2": "Reverberación & Espacio",
+        "boss-rv6": "Reverberación & Espacio",
+        "boss-rv500": "Reverberación & Espacio",
+        "ehx-oceans-11": "Reverberación & Espacio",
+        "ehx-oceans-12": "Reverberación & Espacio",
+        "tc-hall-of-fame-2": "Reverberación & Espacio",
+        "mxr-m300-reverb": "Reverberación & Espacio",
+        "dba-rooms": "Reverberación & Espacio",
+        "rp-context-v2": "Reverberación & Espacio",
+
+        // Lo-Fi, Glitch & Texturas
+        "cb-onward": "Lo-Fi, Glitch & Texturas",
+        "rp-particle-v2": "Lo-Fi, Glitch & Texturas",
+        "rp-tensor": "Lo-Fi, Glitch & Texturas",
+        "cb-gen-loss-mkii": "Lo-Fi, Glitch & Texturas",
+        "cb-lossy": "Lo-Fi, Glitch & Texturas",
+        "rp-bitmap-v2": "Lo-Fi, Glitch & Texturas",
+        "cb-bad-mood": "Lo-Fi, Glitch & Texturas",
+        "cb-mood-mkii": "Lo-Fi, Glitch & Texturas",
+        "walrus-lore": "Lo-Fi, Glitch & Texturas",
+        "boss-sl2": "Lo-Fi, Glitch & Texturas",
+
+        // Loopers de Frase
+        "boss-rc5": "Loopers de Frase",
+        "boss-rc1": "Loopers de Frase",
+        "tc-ditto-stereo": "Loopers de Frase",
+        "walrus-xero": "Loopers de Frase",
+        "cb-blooper": "Loopers de Frase",
+
+        // Utilidad & Ruteo
         "walrus-canvas-rehearsal": "Utilidad & Ruteo",
         "cb-faves": "Utilidad & Ruteo",
         "obne-exp-ramper": "Utilidad & Ruteo",
@@ -839,64 +912,8 @@ function getEffectCategory(p) {
         "boss-tu3": "Utilidad & Ruteo",
         "boss-ns2": "Utilidad & Ruteo",
         "boss-ms3": "Utilidad & Ruteo",
-        "tc-polytune-3": "Utilidad & Ruteo",
-        "kinotone-ghosts": "Varios & Multi-FX",
-        "cb-blooper": "Varios & Multi-FX",
-        "cb-lost-found": "Varios & Multi-FX",
-        "walrus-xero-polylooper": "Varios & Multi-FX",
-        "walrus-lore": "Varios & Multi-FX",
-        "eqd-spatial-delivery-v3": "Varios & Multi-FX",
-        "boss-rc5": "Varios & Multi-FX",
-        "boss-rc1": "Varios & Multi-FX",
-        "tc-ditto-stereo-looper": "Varios & Multi-FX",
-        "tc-plethora-x5": "Varios & Multi-FX",
-        "eqd-rainbow-machine-v2": "Pitch & Synth",
-        "eqd-life-pedal-v3": "Pitch & Synth",
-        "boss-sy1": "Pitch & Synth",
-        "boss-oc5": "Pitch & Synth",
-        "ehx-pitch-fork": "Pitch & Synth",
-        "ehx-nano-pog": "Pitch & Synth",
-        "cb-warped-vinyl": "Modulaci\u00f3n",
-        "rp-radius": "Modulaci\u00f3n",
-        "strymon-mobius": "Modulaci\u00f3n",
-        "strymon-zelzah": "Modulaci\u00f3n",
-        "walrus-julianna": "Modulaci\u00f3n",
-        "boss-ce2w": "Modulaci\u00f3n",
-        "boss-dc2w": "Modulaci\u00f3n",
-        "boss-ch1": "Modulaci\u00f3n",
-        "boss-ce5": "Modulaci\u00f3n",
-        "boss-tr2": "Modulaci\u00f3n",
-        "boss-bf3": "Modulaci\u00f3n",
-        "boss-ph3": "Modulaci\u00f3n",
-        "boss-sl2": "Modulaci\u00f3n",
-        "mxr-phase-90": "Modulaci\u00f3n",
-        "obne-visitor": "Modulaci\u00f3n",
-        "boss-bd2w": "Drive & Ganancia",
-        "boss-ds1": "Drive & Ganancia",
-        "boss-ds2": "Drive & Ganancia",
-        "boss-fz1w": "Drive & Ganancia",
-        "boss-hm2w": "Drive & Ganancia",
-        "boss-mt2": "Drive & Ganancia",
-        "boss-od3": "Drive & Ganancia",
-        "boss-sd1": "Drive & Ganancia",
-        "cb-brothers-am": "Drive & Ganancia",
-        "dba-fuzz-war": "Drive & Ganancia",
-        "eqd-hizumitas": "Drive & Ganancia",
-        "eqd-hoof": "Drive & Ganancia",
-        "eqd-plumes": "Drive & Ganancia",
-        "ehx-big-muff": "Drive & Ganancia",
-        "ehx-soul-food": "Drive & Ganancia",
-        "jhs-angry-charlie-v3": "Drive & Ganancia",
-        "jhs-bonsai": "Drive & Ganancia",
-        "jhs-morning-glory-v4": "Drive & Ganancia",
-        "jhs-muffuletta": "Drive & Ganancia",
-        "jhs-packrat": "Drive & Ganancia",
-        "obne-alpha-haunt-v2": "Drive & Ganancia",
-        "obne-beamsplitter-v2": "Drive & Ganancia",
-        "strymon-riverside": "Drive & Ganancia",
-        "strymon-sunset": "Drive & Ganancia",
-        "walrus-eras": "Drive & Ganancia"
-};
+        "tc-polytune-3": "Utilidad & Ruteo"
+    };
 
     if (p.id && explicitMap[p.id]) {
         return explicitMap[p.id];
@@ -944,7 +961,7 @@ function getEffectCategory(p) {
 function renderCategoryFilters() {
     const container = document.getElementById('category-filters');
     if (!container) return;
-    const categories = ['ALL', 'Drive & Ganancia', 'Delay & Eco', 'Reverb & Ambiente', 'Modulación', 'Lo-Fi & Glitch', 'Pitch & Synth', 'Preamps & Compresores', 'Varios & Multi-FX', 'Utilidad & Ruteo'];
+    const categories = ['ALL', 'Dinámica & Modelado', 'Saturación & Ganancia', 'Pitch & Sintetizador', 'Modulación', 'Delay & Eco', 'Reverberación & Espacio', 'Lo-Fi, Glitch & Texturas', 'Loopers de Frase', 'Utilidad & Ruteo'];
     container.innerHTML = categories.map(c => `
         <button onclick="filterCatalogByCategory('${c}')" class="px-3 py-1 rounded-lg border text-xs font-medium transition-all ${
             c === currentCategoryFilter 
@@ -995,6 +1012,17 @@ const BASE_MANUALS_DRIVE = "https://drive.google.com/drive/folders/1kxwlPFH2J0b7
 
 // DEFAULT FALLBACK CATALOG WITH 135 PEDALS
 const DEFAULT_PEDALS_FALLBACK = [
+    {
+        "id": "obne-sunlight-v1",
+        "brand": "OBNE",
+        "name": "Sunlight V1",
+        "category": "Dynamic Reverb",
+        "maDraw": 80,
+        "maSafety": 104,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1bLabUNmOr42IHJqyOGmawYA6dACqMAxY/view?usp=drivesdk",
+        "description": "Reverb dinámico sensible a la púa con modos Tape, Comb y Pass y función ALT."
+    },
     {
         "id": "cb-clean",
         "brand": "Chase Bliss",
