@@ -2722,7 +2722,7 @@ function getPedalIconHTML(pedal, sizeClasses = 'w-10 h-10') {
     if (pedal && pedal.imageUrl) {
         return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center"><img src="${pedal.imageUrl}" class="w-full h-full object-contain"></div>`;
     }
-    return `<div class="${sizeClasses} rounded-lg border border-[#2A2D36] bg-[#121316] flex items-center justify-center shrink-0 text-[#00A8CC] font-bold font-mono text-xs"><i class="fa-solid fa-sliders"></i></div>`;
+    return '';
 }
 
 function getPowerSupplyIconHTML(ps, sizeClasses = 'w-10 h-10') {
@@ -4749,7 +4749,7 @@ function renderWishlist() {
         
         const photoHtml = item.imageUrl 
             ? `<img src="${item.imageUrl}" class="w-12 h-12 object-contain rounded-lg shrink-0">`
-            : `<div class="w-12 h-12 rounded-lg bg-[#1C1E24] border border-[#2A2D36] flex items-center justify-center text-[#8B5CF6] shrink-0 font-bold text-xs">${(item.brand || 'CB').substring(0,2).toUpperCase()}</div>`;
+            : '';
             
         card.innerHTML = `
             <div class="space-y-2">
@@ -4854,13 +4854,14 @@ function renderMasterWishlistCatalog() {
     }
     
     filtered.forEach(p => {
+        const photoHtml = p.imageUrl 
+            ? `<div class="w-8 h-8 rounded overflow-hidden bg-[#1C1E24] border border-[#2A2D36] flex items-center justify-center shrink-0"><img src="${p.imageUrl}" class="w-full h-full object-contain"></div>`
+            : '';
         const row = document.createElement('div');
         row.className = "bg-[#121316] hover:bg-[#20232B] p-3 rounded-xl border border-[#2A2D36] flex items-center justify-between gap-3 transition-all";
         row.innerHTML = `
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-[#1C1E24] border border-[#2A2D36] flex items-center justify-center text-[#8B5CF6] text-xs shrink-0 font-bold">
-                    ${p.brand.substring(0,2).toUpperCase()}
-                </div>
+                ${photoHtml}
                 <div>
                     <h5 class="text-xs font-bold text-[#FFFFFF]">${p.brand} - ${p.name}</h5>
                     <span class="text-[10px] text-[#9CA3AF] font-mono">${p.category || 'Efecto'} • ${p.maBase || 20}mA</span>
