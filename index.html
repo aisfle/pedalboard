@@ -148,7 +148,7 @@
                             <i class="fa-solid fa-sliders"></i> PEDALES DE EFECTO
                         </h3>
                         <div class="relative flex items-center">
-                            <input type="text" id="catalog-search-input" oninput="handleCatalogSearch(this.value)" placeholder="🔍 Buscar pedal por nombre, marca o efecto..." class="bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-3 py-1.5 pr-8 text-xs font-mono w-52 sm:w-64 focus:outline-none transition-all shadow-inner">
+                            <input type="text" id="catalog-search-input" oninput="handleCatalogSearch(this.value)" placeholder="🔍 Buscar por nombre o marca..." class="bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-3 py-1.5 pr-8 text-xs font-mono w-52 sm:w-64 focus:outline-none transition-all shadow-inner">
                             <button id="catalog-search-clear-btn" onclick="clearCatalogSearch()" title="Limpiar búsqueda" class="hidden absolute right-2.5 text-[#9CA3AF] hover:text-[#F15A24] text-xs transition-colors">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
@@ -2937,14 +2937,7 @@ function renderCatalog(brandFilter = 'ALL') {
                         Explorá el Catálogo de pedales para agregar tu equipamiento o agregá un pedal personalizado.
                     </p>
                 </div>
-                <div class="flex flex-wrap justify-center gap-3 pt-2">
-                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95">
-                        + Cargar pedal desde el catálogo
-                    </button>
-                    <button onclick="openNewPedalModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 hover:border-[#00A8CC] font-bold px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
-                        + Cargar pedal personalizado
-                    </button>
-                </div>
+
             </div>
         `;
     } else if (effects.length === 0) {
@@ -5362,6 +5355,14 @@ function restoreFactoryCatalog() {
     // Deprecated in V34
 }
 
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeMasterCatalogModal();
+        closeNewPedalModal();
+        closeNewPowerSupplyModal();
+    }
+});
+
 window.onload = async () => {
     loadSavedState();
     switchTab('catalog');
@@ -5454,8 +5455,8 @@ window.onload = async () => {
 </div>
 </body>
 </html><!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
-<div id="master-catalog-modal" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh]">
+<div id="master-catalog-modal" onclick="closeMasterCatalogModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
         <!-- MODAL HEADER -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
             <div>
@@ -5475,7 +5476,7 @@ window.onload = async () => {
         <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
             <div class="flex flex-col sm:flex-row gap-3">
                 <div class="relative flex-1">
-                    <input type="text" id="master-catalog-search-input" oninput="handleMasterCatalogSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo (ej: TS9, Strymon, Reverb)..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
+                    <input type="text" id="master-catalog-search-input" oninput="handleMasterCatalogSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
                 </div>
             </div>
             
@@ -5497,7 +5498,7 @@ window.onload = async () => {
         </div>
 
         <!-- MASTER CATALOG GRID -->
-        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[300px]"></div>
+        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[300px]"></div>
 
         <!-- MODAL FOOTER -->
         <div class="flex justify-between items-center pt-3 border-t border-[#2A2D36] text-xs text-[#9CA3AF]">
