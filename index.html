@@ -108,21 +108,21 @@
             <div class="bg-[#1C1E24] border-2 border-[#F15A24] rounded-2xl p-5 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                 <div class="space-y-1 min-w-[280px] flex-1">
                     <h2 class="text-lg font-bold text-[#FFFFFF] tracking-tight flex items-center gap-2 whitespace-nowrap">
-                        Mi colección e inventario
+                        <i class="fa-solid fa-guitar text-[#F15A24]"></i> Mi colección e inventario
                     </h2>
                     <p class="text-xs text-[#9CA3AF] max-w-xl leading-relaxed">
-                        Administra todos tus pedales de efecto, utilidad y fuentes de alimentación personalizadas.
+                        Administra tus pedales personales, armá cadenas de efecto y configurá tus fuentes de alimentación.
                     </p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0 max-w-full">
-                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-lg active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-book-open"></i> + Agregar desde Catálogo
+                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 whitespace-nowrap">
+                        <i class="fa-solid fa-layer-group"></i> + Agregar desde Catálogo (144)
                     </button>
-                    <button onclick="openNewPedalModal()" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 px-3.5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-plus text-[#F15A24]"></i> + Pedal Personalizado
+                    <button onclick="openNewPedalModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 hover:border-[#00A8CC] font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 whitespace-nowrap">
+                        <i class="fa-solid fa-plus"></i> + Crear Pedal Personalizado
                     </button>
-                    <button onclick="openNewPowerSupplyModal()" class="bg-[#00A8CC] hover:bg-[#0092b3] text-[#FFFFFF] font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-lg active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-bolt"></i> + Nueva Fuente
+                    <button onclick="openNewPowerSupplyModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 whitespace-nowrap">
+                        <i class="fa-solid fa-bolt text-[#F15A24]"></i> + Nueva fuente
                     </button>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                             </button>
                         </div>
                     </div>
-
+                        
                     </div>
                     
                     <div id="effects-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
@@ -402,7 +402,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="space-y-1">
                 <label class="text-xs text-[#9CA3AF] block font-mono">Consumo (mA) *</label>
-                <input type="number" id="np-mabase" value="" placeholder="Ej: 100" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
+                <input type="number" id="np-mabase" value="20" placeholder="20" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
             </div>
             <div class="space-y-1">
                 <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura E/S *</label>
@@ -434,7 +434,9 @@
                 <option value="Loopers de Frase">Loopers de Frase (Phrase Looper / Multi-track)</option>
                 <option value="Utilidad & Ruteo">Utilidad & Ruteo (Afinador / Switcher / Noise Gate / Expression / Buffer)</option>
             </select>
-            <p id="np-category-lock-note" class="hidden text-[11px] text-[#00A8CC] font-mono mt-1">🔒 Categoría de fábrica (bloqueada)</p>
+            <p id="np-category-lock-note" class="hidden text-[11px] text-[#00A8CC] font-mono mt-1">
+                <i class="fa-solid fa-lock"></i> Categoría de fábrica bloqueada para preservar la clasificación del catálogo.
+            </p>
         </div>
         <div class="space-y-1">
             <label class="text-xs text-[#9CA3AF] block font-mono">Detalle / Especificación del efecto</label>
@@ -764,6 +766,7 @@ function getEffectCategory(p) {
         "mxr-ten-band-eq": "Dinámica & Modelado",
         "mxr-dyna-comp": "Dinámica & Modelado",
         "ye-defiant-jazz": "Dinámica & Modelado",
+        "tc-plethora-x5": "Dinámica & Modelado",
 
         // Saturación & Ganancia
         "ibanez-ts9": "Saturación & Ganancia",
@@ -794,7 +797,7 @@ function getEffectCategory(p) {
         "obne-beamsplitter-v2": "Saturación & Ganancia",
         "strymon-riverside": "Saturación & Ganancia",
         "strymon-sunset": "Saturación & Ganancia",
-        "walrus-eras": "Saturación & Ganancia",
+        "wa-eras": "Saturación & Ganancia",
 
         // Pitch & Sintetizador
         "boss-sy1": "Pitch & Sintetizador",
@@ -811,7 +814,7 @@ function getEffectCategory(p) {
         "strymon-deco-v2": "Modulación",
         "strymon-mobius": "Modulación",
         "strymon-zelzah": "Modulación",
-        "walrus-julianna": "Modulación",
+        "wa-julianna": "Modulación",
         "boss-ce2w": "Modulación",
         "boss-dc2w": "Modulación",
         "boss-ch1": "Modulación",
@@ -821,9 +824,11 @@ function getEffectCategory(p) {
         "boss-ph3": "Modulación",
         "mxr-phase-90": "Modulación",
         "obne-visitor": "Modulación",
-    "obne-excess-v2": "Modulación",
+        "obne-excess-v2": "Modulación",
         "obne-dweller": "Modulación",
         "cb-warped-vinyl": "Modulación",
+        "eqd-spatial-delivery-v3": "Modulación",
+        "cb-lost-found": "Modulación",
 
         // Delay & Eco
         "cb-reverse-mode-c": "Delay & Eco",
@@ -833,8 +838,8 @@ function getEffectCategory(p) {
         "strymon-el-capistan-v2": "Delay & Eco",
         "strymon-volante": "Delay & Eco",
         "strymon-timeline": "Delay & Eco",
-        "walrus-arp87": "Delay & Eco",
-        "walrus-mako-d1-v2": "Delay & Eco",
+        "wa-arp87": "Delay & Eco",
+        "wa-mako-d1-v2": "Delay & Eco",
         "cb-habit": "Delay & Eco",
         "cb-thermae": "Delay & Eco",
         "cb-tonal-recall-rkm": "Delay & Eco",
@@ -863,9 +868,9 @@ function getEffectCategory(p) {
         "obne-sunlight-v2": "Reverberación & Espacio",
         "obne-procession": "Reverberación & Espacio",
         "obne-dark-star-v3": "Reverberación & Espacio",
-        "walrus-slo": "Reverberación & Espacio",
-        "walrus-sloeer": "Reverberación & Espacio",
-        "walrus-mako-r1": "Reverberación & Espacio",
+        "wa-slo": "Reverberación & Espacio",
+        "wa-sloeer": "Reverberación & Espacio",
+        "wa-mako-r1": "Reverberación & Espacio",
         "eqd-astral-destiny": "Reverberación & Espacio",
         "eqd-afterneath-v3": "Reverberación & Espacio",
         "eqd-avalanche-run-v2": "Reverberación & Espacio",
@@ -887,18 +892,19 @@ function getEffectCategory(p) {
         "rp-bitmap-v2": "Lo-Fi, Glitch & Texturas",
         "cb-bad-mood": "Lo-Fi, Glitch & Texturas",
         "cb-mood-mkii": "Lo-Fi, Glitch & Texturas",
-        "walrus-lore": "Lo-Fi, Glitch & Texturas",
+        "wa-lore": "Lo-Fi, Glitch & Texturas",
         "boss-sl2": "Lo-Fi, Glitch & Texturas",
+        "kino-ghosts": "Lo-Fi, Glitch & Texturas",
 
         // Loopers de Frase
         "boss-rc5": "Loopers de Frase",
         "boss-rc1": "Loopers de Frase",
         "tc-ditto-stereo": "Loopers de Frase",
-        "walrus-xero": "Loopers de Frase",
+        "wa-xero": "Loopers de Frase",
         "cb-blooper": "Loopers de Frase",
 
         // Utilidad & Ruteo
-        "walrus-canvas-rehearsal": "Utilidad & Ruteo",
+        "wa-canvas-rehearsal": "Utilidad & Ruteo",
         "cb-faves": "Utilidad & Ruteo",
         "obne-exp-ramper": "Utilidad & Ruteo",
         "obne-signal-blender": "Utilidad & Ruteo",
@@ -912,6 +918,9 @@ function getEffectCategory(p) {
     if (p.id && explicitMap[p.id]) {
         return explicitMap[p.id];
     }
+    if (p.effectCategory && p.effectCategory.trim() !== '') {
+        return p.effectCategory.trim();
+    }
 
     const cat = (p.category || '').toLowerCase();
     const name = (p.name || '').toLowerCase();
@@ -922,15 +931,15 @@ function getEffectCategory(p) {
     }
 
     if (['preamp', 'pre-amp', 'amp & cab', 'ir cab', 'compressor', 'compresor', 'equalizer', 'eq', 'graphic eq'].some(k => cat.includes(k))) {
-        return 'Preamps & Compresores';
+        return 'Dinámica & Modelado';
     }
 
     if (['gen loss', 'lossy', 'vhs', 'bitcrusher', 'rate reducer', 'digital artifacts', 'tape degenerator', 'glitch'].some(k => cat.includes(k) || name.includes(k))) {
-        return 'Lo-Fi & Glitch';
+        return 'Lo-Fi, Glitch & Texturas';
     }
 
     if (['overdrive', 'distortion', 'fuzz', 'boost', 'saturator', 'screamer', 'muff', 'rat', 'gain', 'drive', 'distorsión', 'sustainer'].some(k => cat.includes(k))) {
-        return 'Drive & Ganancia';
+        return 'Saturación & Ganancia';
     }
 
     if (['delay', 'eco', 'echo', 'space echo', 'tape echo'].some(k => cat.includes(k) || name.includes(k))) {
@@ -938,18 +947,22 @@ function getEffectCategory(p) {
     }
 
     if (['reverb', 'reverberator', 'reverberation', 'ambience', 'ambiente', 'cloudburst', 'nightsky', 'bigsky'].some(k => cat.includes(k) || name.includes(k))) {
-        return 'Reverb & Ambiente';
+        return 'Reverberación & Espacio';
     }
 
     if (['chorus', 'phaser', 'flanger', 'tremolo', 'vibrato', 'slicer', 'ring mod', 'modulation', 'dimension'].some(k => cat.includes(k) || name.includes(k))) {
         return 'Modulación';
     }
 
-    if (['synth', 'octave', 'octaver', 'pitch', 'resonator', 'polyphonic', 'pog'].some(k => cat.includes(k) || name.includes(k))) {
-        return 'Pitch & Synth';
+    if (['octave', 'octavador', 'synth', 'synthesizer', 'pitch', 'whammy', 'pog'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Pitch & Sintetizador';
     }
 
-    return 'Varios & Multi-FX';
+    if (['looper', 'phrase looper', 'loop station', 'ditto'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Loopers de Frase';
+    }
+
+    return 'Saturación & Ganancia';
 }
 
 function renderCategoryFilters() {
@@ -1007,864 +1020,6 @@ const BASE_MANUALS_DRIVE = "https://drive.google.com/drive/folders/1kxwlPFH2J0b7
 // DEFAULT FALLBACK CATALOG WITH 135 PEDALS
 const DEFAULT_PEDALS_FALLBACK = [
     {
-        "id": "obne-sunlight-v1",
-        "brand": "OBNE",
-        "name": "Sunlight V1",
-        "category": "Dynamic Reverb",
-        "maDraw": 80,
-        "maSafety": 104,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1bLabUNmOr42IHJqyOGmawYA6dACqMAxY/view?usp=drivesdk",
-        "description": "Reverb dinámico sensible a la púa con modos Tape, Comb y Pass y función ALT."
-    },
-    {
-        "id": "cb-clean",
-        "brand": "Chase Bliss",
-        "name": "Clean",
-        "category": "Compressor + Swells",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1lRoJ2UX6YAbD7S0ELAGds_aZMCq4_GVF/view?usp=drivesdk",
-        "description": "Compresor y procesador dinámico táctil con envelope y swells."
-    },
-    {
-        "id": "cb-brothers-am",
-        "brand": "Chase Bliss",
-        "name": "Brothers AM",
-        "category": "Boost / Overdrive / Fuzz",
-        "maDraw": 200,
-        "maSafety": 260,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1SkRf1QJ7RDAusJkGQt9K_r3DLeU0AWpr/view?usp=drivesdk",
-        "description": "Boost de agudos y drive analógico dual en colaboración con Analog Man."
-    },
-    {
-        "id": "cb-blooper",
-        "brand": "Chase Bliss",
-        "name": "Blooper",
-        "category": "Bottomless Looper",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1JyHz7ewxT6VAFD1cqgjUd1eLqYRNjL3C/view?usp=drivesdk",
-        "description": "Looper creativo con capas destructivas y modificadores digitales."
-    },
-    {
-        "id": "cb-habit",
-        "brand": "Chase Bliss",
-        "name": "Habit",
-        "category": "Echo Collector / Delay",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1wJTEvMjWXWpcMY8iFm07rb5-gqGe1JP6/view?usp=drivesdk",
-        "description": "Delay creativo con memoria continua de 3 minutos e inspección Scan."
-    },
-    {
-        "id": "cb-lost-found",
-        "brand": "Chase Bliss",
-        "name": "Lost + Found",
-        "category": "Multi-Effect Stereo Engine",
-        "maDraw": 200,
-        "maSafety": 260,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1iQNzidBkiL2prBBViaXHJhSbEEOWgwrd/view?usp=drivesdk",
-        "description": "Sintetizadores, modulaciones complejas y arquitectura estéreo dual."
-    },
-    {
-        "id": "cb-reverse-mode-c",
-        "brand": "Chase Bliss",
-        "name": "Reverse Mode C",
-        "category": "Reverse Delay / Modulator",
-        "maDraw": 270,
-        "maSafety": 351,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1-cabRvptSLSVw-T5h8F9eYE6Vds2Nixh/view?usp=drivesdk",
-        "description": "Reverse delay multidireccional con secuenciador y modulador."
-    },
-    {
-        "id": "cb-bad-mood",
-        "brand": "Chase Bliss",
-        "name": "Bad Mood",
-        "category": "Micro-Looper / Delay / Reverb",
-        "maDraw": 200,
-        "maSafety": 260,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1zhEWs2pa618BL271mIGfhkITsPdfeQfG/view?usp=drivesdk",
-        "description": "Canal de efectos Wet con Micro-Looper dinámico."
-    },
-    {
-        "id": "cb-onward",
-        "brand": "Chase Bliss",
-        "name": "Onward",
-        "category": "Dynamic Sustainer / Glitch",
-        "maDraw": 200,
-        "maSafety": 260,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1gkY2czKGtP5bAYq4tzP1JLnSAbWjRMl_/view?usp=drivesdk",
-        "description": "Sostenidos armónicos orgánicos y ráfagas dinámicas de glitch."
-    },
-    {
-        "id": "cb-lossy",
-        "brand": "Chase Bliss",
-        "name": "Lossy",
-        "category": "Digital Artifacts & Loss",
-        "maDraw": 400,
-        "maSafety": 520,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1YbhUB4F_ALIcZcqofFrvgQGZrWoqoH-d/view?usp=drivesdk",
-        "description": "Simulación de compresión MP3, audio lo-fi y degradación digital."
-    },
-    {
-        "id": "cb-mood-mkii",
-        "brand": "Chase Bliss",
-        "name": "Mood MKII",
-        "category": "Micro-Looper / Spatial Reverb",
-        "maDraw": 270,
-        "maSafety": 351,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1j_DwuFe-HiePnED_oqcF_dG0dvAr-1oj/view?usp=drivesdk",
-        "description": "Micro-looper estéreo, delay granular y generador ambiental."
-    },
-    {
-        "id": "cb-gen-loss-mkii",
-        "brand": "Chase Bliss",
-        "name": "Gen Loss MKII",
-        "category": "VHS Tape Degenerator",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1krQ2-EComTzO9oQZrKpZ61p1FU_nyv9u/view?usp=drivesdk",
-        "description": "Emulador de imperfecciones de cinta de video VHS y cassette."
-    },
-    {
-        "id": "cb-dark-world",
-        "brand": "Chase Bliss",
-        "name": "Dark World",
-        "category": "Dual Channel Reverb",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1RKQasjD7WKuBxLkThxRuqmlMtO41y_BE/view?usp=drivesdk",
-        "description": "Reverb dual Cooper FX + Keeley Electronics."
-    },
-    {
-        "id": "cb-warped-vinyl",
-        "brand": "Chase Bliss",
-        "name": "Warped Vinyl HiFi",
-        "category": "Analog Vibrato / Chorus",
-        "maDraw": 70,
-        "maSafety": 91,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/157RDnY3wptCgfhZ5Nb-evLcerQCBqb0n/view?usp=drivesdk",
-        "description": "Simulador analógico de vinilo desafinado."
-    },
-    {
-        "id": "cb-preamp-mkii",
-        "brand": "Chase Bliss",
-        "name": "Preamp MKII",
-        "category": "Automated Preamp / Fuzz",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/124TzHi5lKbmjntUeV8538oCUvd-dIo9B/view?usp=drivesdk",
-        "description": "Preamplificador analógico motorizado con faders automatizados y fuzz Benson."
-    },
-    {
-        "id": "cb-thermae",
-        "brand": "Chase Bliss",
-        "name": "Thermae",
-        "category": "Analog Delay & Pitch Shifter",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1Fpw9hFuIyO5SutZrqb_lcRMpNOrVLeLP/view?usp=drivesdk",
-        "description": "Delay analógico BBD con armonización de pitch secuenciada por reloj."
-    },
-    {
-        "id": "cb-condor",
-        "brand": "Chase Bliss",
-        "name": "Condor",
-        "category": "Analog EQ & Preamp",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1CJYEFqqvcCH3GbGNm8AmrMTgp3d5cN8u/view?usp=drivesdk",
-        "description": "Ecualizador analógico, filtro paramétrico y boost armónico."
-    },
-    {
-        "id": "cb-tonal-recall-rkm",
-        "brand": "Chase Bliss",
-        "name": "Tonal Recall RKM",
-        "category": "Analog Delay BBD",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1vNwM0YmGMb2d0L3nvbpp5Qn6_GVBjBBO/view?usp=drivesdk",
-        "description": "Delay analógico con chips Panasonic MN3005 reeditados."
-    },
-    {
-        "id": "cb-faves",
-        "brand": "Chase Bliss",
-        "name": "Faves",
-        "category": "Preset Switcher",
-        "maDraw": 20,
-        "maSafety": 26,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1eAAsB7FGl9t8vrpGPiSyndUiCNyjf9Q0/view?usp=drivesdk",
-        "description": "Acceso a 6 presets vía MIDI TRS para pedales Chase Bliss."
-    },
-    {
-        "id": "rp-particle-v2",
-        "brand": "Red Panda",
-        "name": "Particle V2",
-        "category": "Granular Delay / Pitch Shifter",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/19zFNcDutP_LHZ2ILac-bcMQQCnUrR79w/view?usp=drivesdk",
-        "description": "Delay granular y cambio de tono en tiempo real con troceado de señal."
-    },
-    {
-        "id": "rp-tensor",
-        "brand": "Red Panda",
-        "name": "Tensor",
-        "category": "Tape Delay / Pitch / Reverse",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1k0ibHRgXvXTVFgcl3T6kRGHl5kdMtbPa/view?usp=drivesdk",
-        "description": "Rebobinado en vivo, estiramiento de tiempo y pitch shifting sin alteración de tempo."
-    },
-    {
-        "id": "rp-context-v2",
-        "brand": "Red Panda",
-        "name": "Context V2",
-        "category": "Reverb & Delay",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1y4-_-6gnA3kxPJsksbOHpEzaEnTCaAlJ/view?usp=drivesdk",
-        "description": "Reverberaciones de estudio de los años 80 con delay asignable y modulación."
-    },
-    {
-        "id": "rp-raster-v2",
-        "brand": "Red Panda",
-        "name": "Raster V2",
-        "category": "Digital Delay / Pitch Shifter",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1HX72V06PXbadvWfY7c-zqiyzx24JHqNy/view?usp=drivesdk",
-        "description": "Delay digital de micro-desfase con desplazamiento de tono e intensidad LFO."
-    },
-    {
-        "id": "rp-radius",
-        "brand": "Red Panda",
-        "name": "Radius",
-        "category": "Ring Modulator / Frequency Shifter",
-        "maDraw": 200,
-        "maSafety": 260,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1xlUQspfU7Z-J6x1fN72caLhtOe8DnVe1/view?usp=drivesdk",
-        "description": "Ring Modulator y Frequency Shifter estéreo con modulaciones avanzadas."
-    },
-    {
-        "id": "rp-bitmap-v2",
-        "brand": "Red Panda",
-        "name": "Bitmap V2",
-        "category": "Bitcrusher / Rate Reducer",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1TK9zDmUU3HiNDGaB8Sm_jJ1LenpK6kn_/view?usp=drivesdk",
-        "description": "Reducción de tasa de muestreo y profundidad de bits con filtro de olas y envelope."
-    },
-    {
-        "id": "strymon-cloudburst",
-        "brand": "Strymon",
-        "name": "Cloudburst",
-        "category": "Ambient Reverb",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1H0WI1SgSqePig_1Qy8tz8cu9XDrp142v/view?usp=drivesdk",
-        "description": "Reverb ambiental de amplio espacio con generador armónico Ensemble."
-    },
-    {
-        "id": "strymon-nightsky",
-        "brand": "Strymon",
-        "name": "Nightsky",
-        "category": "Time-Warped Reverberator",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1Apy_9ksj-tDJMfST_8hCFpLupifoRnr-/view?usp=drivesdk",
-        "description": "Síntesis de reverb experimental con secuenciador y morphing."
-    },
-    {
-        "id": "strymon-bigsky",
-        "brand": "Strymon",
-        "name": "BigSky",
-        "category": "Multidimensional Reverb",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1YwSR8VNfQ7V58L9g0TKYFHg4OPT6F-J5/view?usp=drivesdk",
-        "description": "Estándar de la industria para reverberaciones ambientales completas."
-    },
-    {
-        "id": "strymon-timeline",
-        "brand": "Strymon",
-        "name": "TimeLine",
-        "category": "Multidimensional Delay",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1TKxiFBbFcXNZ40fhSOZkx8mD0ByQhJ6u/view?usp=drivesdk",
-        "description": "Procesador de delay multidimensional de grado de estudio."
-    },
-    {
-        "id": "strymon-mobius",
-        "brand": "Strymon",
-        "name": "Mobius",
-        "category": "Multidimensional Modulation",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1jQhmtTts5gWMQrhaGwFs_MqTYINfeV_F/view?usp=drivesdk",
-        "description": "12 máquinas de modulación analógicas y digitales de alta resolución."
-    },
-    {
-        "id": "strymon-iridium",
-        "brand": "Strymon",
-        "name": "Iridium",
-        "category": "Amp & IR Cab Simulator",
-        "maDraw": 500,
-        "maSafety": 650,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1jF5WRJ5IVMrUqAHNRLhwyXOGdVZwzSBw/view?usp=drivesdk",
-        "description": "Simulador estéreo de amplificadores e impulsos de pantalla IR."
-    },
-    {
-        "id": "strymon-volante",
-        "brand": "Strymon",
-        "name": "Volante",
-        "category": "Magnetic Echo / Reverb",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1x5xcV2x4YRY08q2400nU09oX9UWtavbt/view?usp=drivesdk",
-        "description": "Ecolocalizador magnético, eco de cinta y drum echo vintage."
-    },
-    {
-        "id": "strymon-flint-v2",
-        "brand": "Strymon",
-        "name": "Flint V2",
-        "category": "Tremolo & Reverb",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1sJ09Phn5hBDUxQmwnmjZBj-27RwU14UZ/view?usp=drivesdk",
-        "description": "Trémolo armónico vintage y tres algoritmos de reverb clásicos."
-    },
-    {
-        "id": "strymon-el-capistan-v2",
-        "brand": "Strymon",
-        "name": "El Capistan V2",
-        "category": "Tape Echo",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/166mfX5ZS1fgqXb5lSua1ZIsnZN85ZvUj/view?usp=drivesdk",
-        "description": "Eco de cinta DTAPE de alta precisión con simulación de desgaste de cinta."
-    },
-    {
-        "id": "strymon-deco-v2",
-        "brand": "Strymon",
-        "name": "Deco V2",
-        "category": "Tape Saturation & Doubletracker",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1cQYw3P_nkOBblej8tq97Mpo5eoA6rP1w/view?usp=drivesdk",
-        "description": "Saturación de cinta de carrete a carrete y duplicador analógico estéreo."
-    },
-    {
-        "id": "strymon-zelzah",
-        "brand": "Strymon",
-        "name": "Zelzah",
-        "category": "Multidimensional Phaser",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1BPzAWxLcM5J6j0oMKcwljzhNuzB28BVd/view?usp=drivesdk",
-        "description": "Phaser dual de 4 y 6 etapas con resonancia independiente y envelope."
-    },
-    {
-        "id": "strymon-compadre",
-        "brand": "Strymon",
-        "name": "Compadre",
-        "category": "Dual Compressor & Boost",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1G5ih0m_wTGG670tkaeb4trMjpgZZJA7r/view?usp=drivesdk",
-        "description": "Compresor de estudio VCA y boost limpio analógico de ecualización seleccionable."
-    },
-    {
-        "id": "strymon-riverside",
-        "brand": "Strymon",
-        "name": "Riverside",
-        "category": "Multistage Drive",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/10oXwMjM89ph27Dy0sp2g-sJBtG-Sy8Jf/view?usp=drivesdk",
-        "description": "Overdrive multietapa híbrido JFET analógico + DSP de distorsión continua."
-    },
-    {
-        "id": "strymon-sunset",
-        "brand": "Strymon",
-        "name": "Sunset",
-        "category": "Dual Overdrive",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1kJaEdRB7YKcQab_uxrS1RgjH0LZQoLT0/view?usp=drivesdk",
-        "description": "Circuito dual de overdrive analógico/digital con 6 voces icónicas."
-    },
-    {
-        "id": "obne-exp-ramper",
-        "brand": "OBNE",
-        "name": "Expression Ramper",
-        "category": "Expression LFO",
-        "maDraw": 50,
-        "maSafety": 65,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1OIq7kk73nxGopoF-1yx_0MyHJnHgcAC1/view?usp=drivesdk",
-        "description": "Movimiento continuo de expresión LFO entre los puntos A y B."
-    },
-    {
-        "id": "obne-dark-star-v3",
-        "brand": "OBNE",
-        "name": "Dark Star Stereo V3",
-        "category": "Pad Reverb / Pitch / Delay",
-        "maDraw": 350,
-        "maSafety": 455,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/19pW3YkP8ppnJ1izd1YO_wAnBMAhpsbRI/view?usp=drivesdk",
-        "description": "Reverb estéreo atmosférico con modulaciones Pitch/Delay/Crush."
-    },
-    {
-        "id": "obne-sunlight-v2",
-        "brand": "OBNE",
-        "name": "Sunlight Stereo V2",
-        "category": "Dynamic Stereo Reverb",
-        "maDraw": 350,
-        "maSafety": 455,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1OhW9M9ts0TAjobzIpr3BLY4WM67U0oj8/view?usp=drivesdk",
-        "description": "Reverb dinámico sensible a la intensidad con congelado dinámico."
-    },
-    {
-        "id": "obne-beamsplitter-v2",
-        "brand": "OBNE",
-        "name": "Beamsplitter V2",
-        "category": "Triple Tracking Overdrive",
-        "maDraw": 350,
-        "maSafety": 455,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1V24uuITYGCTLAHr91n6OKVTBgGTJRWqw/view?usp=drivesdk",
-        "description": "Triple overdrive analógico paralelo con delays de micro-desfase."
-    },
-    {
-        "id": "obne-procession",
-        "brand": "OBNE",
-        "name": "Procession",
-        "category": "Sci-Fi Reverb",
-        "maDraw": 60,
-        "maSafety": 78,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1tygBAOSnR5FV-s_TGtJNlM-R3eSnUp3i/view?usp=drivesdk",
-        "description": "Reverb Sci-Fi con filtro envolvente, tremolo y phaser modulado."
-    },
-    {
-        "id": "obne-minim",
-        "brand": "OBNE",
-        "name": "Minim",
-        "category": "Delay + Reverse + Reverb",
-        "maDraw": 150,
-        "maSafety": 195,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1UsiI0iZ2Moq-JkJfjdgRwM0AWq3tPvZn/view?usp=drivesdk",
-        "description": "Sección combinada de delay, reverb modulado y sección de reversa."
-    },
-    {
-        "id": "obne-signal-blender",
-        "brand": "OBNE",
-        "name": "Signal Blender",
-        "category": "Parallel Line Switcher",
-        "maDraw": 30,
-        "maSafety": 39,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1o_uoQ9CrTPUID_74dMXv0YJwgBrKALJA/view?usp=drivesdk",
-        "description": "Conmutador y mezclador paralelo de bucles para cadenas complejas."
-    },
-    {
-        "id": "obne-dweller",
-        "brand": "OBNE",
-        "name": "Dweller",
-        "category": "Phase Repeater",
-        "maDraw": 80,
-        "maSafety": 104,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1H6oh9ZL8-g_eV0Ok-caDjhSGUlQw_T0G/view?usp=drivesdk",
-        "description": "Delay modulado por phaser de pasos para texturas envolventes."
-    },
-    {
-        "id": "obne-visitor",
-        "brand": "OBNE",
-        "name": "Visitor",
-        "category": "Parallel Multi-Modulator",
-        "maDraw": 46,
-        "maSafety": 60,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1JOQOnzTvLtVYUuRFCUwNaQwXryzI44kz/view?usp=drivesdk",
-        "description": "Modulación paralela primaria y secundaria simultánea con delay cruzado."
-    },
-    {
-        "id": "obne-black-fountain-v3",
-        "brand": "OBNE",
-        "name": "Black Fountain V3",
-        "category": "Oil Can Delay",
-        "maDraw": 90,
-        "maSafety": 117,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1Q1pes_liGxAgYwCKiik0INtl7f36Ddi1/view?usp=drivesdk",
-        "description": "Emulador analógico de unidades de delay de aceite vintage con modulaciones oscuras."
-    },
-    {
-        "id": "obne-alpha-haunt-v2",
-        "brand": "OBNE",
-        "name": "Alpha Haunt V2",
-        "category": "Fuzz Engine",
-        "maDraw": 85,
-        "maSafety": 110,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1uSHdH3anKoPLT6RezV3535nALyJVuJMT/view?usp=drivesdk",
-        "description": "Motor de fuzz analógico flexible con ecualizador gráfico activo y mezcla limpia."
-    },
-    {
-        "id": "wa-canvas-rehearsal",
-        "brand": "Walrus Audio",
-        "name": "Canvas Rehearsal",
-        "category": "Rehearsal Engine / DI",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1Rb5pR8jCFmcqxZeH24ljymFD3lzAgWfF/view?usp=drivesdk",
-        "description": "Final de cadena de ensayo con salida auriculares y Aux Bluetooth."
-    },
-    {
-        "id": "wa-acs1-mkii",
-        "brand": "Walrus Audio",
-        "name": "ACS1 MKII",
-        "category": "Amp + Cab Simulator",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1uUQtd1LrsD7R9q_M2Z5KBwjb_1UCAA5n/view?usp=drivesdk",
-        "description": "Simulador estéreo de amplificadores e impulsos de pantalla IR."
-    },
-    {
-        "id": "wa-xero",
-        "brand": "Walrus Audio",
-        "name": "Xero Polylooper",
-        "category": "Dual Stereo Looper",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1Td9dJGVjlaQE4gJGbQPlWcYM6-T7T2Mm/view?usp=drivesdk",
-        "description": "Looper polifónico de doble canal estéreo con sincronización MIDI."
-    },
-    {
-        "id": "wa-julianna",
-        "brand": "Walrus Audio",
-        "name": "Julianna",
-        "category": "Analog Chorus / Vibrato",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Chorus y vibrato analógico estéreo con LFO de forma de onda secundaria."
-    },
-    {
-        "id": "wa-slo",
-        "brand": "Walrus Audio",
-        "name": "Slö",
-        "category": "Multi-Texture Reverb",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Reverb de múltiples texturas ambientales con modos Dark, Rise y Dream."
-    },
-    {
-        "id": "wa-sloeer",
-        "brand": "Walrus Audio",
-        "name": "Slöer",
-        "category": "Stereo Multi-Texture Reverb",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Versión estéreo expandida con 5 modos de reverb y control de ancho de campo."
-    },
-    {
-        "id": "wa-arp87",
-        "brand": "Walrus Audio",
-        "name": "ARP-87",
-        "category": "Multi-Function Delay",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Delay multifunción compacto con modos Digital, Analog, Lo-Fi y Slap."
-    },
-    {
-        "id": "wa-lore",
-        "brand": "Walrus Audio",
-        "name": "Lore",
-        "category": "Reverse Soundscape Generator",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Generador de paisajes sonoros reversos y time-warp ambiencial."
-    },
-    {
-        "id": "wa-mako-d1-v2",
-        "brand": "Walrus Audio",
-        "name": "Mako D1 V2",
-        "category": "High-Fidelity Stereo Delay",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Delay estéreo multialgorítmico de alta fidelidad con control de ataque."
-    },
-    {
-        "id": "wa-mako-r1",
-        "brand": "Walrus Audio",
-        "name": "Mako R1",
-        "category": "High-Fidelity Stereo Reverb",
-        "maDraw": 300,
-        "maSafety": 390,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Reverb de grado de estudio con algoritmos Spring, Hall, Plate, BFR y Refract."
-    },
-    {
-        "id": "wa-eras",
-        "brand": "Walrus Audio",
-        "name": "Eras",
-        "category": "Five-State High Gain Distortion",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Distorsión pesada de 5 estados con control de mezcla analógica de señal limpia."
-    },
-    {
-        "id": "wa-deep-six-v4",
-        "brand": "Walrus Audio",
-        "name": "Deep Six V4",
-        "category": "Compressor",
-        "maDraw": 30,
-        "maSafety": 39,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Compresor estilo Universal Audio 1176 con perilla de Blend y tono."
-    },
-    {
-        "id": "eqd-avalanche-run-v2",
-        "brand": "EarthQuaker Devices",
-        "name": "Avalanche Run V2",
-        "category": "Stereo Delay & Reverb",
-        "maDraw": 410,
-        "maSafety": 533,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Delay y reverb estéreo ambiental con procesamiento DSP de alta velocidad."
-    },
-    {
-        "id": "eqd-dispatch-master-v3",
-        "brand": "EarthQuaker Devices",
-        "name": "Dispatch Master V3",
-        "category": "Delay & Reverb",
-        "maDraw": 78,
-        "maSafety": 101,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Combinación compacta de delay de hasta 1.5s y reverb hi-fi."
-    },
-    {
-        "id": "eqd-plumes",
-        "brand": "EarthQuaker Devices",
-        "name": "Plumes",
-        "category": "Signal Shredder Overdrive",
-        "maDraw": 25,
-        "maSafety": 32,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Overdrive analógico de estilo Tube Screamer con 3 modos de recorte op-amp."
-    },
-    {
-        "id": "eqd-hoof",
-        "brand": "EarthQuaker Devices",
-        "name": "Hoof",
-        "category": "Germanium / Silicon Fuzz",
-        "maDraw": 15,
-        "maSafety": 20,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Fuzz híbrido de germanio/silicio inspirado en el Big Muff verde ruso."
-    },
-    {
-        "id": "eqd-astral-destiny",
-        "brand": "EarthQuaker Devices",
-        "name": "Astral Destiny",
-        "category": "Octave Reverberation Engine",
-        "maDraw": 85,
-        "maSafety": 110,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Motor de reverberación octavada con 8 modos modulados y presets."
-    },
-    {
-        "id": "eqd-rainbow-machine-v2",
-        "brand": "EarthQuaker Devices",
-        "name": "Rainbow Machine V2",
-        "category": "Polyphonic Pitch Resonator",
-        "maDraw": 160,
-        "maSafety": 208,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Resonador polifónico de pitch shifting digital y oscilación mágica."
-    },
-    {
-        "id": "eqd-afterneath-v3",
-        "brand": "EarthQuaker Devices",
-        "name": "Afterneath V3",
-        "category": "Otherworldly Reverberator",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Reverb de cueva espacial con matriz de cortos delays difusos y modo de modo de escala."
-    },
-    {
-        "id": "eqd-life-pedal-v3",
-        "brand": "EarthQuaker Devices",
-        "name": "Life Pedal V3",
-        "category": "Octave Distortion & Boost",
-        "maDraw": 15,
-        "maSafety": 20,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Distorsión estilo RAT con octava arriba de germanio y boost de MOSFET Sunn O))) style."
-    },
-    {
-        "id": "eqd-spatial-delivery-v3",
-        "brand": "EarthQuaker Devices",
-        "name": "Spatial Delivery V3",
-        "category": "Envelope Filter with Sample & Hold",
-        "maDraw": 69,
-        "maSafety": 90,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Filtro de envolvente dinámico con modos Up, Down y filtro aleatorio Sample & Hold."
-    },
-    {
-        "id": "eqd-hizumitas",
-        "brand": "EarthQuaker Devices",
-        "name": "Hizumitas",
-        "category": "Fuzz Sustainar",
-        "maDraw": 10,
-        "maSafety": 13,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Fuzz de alta ganancia en colaboración con Wata de la banda Boris."
-    },
-    {
-        "id": "boss-ls2-util",
-        "brand": "Boss",
-        "name": "LS-2 Line Selector",
-        "category": "Line Switcher",
-        "maDraw": 30,
-        "maSafety": 39,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/16j7NmsVKyYJOBM-JYPvv3ICflKvcVD1a/view?usp=drivesdk",
-        "description": "Conmutador utilitario para bucles A/B y distribución de señal."
-    },
-    {
-        "id": "boss-ce2w",
-        "brand": "Boss",
-        "name": "CE-2w Chorus (Waza Craft)",
-        "category": "Analog Chorus",
-        "maDraw": 25,
-        "maSafety": 32,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1clcBozuQXblnUrtt3b4ZOtKRK3jU2hFa/view?usp=drivesdk",
-        "description": "Chorus analógico BBD con circuito premium Waza Craft y modos CE-1."
-    },
-    {
-        "id": "boss-rc5",
-        "brand": "Boss",
-        "name": "RC-5 Loop Station",
-        "category": "Compact Phrase Looper",
-        "maDraw": 170,
-        "maSafety": 221,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1TQyct7cMQGchPGQtiNURP71a4cKAG7o3/view?usp=drivesdk",
-        "description": "Looper avanzado de 32 bits con ritmos de batería integrados."
-    },
-    {
-        "id": "boss-te2",
-        "brand": "Boss",
-        "name": "Tera Echo TE-2",
-        "category": "Stereo Echo / Ambience",
-        "maDraw": 53,
-        "maSafety": 69,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1rx6NSaQIJKNBSgIkHiykNZQwRdFM7Gt1/view?usp=drivesdk",
-        "description": "Reverberación ambiental dinámica MDP con envolvente espacial."
-    },
-    {
-        "id": "boss-dd8",
-        "brand": "Boss",
-        "name": "DD-8 Digital Delay",
-        "category": "Digital Delay",
-        "maDraw": 65,
-        "maSafety": 84,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Delay compacto avanzado con 11 modos, looper e ins/outs estéreo."
-    },
-    {
-        "id": "boss-rv6",
-        "brand": "Boss",
-        "name": "RV-6 Reverb",
-        "category": "Digital Reverb",
-        "maDraw": 65,
-        "maSafety": 84,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "8 algoritmos de reverberación hi-fi incluyendo Shimmer y Dynamic."
-    },
-    {
         "id": "boss-bd2w",
         "brand": "Boss",
         "name": "BD-2w Blues Driver (Waza Craft)",
@@ -1874,182 +1029,6 @@ const DEFAULT_PEDALS_FALLBACK = [
         "io": "Mono I/O",
         "manualUrl": null,
         "description": "Overdrive analógico clásico reinventado por Waza Craft con modo Custom."
-    },
-    {
-        "id": "boss-tu3",
-        "brand": "Boss",
-        "name": "TU-3 Chromatic Tuner",
-        "category": "Chromatic Tuner",
-        "maDraw": 30,
-        "maSafety": 39,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Afinador cromático estándar de escenario con salida DC Out."
-    },
-    {
-        "id": "boss-re202",
-        "brand": "Boss",
-        "name": "RE-202 Space Echo",
-        "category": "Space Echo Tape Delay",
-        "maDraw": 140,
-        "maSafety": 182,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Recreación exacta del Roland RE-201 Space Echo con cabezales múltiples."
-    },
-    {
-        "id": "boss-dd200",
-        "brand": "Boss",
-        "name": "DD-200 Digital Delay",
-        "category": "Smart Delay",
-        "maDraw": 225,
-        "maSafety": 292,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Delay programable de la serie 200 con sonido de alta resolución a 32-bit."
-    },
-    {
-        "id": "boss-rv500",
-        "brand": "Boss",
-        "name": "RV-500 Reverb",
-        "category": "Advanced Reverb Processor",
-        "maDraw": 250,
-        "maSafety": 325,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Procesador de reverberación de buque insignia de 32-bit/96kHz con modo Simul."
-    },
-    {
-        "id": "boss-sd1",
-        "brand": "Boss",
-        "name": "SD-1 Super Overdrive",
-        "category": "Classic Overdrive",
-        "maDraw": 10,
-        "maSafety": 13,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "El overdrive de recorte asimétrico estándar de la industria desde 1981."
-    },
-    {
-        "id": "boss-sy1",
-        "brand": "Boss",
-        "name": "SY-1 Synthesizer",
-        "category": "Polyphonic Guitar Synth",
-        "maDraw": 85,
-        "maSafety": 110,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "121 sonidos de sintetizador polifónico analógico sin latencia ni micrófonos especiales."
-    },
-    {
-        "id": "boss-dc2w",
-        "brand": "Boss",
-        "name": "DC-2w Dimension C (Waza Craft)",
-        "category": "Waza Craft Spatial Chorus",
-        "maDraw": 45,
-        "maSafety": 58,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Espacializador analógico 3D de 4 botones y circuito de estudio SDD-320."
-    },
-    {
-        "id": "boss-ds1",
-        "brand": "Boss",
-        "name": "DS-1 Distortion",
-        "category": "Classic Distortion",
-        "maDraw": 10,
-        "maSafety": 13,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "La distorsión analógica naranja más vendida de la historia desde 1978."
-    },
-    {
-        "id": "boss-ds2",
-        "brand": "Boss",
-        "name": "DS-2 Turbo Distortion",
-        "category": "Turbo Distortion",
-        "maDraw": 12,
-        "maSafety": 16,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Distorsión de dos modos con Turbo Boost para solos agresivos y penetrantes."
-    },
-    {
-        "id": "boss-od3",
-        "brand": "Boss",
-        "name": "OD-3 OverDrive",
-        "category": "Natural Overdrive",
-        "maDraw": 15,
-        "maSafety": 20,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Overdrive fluido y cálido de doble etapa con gran respuesta a la dinámica."
-    },
-    {
-        "id": "boss-mt2",
-        "brand": "Boss",
-        "name": "MT-2 Metal Zone",
-        "category": "High Gain Distortion",
-        "maDraw": 20,
-        "maSafety": 26,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Distorsión pesada legendaria con ecualizador paramétrico de 3 bandas para medios."
-    },
-    {
-        "id": "boss-hm2w",
-        "brand": "Boss",
-        "name": "HM-2w Heavy Metal (Waza Craft)",
-        "category": "Swedish Chainsaw Fuzz / Distortion",
-        "maDraw": 24,
-        "maSafety": 31,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "El icónico tono \"Chainsaw\" del death metal sueco refinado por Waza Craft."
-    },
-    {
-        "id": "boss-fz1w",
-        "brand": "Boss",
-        "name": "FZ-1w Fuzz (Waza Craft)",
-        "category": "Vintage & Modern Fuzz",
-        "maDraw": 16,
-        "maSafety": 21,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Fuzz analógico versátil de transistores de silicio con modos Vintage y Custom."
-    },
-    {
-        "id": "boss-ch1",
-        "brand": "Boss",
-        "name": "CH-1 Super Chorus",
-        "category": "Stereo Chorus",
-        "maDraw": 22,
-        "maSafety": 29,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Chorus estéreo limpio y cristalino con perilla de EQ para corte de frecuencias."
-    },
-    {
-        "id": "boss-ce5",
-        "brand": "Boss",
-        "name": "CE-5 Chorus Ensemble",
-        "category": "Stereo Chorus Ensemble",
-        "maDraw": 22,
-        "maSafety": 29,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Amplia gama de efectos de chorus con filtros independientes de corte High y Low."
-    },
-    {
-        "id": "boss-tr2",
-        "brand": "Boss",
-        "name": "TR-2 Tremolo",
-        "category": "Vintage Tremolo",
-        "maDraw": 20,
-        "maSafety": 26,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Trémolo clásico con selector de forma de onda continuo entre suave (Wave) y cuadrada."
     },
     {
         "id": "boss-bf3",
@@ -2063,15 +1042,70 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Flanger estéreo de impacto con modos Ultra, Momentary y panorama rítmico Gate/Pan."
     },
     {
-        "id": "boss-ph3",
+        "id": "boss-ce2w",
         "brand": "Boss",
-        "name": "PH-3 Phase Shifter",
-        "category": "Multi-Stage Phaser",
-        "maDraw": 50,
-        "maSafety": 65,
+        "name": "CE-2w Chorus (Waza Craft)",
+        "category": "Analog Chorus",
+        "maDraw": 25,
+        "maSafety": 32,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1clcBozuQXblnUrtt3b4ZOtKRK3jU2hFa/view?usp=drivesdk",
+        "description": "Chorus analógico BBD con circuito premium Waza Craft y modos CE-1."
+    },
+    {
+        "id": "boss-ce5",
+        "brand": "Boss",
+        "name": "CE-5 Chorus Ensemble",
+        "category": "Stereo Chorus Ensemble",
+        "maDraw": 22,
+        "maSafety": 29,
         "io": "Stereo I/O",
         "manualUrl": null,
-        "description": "Phaser digital de 4, 8, 10 y 12 etapas con modulaciones ascendentes y descendentes (Rise/Fall)."
+        "description": "Amplia gama de efectos de chorus con filtros independientes de corte High y Low."
+    },
+    {
+        "id": "boss-ch1",
+        "brand": "Boss",
+        "name": "CH-1 Super Chorus",
+        "category": "Stereo Chorus",
+        "maDraw": 22,
+        "maSafety": 29,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Chorus estéreo limpio y cristalino con perilla de EQ para corte de frecuencias."
+    },
+    {
+        "id": "boss-cp1x",
+        "brand": "Boss",
+        "name": "CP-1X Compressor",
+        "category": "Multi-Band Digital Compressor",
+        "maDraw": 90,
+        "maSafety": 117,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Compresor multibanda con tecnología MDP que preserva la claridad sin aplastar el ataque."
+    },
+    {
+        "id": "boss-dc2w",
+        "brand": "Boss",
+        "name": "DC-2w Dimension C (Waza Craft)",
+        "category": "Waza Craft Spatial Chorus",
+        "maDraw": 45,
+        "maSafety": 58,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Espacializador analógico 3D de 4 botones y circuito de estudio SDD-320."
+    },
+    {
+        "id": "boss-dd200",
+        "brand": "Boss",
+        "name": "DD-200 Digital Delay",
+        "category": "Smart Delay",
+        "maDraw": 225,
+        "maSafety": 292,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Delay programable de la serie 200 con sonido de alta resolución a 32-bit."
     },
     {
         "id": "boss-dd3t",
@@ -2096,6 +1130,17 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Delay digital compacto con modo Analog, Modulation, Reverse y 40 segundos de looper/Hold."
     },
     {
+        "id": "boss-dd8",
+        "brand": "Boss",
+        "name": "DD-8 Digital Delay",
+        "category": "Digital Delay",
+        "maDraw": 65,
+        "maSafety": 84,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Delay compacto avanzado con 11 modos, looper e ins/outs estéreo."
+    },
+    {
         "id": "boss-dm2w",
         "brand": "Boss",
         "name": "DM-2w Delay (Waza Craft)",
@@ -2107,26 +1152,37 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Delay analógico cálido de chips BBD con modos Standard (300ms) y Custom (800ms)."
     },
     {
-        "id": "boss-sl2",
+        "id": "boss-ds1",
         "brand": "Boss",
-        "name": "SL-2 Slicer",
-        "category": "Audio Pattern Slicer",
-        "maDraw": 95,
-        "maSafety": 124,
-        "io": "Stereo I/O",
+        "name": "DS-1 Distortion",
+        "category": "Classic Distortion",
+        "maDraw": 10,
+        "maSafety": 13,
+        "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Troceador rítmico estéreo que convierte la guitarra en patrones percusivos con MIDI."
+        "description": "La distorsión analógica naranja más vendida de la historia desde 1978."
     },
     {
-        "id": "boss-rc1",
+        "id": "boss-ds2",
         "brand": "Boss",
-        "name": "RC-1 Loop Station",
-        "category": "Compact Phrase Looper",
-        "maDraw": 95,
-        "maSafety": 124,
-        "io": "Stereo I/O",
+        "name": "DS-2 Turbo Distortion",
+        "category": "Turbo Distortion",
+        "maDraw": 12,
+        "maSafety": 16,
+        "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Looper estéreo minimalista con 12 minutos de grabación e indicador circular LED."
+        "description": "Distorsión de dos modos con Turbo Boost para solos agresivos y penetrantes."
+    },
+    {
+        "id": "boss-fz1w",
+        "brand": "Boss",
+        "name": "FZ-1w Fuzz (Waza Craft)",
+        "category": "Vintage & Modern Fuzz",
+        "maDraw": 16,
+        "maSafety": 21,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Fuzz analógico versátil de transistores de silicio con modos Vintage y Custom."
     },
     {
         "id": "boss-ge7",
@@ -2140,37 +1196,15 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Ecualizador gráfico de 7 bandas (+/-15dB) indispensable para esculpir tonos o como boost."
     },
     {
-        "id": "boss-ns2",
+        "id": "boss-hm2w",
         "brand": "Boss",
-        "name": "NS-2 Noise Suppressor",
-        "category": "Noise Reduction Loop",
-        "maDraw": 20,
-        "maSafety": 26,
+        "name": "HM-2w Heavy Metal (Waza Craft)",
+        "category": "Swedish Chainsaw Fuzz / Distortion",
+        "maDraw": 24,
+        "maSafety": 31,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Supresor de ruido inteligente con bucle de silencio Send/Return para overdrives."
-    },
-    {
-        "id": "boss-cp1x",
-        "brand": "Boss",
-        "name": "CP-1X Compressor",
-        "category": "Multi-Band Digital Compressor",
-        "maDraw": 90,
-        "maSafety": 117,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Compresor multibanda con tecnología MDP que preserva la claridad sin aplastar el ataque."
-    },
-    {
-        "id": "boss-oc5",
-        "brand": "Boss",
-        "name": "OC-5 Octave",
-        "category": "Polyphonic Octaver",
-        "maDraw": 55,
-        "maSafety": 72,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Octavador con modo monofónico clásico de OC-2 y motor polifónico moderno de gran tracking."
+        "description": "El icónico tono \"Chainsaw\" del death metal sueco refinado por Waza Craft."
     },
     {
         "id": "boss-ir2",
@@ -2184,6 +1218,17 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Simulador compacto con 11 emulaciones de amplificadores e impulsos Celestion IR."
     },
     {
+        "id": "boss-ls2-util",
+        "brand": "Boss",
+        "name": "LS-2 Line Selector",
+        "category": "Line Switcher",
+        "maDraw": 30,
+        "maSafety": 39,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/16j7NmsVKyYJOBM-JYPvv3ICflKvcVD1a/view?usp=drivesdk",
+        "description": "Conmutador utilitario para bucles A/B y distribución de señal."
+    },
+    {
         "id": "boss-ms3",
         "brand": "Boss",
         "name": "MS-3 Multi Effects Switcher",
@@ -2195,70 +1240,576 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Controlador con 3 bucles de pedales físicos y procesador multiefectos integrado."
     },
     {
-        "id": "jhs-morning-glory-v4",
-        "brand": "JHS Pedals",
-        "name": "Morning Glory V4",
-        "category": "Transparent Overdrive",
-        "maDraw": 43,
-        "maSafety": 56,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Overdrive transparente estilo Bluesbreaker con red-remote switchable gain."
-    },
-    {
-        "id": "jhs-bonsai",
-        "brand": "JHS Pedals",
-        "name": "Bonsai",
-        "category": "9-Way Tube Screamer",
+        "id": "boss-mt2",
+        "brand": "Boss",
+        "name": "MT-2 Metal Zone",
+        "category": "High Gain Distortion",
         "maDraw": 20,
         "maSafety": 26,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "9 circuitos analógicos exactos de Tube Screamer en un solo pedal."
+        "description": "Distorsión pesada legendaria con ecualizador paramétrico de 3 bandas para medios."
     },
     {
-        "id": "jhs-packrat",
-        "brand": "JHS Pedals",
-        "name": "PackRat",
-        "category": "9-Way RAT Distortion",
+        "id": "boss-ns2",
+        "brand": "Boss",
+        "name": "NS-2 Noise Suppressor",
+        "category": "Noise Reduction Loop",
+        "maDraw": 20,
+        "maSafety": 26,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Supresor de ruido inteligente con bucle de silencio Send/Return para overdrives."
+    },
+    {
+        "id": "boss-oc5",
+        "brand": "Boss",
+        "name": "OC-5 Octave",
+        "category": "Polyphonic Octaver",
+        "maDraw": 55,
+        "maSafety": 72,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Octavador con modo monofónico clásico de OC-2 y motor polifónico moderno de gran tracking."
+    },
+    {
+        "id": "boss-od3",
+        "brand": "Boss",
+        "name": "OD-3 OverDrive",
+        "category": "Natural Overdrive",
+        "maDraw": 15,
+        "maSafety": 20,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Overdrive fluido y cálido de doble etapa con gran respuesta a la dinámica."
+    },
+    {
+        "id": "boss-ph3",
+        "brand": "Boss",
+        "name": "PH-3 Phase Shifter",
+        "category": "Multi-Stage Phaser",
+        "maDraw": 50,
+        "maSafety": 65,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Phaser digital de 4, 8, 10 y 12 etapas con modulaciones ascendentes y descendentes (Rise/Fall)."
+    },
+    {
+        "id": "boss-rc1",
+        "brand": "Boss",
+        "name": "RC-1 Loop Station",
+        "category": "Compact Phrase Looper",
+        "maDraw": 95,
+        "maSafety": 124,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Looper estéreo minimalista con 12 minutos de grabación e indicador circular LED."
+    },
+    {
+        "id": "boss-rc5",
+        "brand": "Boss",
+        "name": "RC-5 Loop Station",
+        "category": "Compact Phrase Looper",
+        "maDraw": 170,
+        "maSafety": 221,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1TQyct7cMQGchPGQtiNURP71a4cKAG7o3/view?usp=drivesdk",
+        "description": "Looper avanzado de 32 bits con ritmos de batería integrados."
+    },
+    {
+        "id": "boss-re202",
+        "brand": "Boss",
+        "name": "RE-202 Space Echo",
+        "category": "Space Echo Tape Delay",
+        "maDraw": 140,
+        "maSafety": 182,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Recreación exacta del Roland RE-201 Space Echo con cabezales múltiples."
+    },
+    {
+        "id": "boss-rv500",
+        "brand": "Boss",
+        "name": "RV-500 Reverb",
+        "category": "Advanced Reverb Processor",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Procesador de reverberación de buque insignia de 32-bit/96kHz con modo Simul."
+    },
+    {
+        "id": "boss-rv6",
+        "brand": "Boss",
+        "name": "RV-6 Reverb",
+        "category": "Digital Reverb",
+        "maDraw": 65,
+        "maSafety": 84,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "8 algoritmos de reverberación hi-fi incluyendo Shimmer y Dynamic."
+    },
+    {
+        "id": "boss-sd1",
+        "brand": "Boss",
+        "name": "SD-1 Super Overdrive",
+        "category": "Classic Overdrive",
+        "maDraw": 10,
+        "maSafety": 13,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "El overdrive de recorte asimétrico estándar de la industria desde 1981."
+    },
+    {
+        "id": "boss-sl2",
+        "brand": "Boss",
+        "name": "SL-2 Slicer",
+        "category": "Audio Pattern Slicer",
+        "maDraw": 95,
+        "maSafety": 124,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Troceador rítmico estéreo que convierte la guitarra en patrones percusivos con MIDI."
+    },
+    {
+        "id": "boss-sy1",
+        "brand": "Boss",
+        "name": "SY-1 Synthesizer",
+        "category": "Polyphonic Guitar Synth",
+        "maDraw": 85,
+        "maSafety": 110,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "121 sonidos de sintetizador polifónico analógico sin latencia ni micrófonos especiales."
+    },
+    {
+        "id": "boss-te2",
+        "brand": "Boss",
+        "name": "Tera Echo TE-2",
+        "category": "Stereo Echo / Ambience",
+        "maDraw": 53,
+        "maSafety": 69,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1rx6NSaQIJKNBSgIkHiykNZQwRdFM7Gt1/view?usp=drivesdk",
+        "description": "Reverberación ambiental dinámica MDP con envolvente espacial."
+    },
+    {
+        "id": "boss-tr2",
+        "brand": "Boss",
+        "name": "TR-2 Tremolo",
+        "category": "Vintage Tremolo",
+        "maDraw": 20,
+        "maSafety": 26,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Trémolo clásico con selector de forma de onda continuo entre suave (Wave) y cuadrada."
+    },
+    {
+        "id": "boss-tu3",
+        "brand": "Boss",
+        "name": "TU-3 Chromatic Tuner",
+        "category": "Chromatic Tuner",
+        "maDraw": 30,
+        "maSafety": 39,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Afinador cromático estándar de escenario con salida DC Out."
+    },
+    {
+        "id": "cb-bad-mood",
+        "brand": "Chase Bliss",
+        "name": "Bad Mood",
+        "category": "Micro-Looper / Delay / Reverb",
+        "maDraw": 200,
+        "maSafety": 260,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1zhEWs2pa618BL271mIGfhkITsPdfeQfG/view?usp=drivesdk",
+        "description": "Canal de efectos Wet con Micro-Looper dinámico."
+    },
+    {
+        "id": "cb-blooper",
+        "brand": "Chase Bliss",
+        "name": "Blooper",
+        "category": "Bottomless Looper",
+        "maDraw": 150,
+        "maSafety": 195,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1JyHz7ewxT6VAFD1cqgjUd1eLqYRNjL3C/view?usp=drivesdk",
+        "description": "Looper creativo con capas destructivas y modificadores digitales."
+    },
+    {
+        "id": "cb-brothers-am",
+        "brand": "Chase Bliss",
+        "name": "Brothers AM",
+        "category": "Boost / Overdrive / Fuzz",
+        "maDraw": 200,
+        "maSafety": 260,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1SkRf1QJ7RDAusJkGQt9K_r3DLeU0AWpr/view?usp=drivesdk",
+        "description": "Boost de agudos y drive analógico dual en colaboración con Analog Man."
+    },
+    {
+        "id": "cb-clean",
+        "brand": "Chase Bliss",
+        "name": "Clean",
+        "category": "Compressor + Swells",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1lRoJ2UX6YAbD7S0ELAGds_aZMCq4_GVF/view?usp=drivesdk",
+        "description": "Compresor y procesador dinámico táctil con envelope y swells."
+    },
+    {
+        "id": "cb-condor",
+        "brand": "Chase Bliss",
+        "name": "Condor",
+        "category": "Analog EQ & Preamp",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1CJYEFqqvcCH3GbGNm8AmrMTgp3d5cN8u/view?usp=drivesdk",
+        "description": "Ecualizador analógico, filtro paramétrico y boost armónico."
+    },
+    {
+        "id": "cb-dark-world",
+        "brand": "Chase Bliss",
+        "name": "Dark World",
+        "category": "Dual Channel Reverb",
+        "maDraw": 150,
+        "maSafety": 195,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1RKQasjD7WKuBxLkThxRuqmlMtO41y_BE/view?usp=drivesdk",
+        "description": "Reverb dual Cooper FX + Keeley Electronics."
+    },
+    {
+        "id": "cb-faves",
+        "brand": "Chase Bliss",
+        "name": "Faves",
+        "category": "Preset Switcher",
+        "maDraw": 20,
+        "maSafety": 26,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1eAAsB7FGl9t8vrpGPiSyndUiCNyjf9Q0/view?usp=drivesdk",
+        "description": "Acceso a 6 presets vía MIDI TRS para pedales Chase Bliss."
+    },
+    {
+        "id": "cb-gen-loss-mkii",
+        "brand": "Chase Bliss",
+        "name": "Gen Loss MKII",
+        "category": "VHS Tape Degenerator",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1krQ2-EComTzO9oQZrKpZ61p1FU_nyv9u/view?usp=drivesdk",
+        "description": "Emulador de imperfecciones de cinta de video VHS y cassette."
+    },
+    {
+        "id": "cb-habit",
+        "brand": "Chase Bliss",
+        "name": "Habit",
+        "category": "Echo Collector / Delay",
+        "maDraw": 150,
+        "maSafety": 195,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1wJTEvMjWXWpcMY8iFm07rb5-gqGe1JP6/view?usp=drivesdk",
+        "description": "Delay creativo con memoria continua de 3 minutos e inspección Scan."
+    },
+    {
+        "id": "cb-lossy",
+        "brand": "Chase Bliss",
+        "name": "Lossy",
+        "category": "Digital Artifacts & Loss",
+        "maDraw": 400,
+        "maSafety": 520,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1YbhUB4F_ALIcZcqofFrvgQGZrWoqoH-d/view?usp=drivesdk",
+        "description": "Simulación de compresión MP3, audio lo-fi y degradación digital."
+    },
+    {
+        "id": "cb-lost-found",
+        "brand": "Chase Bliss",
+        "name": "Lost + Found",
+        "category": "Multi-Effect Stereo Engine",
+        "maDraw": 200,
+        "maSafety": 260,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1iQNzidBkiL2prBBViaXHJhSbEEOWgwrd/view?usp=drivesdk",
+        "description": "Sintetizadores, modulaciones complejas y arquitectura estéreo dual."
+    },
+    {
+        "id": "cb-mood-mkii",
+        "brand": "Chase Bliss",
+        "name": "Mood MKII",
+        "category": "Micro-Looper / Spatial Reverb",
+        "maDraw": 270,
+        "maSafety": 351,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1j_DwuFe-HiePnED_oqcF_dG0dvAr-1oj/view?usp=drivesdk",
+        "description": "Micro-looper estéreo, delay granular y generador ambiental."
+    },
+    {
+        "id": "cb-onward",
+        "brand": "Chase Bliss",
+        "name": "Onward",
+        "category": "Dynamic Sustainer / Glitch",
+        "maDraw": 200,
+        "maSafety": 260,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1gkY2czKGtP5bAYq4tzP1JLnSAbWjRMl_/view?usp=drivesdk",
+        "description": "Sostenidos armónicos orgánicos y ráfagas dinámicas de glitch."
+    },
+    {
+        "id": "cb-preamp-mkii",
+        "brand": "Chase Bliss",
+        "name": "Preamp MKII",
+        "category": "Automated Preamp / Fuzz",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/124TzHi5lKbmjntUeV8538oCUvd-dIo9B/view?usp=drivesdk",
+        "description": "Preamplificador analógico motorizado con faders automatizados y fuzz Benson."
+    },
+    {
+        "id": "cb-reverse-mode-c",
+        "brand": "Chase Bliss",
+        "name": "Reverse Mode C",
+        "category": "Reverse Delay / Modulator",
+        "maDraw": 270,
+        "maSafety": 351,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1-cabRvptSLSVw-T5h8F9eYE6Vds2Nixh/view?usp=drivesdk",
+        "description": "Reverse delay multidireccional con secuenciador y modulador."
+    },
+    {
+        "id": "cb-thermae",
+        "brand": "Chase Bliss",
+        "name": "Thermae",
+        "category": "Analog Delay & Pitch Shifter",
+        "maDraw": 150,
+        "maSafety": 195,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1Fpw9hFuIyO5SutZrqb_lcRMpNOrVLeLP/view?usp=drivesdk",
+        "description": "Delay analógico BBD con armonización de pitch secuenciada por reloj."
+    },
+    {
+        "id": "cb-tonal-recall-rkm",
+        "brand": "Chase Bliss",
+        "name": "Tonal Recall RKM",
+        "category": "Analog Delay BBD",
+        "maDraw": 150,
+        "maSafety": 195,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1vNwM0YmGMb2d0L3nvbpp5Qn6_GVBjBBO/view?usp=drivesdk",
+        "description": "Delay analógico con chips Panasonic MN3005 reeditados."
+    },
+    {
+        "id": "cb-warped-vinyl",
+        "brand": "Chase Bliss",
+        "name": "Warped Vinyl HiFi",
+        "category": "Analog Vibrato / Chorus",
+        "maDraw": 70,
+        "maSafety": 91,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/157RDnY3wptCgfhZ5Nb-evLcerQCBqb0n/view?usp=drivesdk",
+        "description": "Simulador analógico de vinilo desafinado."
+    },
+    {
+        "id": "dba-echo-dream-2",
+        "brand": "Death By Audio",
+        "name": "Echo Dream 2",
+        "category": "Modulated Analog Delay",
+        "maDraw": 40,
+        "maSafety": 52,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Delay lo-fi modulado con fuzz integrado y oscilador de onda cuadrada."
+    },
+    {
+        "id": "dba-fuzz-war",
+        "brand": "Death By Audio",
+        "name": "Fuzz War",
+        "category": "High-Gain Fuzz",
+        "maDraw": 10,
+        "maSafety": 13,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Fuzz brutal de alto ganancia con control de tono multifiltro masivo."
+    },
+    {
+        "id": "dba-rooms",
+        "brand": "Death By Audio",
+        "name": "Rooms",
+        "category": "Stereo Reverberator",
+        "maDraw": 80,
+        "maSafety": 104,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Reverberador estéreo multialgorítmico de alta fidelidad y volumen extremo."
+    },
+    {
+        "id": "dba-space-bender",
+        "brand": "Death By Audio",
+        "name": "Space Bender",
+        "category": "Chorus Delay Modulator",
+        "maDraw": 65,
+        "maSafety": 84,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Modulador dinámico de delay corto y chorus desfasado con oscilación salvaje."
+    },
+    {
+        "id": "digitech-whammy-5",
+        "brand": "DigiTech",
+        "name": "Whammy V",
+        "category": "Polyphonic Pitch Shifter",
+        "maDraw": 265,
+        "maSafety": 345,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "Pedal de pitch shifting polifónico y armonizador clásico accionado por pedal de expresión."
+    },
+    {
+        "id": "dunlop-cry-baby",
+        "brand": "Dunlop",
+        "name": "Cry Baby GCB95",
+        "category": "Wah-Wah Filter",
+        "maDraw": 1,
+        "maSafety": 2,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "El pedal de wah-wah estándar e indispensable en la historia del rock."
+    },
+    {
+        "id": "eqd-afterneath-v3",
+        "brand": "EarthQuaker Devices",
+        "name": "Afterneath V3",
+        "category": "Otherworldly Reverberator",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Reverb de cueva espacial con matriz de cortos delays difusos y modo de modo de escala."
+    },
+    {
+        "id": "eqd-astral-destiny",
+        "brand": "EarthQuaker Devices",
+        "name": "Astral Destiny",
+        "category": "Octave Reverberation Engine",
+        "maDraw": 85,
+        "maSafety": 110,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Motor de reverberación octavada con 8 modos modulados y presets."
+    },
+    {
+        "id": "eqd-avalanche-run-v2",
+        "brand": "EarthQuaker Devices",
+        "name": "Avalanche Run V2",
+        "category": "Stereo Delay & Reverb",
+        "maDraw": 410,
+        "maSafety": 533,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Delay y reverb estéreo ambiental con procesamiento DSP de alta velocidad."
+    },
+    {
+        "id": "eqd-dispatch-master-v3",
+        "brand": "EarthQuaker Devices",
+        "name": "Dispatch Master V3",
+        "category": "Delay & Reverb",
+        "maDraw": 78,
+        "maSafety": 101,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Combinación compacta de delay de hasta 1.5s y reverb hi-fi."
+    },
+    {
+        "id": "eqd-hizumitas",
+        "brand": "EarthQuaker Devices",
+        "name": "Hizumitas",
+        "category": "Fuzz Sustainar",
+        "maDraw": 10,
+        "maSafety": 13,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Fuzz de alta ganancia en colaboración con Wata de la banda Boris."
+    },
+    {
+        "id": "eqd-hoof",
+        "brand": "EarthQuaker Devices",
+        "name": "Hoof",
+        "category": "Germanium / Silicon Fuzz",
+        "maDraw": 15,
+        "maSafety": 20,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Fuzz híbrido de germanio/silicio inspirado en el Big Muff verde ruso."
+    },
+    {
+        "id": "eqd-life-pedal-v3",
+        "brand": "EarthQuaker Devices",
+        "name": "Life Pedal V3",
+        "category": "Octave Distortion & Boost",
+        "maDraw": 15,
+        "maSafety": 20,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Distorsión estilo RAT con octava arriba de germanio y boost de MOSFET Sunn O))) style."
+    },
+    {
+        "id": "eqd-plumes",
+        "brand": "EarthQuaker Devices",
+        "name": "Plumes",
+        "category": "Signal Shredder Overdrive",
         "maDraw": 25,
         "maSafety": 32,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "9 modos analógicos legendarios de la historia del ProCo RAT."
+        "description": "Overdrive analógico de estilo Tube Screamer con 3 modos de recorte op-amp."
     },
     {
-        "id": "jhs-pulp-n-peel-v4",
-        "brand": "JHS Pedals",
-        "name": "Pulp 'N' Peel V4",
-        "category": "Compressor / Preamp / DI",
-        "maDraw": 41,
-        "maSafety": 53,
+        "id": "eqd-rainbow-machine-v2",
+        "brand": "EarthQuaker Devices",
+        "name": "Rainbow Machine V2",
+        "category": "Polyphonic Pitch Resonator",
+        "maDraw": 160,
+        "maSafety": 208,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Compresor analógico estilo Dan Armstrong con salida paralela XLR DI."
+        "description": "Resonador polifónico de pitch shifting digital y oscilación mágica."
     },
     {
-        "id": "jhs-muffuletta",
-        "brand": "JHS Pedals",
-        "name": "Muffuletta",
-        "category": "6-Way Big Muff Fuzz",
-        "maDraw": 4,
-        "maSafety": 5,
+        "id": "eqd-spatial-delivery-v3",
+        "brand": "EarthQuaker Devices",
+        "name": "Spatial Delivery V3",
+        "category": "Envelope Filter with Sample & Hold",
+        "maDraw": 69,
+        "maSafety": 90,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "6 circuitos analógicos históricos de Big Muff en un único chasis."
+        "description": "Filtro de envolvente dinámico con modos Up, Down y filtro aleatorio Sample & Hold."
     },
     {
-        "id": "jhs-angry-charlie-v3",
-        "brand": "JHS Pedals",
-        "name": "Angry Charlie V3",
-        "category": "High Gain JCM800 Distortion",
-        "maDraw": 11,
-        "maSafety": 14,
+        "id": "ehx-big-muff",
+        "brand": "Electro-Harmonix",
+        "name": "Big Muff Pi",
+        "category": "Classic Fuzz / Sustainer",
+        "maDraw": 5,
+        "maSafety": 6,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Tono de amplificador Marshall JCM800 británico con ecualizador de 3 bandas."
+        "description": "El tono clásico de fuzz y sostenido cantante con distorsión armónica."
+    },
+    {
+        "id": "ehx-nano-pog",
+        "brand": "Electro-Harmonix",
+        "name": "Nano POG",
+        "category": "Polyphonic Octave Generator",
+        "maDraw": 25,
+        "maSafety": 32,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Generador de octava arriba y octava abajo polifónico de seguimiento rápido."
     },
     {
         "id": "ehx-oceans-11",
@@ -2294,26 +1845,15 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Pitch shifter y armonizador polifónico de +/- 3 octavas."
     },
     {
-        "id": "ehx-big-muff",
+        "id": "ehx-small-clone",
         "brand": "Electro-Harmonix",
-        "name": "Big Muff Pi",
-        "category": "Classic Fuzz / Sustainer",
-        "maDraw": 5,
-        "maSafety": 6,
+        "name": "Small Clone",
+        "category": "Analog Chorus",
+        "maDraw": 12,
+        "maSafety": 16,
         "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "El tono clásico de fuzz y sostenido cantante con distorsión armónica."
-    },
-    {
-        "id": "ehx-nano-pog",
-        "brand": "Electro-Harmonix",
-        "name": "Nano POG",
-        "category": "Polyphonic Octave Generator",
-        "maDraw": 25,
-        "maSafety": 32,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Generador de octava arriba y octava abajo polifónico de seguimiento rápido."
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "Chorus analógico BBD legendario famoso por el sonido característico de los 90s."
     },
     {
         "id": "ehx-soul-food",
@@ -2327,59 +1867,114 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Overdrive transparente estilo Klon Centaur con rieles de potencia elevados a 18V."
     },
     {
-        "id": "tc-flashback-2",
-        "brand": "TC Electronic",
-        "name": "Flashback 2",
-        "category": "Delay & Looper",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Delay estéreo con footswitch de presión Mash y tecnología TonePrint."
+        "id": "ibanez-ts9",
+        "brand": "Ibanez",
+        "name": "TS9 Tube Screamer",
+        "category": "Analog Overdrive",
+        "maDraw": 8,
+        "maSafety": 11,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "Overdrive verde analógico clásico e icónico de recortado suave para empujar valvulares."
     },
     {
-        "id": "tc-hall-of-fame-2",
-        "brand": "TC Electronic",
-        "name": "Hall of Fame 2",
-        "category": "Digital Reverb",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Reverb estéreo con algoritmo Shimmer, MASH y ranuras TonePrint."
-    },
-    {
-        "id": "tc-ditto-stereo",
-        "brand": "TC Electronic",
-        "name": "Ditto Stereo Looper",
-        "category": "Stereo Phrase Looper",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Looper estéreo minimalista de 24 bits con importación/exportación de backing tracks."
-    },
-    {
-        "id": "tc-polytune-3",
-        "brand": "TC Electronic",
-        "name": "PolyTune 3",
-        "category": "Polyphonic Tuner & Buffer",
-        "maDraw": 100,
-        "maSafety": 130,
+        "id": "jhs-angry-charlie-v3",
+        "brand": "JHS Pedals",
+        "name": "Angry Charlie V3",
+        "category": "High Gain JCM800 Distortion",
+        "maDraw": 11,
+        "maSafety": 14,
         "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Afinador polifónico ultrafavorable con circuito BonaFide Buffer integrado."
+        "description": "Tono de amplificador Marshall JCM800 británico con ecualizador de 3 bandas."
     },
     {
-        "id": "tc-plethora-x5",
-        "brand": "TC Electronic",
-        "name": "Plethora X5",
-        "category": "TonePrint Multi-FX Board",
-        "maDraw": 600,
-        "maSafety": 780,
-        "io": "Stereo I/O",
+        "id": "jhs-bonsai",
+        "brand": "JHS Pedals",
+        "name": "Bonsai",
+        "category": "9-Way Tube Screamer",
+        "maDraw": 20,
+        "maSafety": 26,
+        "io": "Mono I/O",
         "manualUrl": null,
-        "description": "Tablero virtual flexible de hasta 5 pedales TonePrint con MIDI e ins/outs estéreo."
+        "description": "9 circuitos analógicos exactos de Tube Screamer en un solo pedal."
+    },
+    {
+        "id": "jhs-morning-glory-v4",
+        "brand": "JHS Pedals",
+        "name": "Morning Glory V4",
+        "category": "Transparent Overdrive",
+        "maDraw": 43,
+        "maSafety": 56,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Overdrive transparente estilo Bluesbreaker con red-remote switchable gain."
+    },
+    {
+        "id": "jhs-muffuletta",
+        "brand": "JHS Pedals",
+        "name": "Muffuletta",
+        "category": "6-Way Big Muff Fuzz",
+        "maDraw": 4,
+        "maSafety": 5,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "6 circuitos analógicos históricos de Big Muff en un único chasis."
+    },
+    {
+        "id": "jhs-packrat",
+        "brand": "JHS Pedals",
+        "name": "PackRat",
+        "category": "9-Way RAT Distortion",
+        "maDraw": 25,
+        "maSafety": 32,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "9 modos analógicos legendarios de la historia del ProCo RAT."
+    },
+    {
+        "id": "jhs-pulp-n-peel-v4",
+        "brand": "JHS Pedals",
+        "name": "Pulp 'N' Peel V4",
+        "category": "Compressor / Preamp / DI",
+        "maDraw": 41,
+        "maSafety": 53,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Compresor analógico estilo Dan Armstrong con salida paralela XLR DI."
+    },
+    {
+        "id": "kino-ghosts",
+        "brand": "Kinotone",
+        "name": "Ghosts",
+        "category": "Polyphonic Resonator",
+        "maDraw": 220,
+        "maSafety": 286,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1NrRJBqEqnA1p7owQJIlIf7Qf0lPMevUs/view?usp=drivesdk",
+        "description": "Resonador físico polifónico de cuerdas y tubos con textura analógica."
+    },
+    {
+        "id": "klon-centaur",
+        "brand": "Klon",
+        "name": "Centaur",
+        "category": "Transparent Overdrive",
+        "maDraw": 5,
+        "maSafety": 7,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "El mítico overdrive transparente con doblador de voltaje interno de 18V."
+    },
+    {
+        "id": "line6-dl4",
+        "brand": "Line 6",
+        "name": "DL4 Delay Modeler",
+        "category": "Multi-Delay & Looper",
+        "maDraw": 200,
+        "maSafety": 260,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "El clásico modelador verde de delays digitales, reverse y looper de 14 segundos."
     },
     {
         "id": "mxr-carbon-copy",
@@ -2404,6 +1999,28 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Versión Deluxe con tap tempo, subdivisiones de nota y selector Bright/Dark."
     },
     {
+        "id": "mxr-dyna-comp",
+        "brand": "MXR",
+        "name": "Dyna Comp",
+        "category": "Compressor",
+        "maDraw": 5,
+        "maSafety": 7,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "description": "El compresor analógico rojo en formato compacto para sustain y ataque percusivo."
+    },
+    {
+        "id": "mxr-m300-reverb",
+        "brand": "MXR",
+        "name": "M300 Reverb",
+        "category": "Digital Reverb",
+        "maDraw": 240,
+        "maSafety": 312,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "6 algoritmos de reverberación hi-fi de nivel de estudio en chasis compacto MXR."
+    },
+    {
         "id": "mxr-phase-90",
         "brand": "MXR",
         "name": "Phase 90",
@@ -2426,103 +2043,136 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Ecualizador gráfico de 10 bandas con +12dB de corte/realce y headroom de 18V."
     },
     {
-        "id": "mxr-m300-reverb",
-        "brand": "MXR",
-        "name": "M300 Reverb",
-        "category": "Digital Reverb",
-        "maDraw": 240,
-        "maSafety": 312,
-        "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "6 algoritmos de reverberación hi-fi de nivel de estudio en chasis compacto MXR."
+        "id": "obne-alpha-haunt-v2",
+        "brand": "OBNE",
+        "name": "Alpha Haunt V2",
+        "category": "Fuzz Engine",
+        "maDraw": 85,
+        "maSafety": 110,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1uSHdH3anKoPLT6RezV3535nALyJVuJMT/view?usp=drivesdk",
+        "description": "Motor de fuzz analógico flexible con ecualizador gráfico activo y mezcla limpia."
     },
     {
-        "id": "dba-rooms",
-        "brand": "Death By Audio",
-        "name": "Rooms",
-        "category": "Stereo Reverberator",
+        "id": "obne-beamsplitter-v2",
+        "brand": "OBNE",
+        "name": "Beamsplitter V2",
+        "category": "Triple Tracking Overdrive",
+        "maDraw": 350,
+        "maSafety": 455,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1V24uuITYGCTLAHr91n6OKVTBgGTJRWqw/view?usp=drivesdk",
+        "description": "Triple overdrive analógico paralelo con delays de micro-desfase."
+    },
+    {
+        "id": "obne-black-fountain-v3",
+        "brand": "OBNE",
+        "name": "Black Fountain V3",
+        "category": "Oil Can Delay",
+        "maDraw": 90,
+        "maSafety": 117,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1Q1pes_liGxAgYwCKiik0INtl7f36Ddi1/view?usp=drivesdk",
+        "description": "Emulador analógico de unidades de delay de aceite vintage con modulaciones oscuras."
+    },
+    {
+        "id": "obne-dark-star-v3",
+        "brand": "OBNE",
+        "name": "Dark Star Stereo V3",
+        "category": "Pad Reverb / Pitch / Delay",
+        "maDraw": 350,
+        "maSafety": 455,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/19pW3YkP8ppnJ1izd1YO_wAnBMAhpsbRI/view?usp=drivesdk",
+        "description": "Reverb estéreo atmosférico con modulaciones Pitch/Delay/Crush."
+    },
+    {
+        "id": "obne-dweller",
+        "brand": "OBNE",
+        "name": "Dweller",
+        "category": "Phase Repeater",
         "maDraw": 80,
         "maSafety": 104,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1H6oh9ZL8-g_eV0Ok-caDjhSGUlQw_T0G/view?usp=drivesdk",
+        "description": "Delay modulado por phaser de pasos para texturas envolventes."
+    },
+    {
+        "id": "obne-exp-ramper",
+        "brand": "OBNE",
+        "name": "Expression Ramper",
+        "category": "Expression LFO",
+        "maDraw": 50,
+        "maSafety": 65,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1OIq7kk73nxGopoF-1yx_0MyHJnHgcAC1/view?usp=drivesdk",
+        "description": "Movimiento continuo de expresión LFO entre los puntos A y B."
+    },
+    {
+        "id": "obne-minim",
+        "brand": "OBNE",
+        "name": "Minim",
+        "category": "Delay + Reverse + Reverb",
+        "maDraw": 150,
+        "maSafety": 195,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1UsiI0iZ2Moq-JkJfjdgRwM0AWq3tPvZn/view?usp=drivesdk",
+        "description": "Sección combinada de delay, reverb modulado y sección de reversa."
+    },
+    {
+        "id": "obne-procession",
+        "brand": "OBNE",
+        "name": "Procession",
+        "category": "Sci-Fi Reverb",
+        "maDraw": 60,
+        "maSafety": 78,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1tygBAOSnR5FV-s_TGtJNlM-R3eSnUp3i/view?usp=drivesdk",
+        "description": "Reverb Sci-Fi con filtro envolvente, tremolo y phaser modulado."
+    },
+    {
+        "id": "obne-signal-blender",
+        "brand": "OBNE",
+        "name": "Signal Blender",
+        "category": "Parallel Line Switcher",
+        "maDraw": 30,
+        "maSafety": 39,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1o_uoQ9CrTPUID_74dMXv0YJwgBrKALJA/view?usp=drivesdk",
+        "description": "Conmutador y mezclador paralelo de bucles para cadenas complejas."
+    },
+    {
+        "id": "obne-sunlight-v2",
+        "brand": "OBNE",
+        "name": "Sunlight Stereo V2",
+        "category": "Dynamic Stereo Reverb",
+        "maDraw": 350,
+        "maSafety": 455,
         "io": "Stereo I/O",
-        "manualUrl": null,
-        "description": "Reverberador estéreo multialgorítmico de alta fidelidad y volumen extremo."
+        "manualUrl": "https://drive.google.com/file/d/1OhW9M9ts0TAjobzIpr3BLY4WM67U0oj8/view?usp=drivesdk",
+        "description": "Reverb dinámico sensible a la intensidad con congelado dinámico."
     },
     {
-        "id": "dba-fuzz-war",
-        "brand": "Death By Audio",
-        "name": "Fuzz War",
-        "category": "High-Gain Fuzz",
-        "maDraw": 10,
-        "maSafety": 13,
+        "id": "obne-sunlight-v1",
+        "brand": "OBNE",
+        "name": "Sunlight V1",
+        "category": "Dynamic Reverb",
+        "maDraw": 80,
+        "maSafety": 104,
         "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Fuzz brutal de alto ganancia con control de tono multifiltro masivo."
+        "manualUrl": "https://drive.google.com/file/d/1bLabUNmOr42IHJqyOGmawYA6dACqMAxY/view?usp=drivesdk",
+        "description": "Reverb dinámico sensible a la púa con modos Tape, Comb y Pass y función ALT."
     },
     {
-        "id": "dba-echo-dream-2",
-        "brand": "Death By Audio",
-        "name": "Echo Dream 2",
-        "category": "Modulated Analog Delay",
-        "maDraw": 40,
-        "maSafety": 52,
+        "id": "obne-visitor",
+        "brand": "OBNE",
+        "name": "Visitor",
+        "category": "Parallel Multi-Modulator",
+        "maDraw": 46,
+        "maSafety": 60,
         "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Delay lo-fi modulado con fuzz integrado y oscilador de onda cuadrada."
-    },
-    {
-        "id": "dba-space-bender",
-        "brand": "Death By Audio",
-        "name": "Space Bender",
-        "category": "Chorus Delay Modulator",
-        "maDraw": 65,
-        "maSafety": 84,
-        "io": "Mono I/O",
-        "manualUrl": null,
-        "description": "Modulador dinámico de delay corto y chorus desfasado con oscilación salvaje."
-    },
-    {
-        "id": "kino-ghosts",
-        "brand": "Kinotone",
-        "name": "Ghosts",
-        "category": "Polyphonic Resonator",
-        "maDraw": 220,
-        "maSafety": 286,
-        "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/file/d/1NrRJBqEqnA1p7owQJIlIf7Qf0lPMevUs/view?usp=drivesdk",
-        "description": "Resonador físico polifónico de cuerdas y tubos con textura analógica."
-    },
-    {
-        "id": "ye-defiant-jazz",
-        "brand": "Yesterday Effects",
-        "name": "Defiant Jazz",
-        "category": "Pre-Amp / Drive",
-        "maDraw": 100,
-        "maSafety": 130,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/file/d/1Wb113-Kg1B69lu4AZdlTTFPIBN1QIENm/view?usp=drivesdk",
-        "description": "Pre-amp analógico inspirado en Roland JC-120."
-    },
-    {
-        "id": "ibanez-ts9",
-        "brand": "Ibanez",
-        "name": "TS9 Tube Screamer",
-        "category": "Analog Overdrive",
-        "maDraw": 8,
-        "maSafety": 11,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "Overdrive verde analógico clásico e icónico de recortado suave para empujar valvulares."
-    },
-    {
-        "id": "klon-centaur",
-        "brand": "Klon",
-        "name": "Centaur",
-        "category": "Transparent Overdrive",
-        "maDraw": 5,
-        "maSafety": 7,
-        "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "El mítico overdrive transparente con doblador de voltaje interno de 18V."
+        "manualUrl": "https://drive.google.com/file/d/1JOQOnzTvLtVYUuRFCUwNaQwXryzI44kz/view?usp=drivesdk",
+        "description": "Modulación paralela primaria y secundaria simultánea con delay cruzado."
     },
     {
         "id": "proco-rat-2",
@@ -2536,59 +2186,422 @@ const DEFAULT_PEDALS_FALLBACK = [
         "description": "Distorsión clásica e incisiva con perilla de Filter pasivo y tono de ganancia agresivo."
     },
     {
-        "id": "line6-dl4",
-        "brand": "Line 6",
-        "name": "DL4 Delay Modeler",
-        "category": "Multi-Delay & Looper",
+        "id": "rp-bitmap-v2",
+        "brand": "Red Panda",
+        "name": "Bitmap V2",
+        "category": "Bitcrusher / Rate Reducer",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1TK9zDmUU3HiNDGaB8Sm_jJ1LenpK6kn_/view?usp=drivesdk",
+        "description": "Reducción de tasa de muestreo y profundidad de bits con filtro de olas y envelope."
+    },
+    {
+        "id": "rp-context-v2",
+        "brand": "Red Panda",
+        "name": "Context V2",
+        "category": "Reverb & Delay",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1y4-_-6gnA3kxPJsksbOHpEzaEnTCaAlJ/view?usp=drivesdk",
+        "description": "Reverberaciones de estudio de los años 80 con delay asignable y modulación."
+    },
+    {
+        "id": "rp-particle-v2",
+        "brand": "Red Panda",
+        "name": "Particle V2",
+        "category": "Granular Delay / Pitch Shifter",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/19zFNcDutP_LHZ2ILac-bcMQQCnUrR79w/view?usp=drivesdk",
+        "description": "Delay granular y cambio de tono en tiempo real con troceado de señal."
+    },
+    {
+        "id": "rp-radius",
+        "brand": "Red Panda",
+        "name": "Radius",
+        "category": "Ring Modulator / Frequency Shifter",
         "maDraw": 200,
         "maSafety": 260,
         "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "El clásico modelador verde de delays digitales, reverse y looper de 14 segundos."
+        "manualUrl": "https://drive.google.com/file/d/1xlUQspfU7Z-J6x1fN72caLhtOe8DnVe1/view?usp=drivesdk",
+        "description": "Ring Modulator y Frequency Shifter estéreo con modulaciones avanzadas."
     },
     {
-        "id": "ehx-small-clone",
-        "brand": "Electro-Harmonix",
-        "name": "Small Clone",
-        "category": "Analog Chorus",
-        "maDraw": 12,
-        "maSafety": 16,
+        "id": "rp-raster-v2",
+        "brand": "Red Panda",
+        "name": "Raster V2",
+        "category": "Digital Delay / Pitch Shifter",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1HX72V06PXbadvWfY7c-zqiyzx24JHqNy/view?usp=drivesdk",
+        "description": "Delay digital de micro-desfase con desplazamiento de tono e intensidad LFO."
+    },
+    {
+        "id": "rp-tensor",
+        "brand": "Red Panda",
+        "name": "Tensor",
+        "category": "Tape Delay / Pitch / Reverse",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1k0ibHRgXvXTVFgcl3T6kRGHl5kdMtbPa/view?usp=drivesdk",
+        "description": "Rebobinado en vivo, estiramiento de tiempo y pitch shifting sin alteración de tempo."
+    },
+    {
+        "id": "strymon-bigsky",
+        "brand": "Strymon",
+        "name": "BigSky",
+        "category": "Multidimensional Reverb",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1YwSR8VNfQ7V58L9g0TKYFHg4OPT6F-J5/view?usp=drivesdk",
+        "description": "Estándar de la industria para reverberaciones ambientales completas."
+    },
+    {
+        "id": "strymon-cloudburst",
+        "brand": "Strymon",
+        "name": "Cloudburst",
+        "category": "Ambient Reverb",
+        "maDraw": 250,
+        "maSafety": 325,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1H0WI1SgSqePig_1Qy8tz8cu9XDrp142v/view?usp=drivesdk",
+        "description": "Reverb ambiental de amplio espacio con generador armónico Ensemble."
+    },
+    {
+        "id": "strymon-compadre",
+        "brand": "Strymon",
+        "name": "Compadre",
+        "category": "Dual Compressor & Boost",
+        "maDraw": 150,
+        "maSafety": 195,
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "Chorus analógico BBD legendario famoso por el sonido característico de los 90s."
+        "manualUrl": "https://drive.google.com/file/d/1G5ih0m_wTGG670tkaeb4trMjpgZZJA7r/view?usp=drivesdk",
+        "description": "Compresor de estudio VCA y boost limpio analógico de ecualización seleccionable."
     },
     {
-        "id": "digitech-whammy-5",
-        "brand": "DigiTech",
-        "name": "Whammy V",
-        "category": "Polyphonic Pitch Shifter",
-        "maDraw": 265,
-        "maSafety": 345,
+        "id": "strymon-deco-v2",
+        "brand": "Strymon",
+        "name": "Deco V2",
+        "category": "Tape Saturation & Doubletracker",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1cQYw3P_nkOBblej8tq97Mpo5eoA6rP1w/view?usp=drivesdk",
+        "description": "Saturación de cinta de carrete a carrete y duplicador analógico estéreo."
+    },
+    {
+        "id": "strymon-el-capistan-v2",
+        "brand": "Strymon",
+        "name": "El Capistan V2",
+        "category": "Tape Echo",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/166mfX5ZS1fgqXb5lSua1ZIsnZN85ZvUj/view?usp=drivesdk",
+        "description": "Eco de cinta DTAPE de alta precisión con simulación de desgaste de cinta."
+    },
+    {
+        "id": "strymon-flint-v2",
+        "brand": "Strymon",
+        "name": "Flint V2",
+        "category": "Tremolo & Reverb",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1sJ09Phn5hBDUxQmwnmjZBj-27RwU14UZ/view?usp=drivesdk",
+        "description": "Trémolo armónico vintage y tres algoritmos de reverb clásicos."
+    },
+    {
+        "id": "strymon-iridium",
+        "brand": "Strymon",
+        "name": "Iridium",
+        "category": "Amp & IR Cab Simulator",
+        "maDraw": 500,
+        "maSafety": 650,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1jF5WRJ5IVMrUqAHNRLhwyXOGdVZwzSBw/view?usp=drivesdk",
+        "description": "Simulador estéreo de amplificadores e impulsos de pantalla IR."
+    },
+    {
+        "id": "strymon-mobius",
+        "brand": "Strymon",
+        "name": "Mobius",
+        "category": "Multidimensional Modulation",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1jQhmtTts5gWMQrhaGwFs_MqTYINfeV_F/view?usp=drivesdk",
+        "description": "12 máquinas de modulación analógicas y digitales de alta resolución."
+    },
+    {
+        "id": "strymon-nightsky",
+        "brand": "Strymon",
+        "name": "Nightsky",
+        "category": "Time-Warped Reverberator",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1Apy_9ksj-tDJMfST_8hCFpLupifoRnr-/view?usp=drivesdk",
+        "description": "Síntesis de reverb experimental con secuenciador y morphing."
+    },
+    {
+        "id": "strymon-riverside",
+        "brand": "Strymon",
+        "name": "Riverside",
+        "category": "Multistage Drive",
+        "maDraw": 250,
+        "maSafety": 325,
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "Pedal de pitch shifting polifónico y armonizador clásico accionado por pedal de expresión."
+        "manualUrl": "https://drive.google.com/file/d/10oXwMjM89ph27Dy0sp2g-sJBtG-Sy8Jf/view?usp=drivesdk",
+        "description": "Overdrive multietapa híbrido JFET analógico + DSP de distorsión continua."
     },
     {
-        "id": "dunlop-cry-baby",
-        "brand": "Dunlop",
-        "name": "Cry Baby GCB95",
-        "category": "Wah-Wah Filter",
-        "maDraw": 1,
-        "maSafety": 2,
+        "id": "strymon-sunset",
+        "brand": "Strymon",
+        "name": "Sunset",
+        "category": "Dual Overdrive",
+        "maDraw": 250,
+        "maSafety": 325,
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "El pedal de wah-wah estándar e indispensable en la historia del rock."
+        "manualUrl": "https://drive.google.com/file/d/1kJaEdRB7YKcQab_uxrS1RgjH0LZQoLT0/view?usp=drivesdk",
+        "description": "Circuito dual de overdrive analógico/digital con 6 voces icónicas."
     },
     {
-        "id": "mxr-dyna-comp",
-        "brand": "MXR",
-        "name": "Dyna Comp",
+        "id": "strymon-timeline",
+        "brand": "Strymon",
+        "name": "TimeLine",
+        "category": "Multidimensional Delay",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1TKxiFBbFcXNZ40fhSOZkx8mD0ByQhJ6u/view?usp=drivesdk",
+        "description": "Procesador de delay multidimensional de grado de estudio."
+    },
+    {
+        "id": "strymon-volante",
+        "brand": "Strymon",
+        "name": "Volante",
+        "category": "Magnetic Echo / Reverb",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1x5xcV2x4YRY08q2400nU09oX9UWtavbt/view?usp=drivesdk",
+        "description": "Ecolocalizador magnético, eco de cinta y drum echo vintage."
+    },
+    {
+        "id": "strymon-zelzah",
+        "brand": "Strymon",
+        "name": "Zelzah",
+        "category": "Multidimensional Phaser",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1BPzAWxLcM5J6j0oMKcwljzhNuzB28BVd/view?usp=drivesdk",
+        "description": "Phaser dual de 4 y 6 etapas con resonancia independiente y envelope."
+    },
+    {
+        "id": "tc-ditto-stereo",
+        "brand": "TC Electronic",
+        "name": "Ditto Stereo Looper",
+        "category": "Stereo Phrase Looper",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Looper estéreo minimalista de 24 bits con importación/exportación de backing tracks."
+    },
+    {
+        "id": "tc-flashback-2",
+        "brand": "TC Electronic",
+        "name": "Flashback 2",
+        "category": "Delay & Looper",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Delay estéreo con footswitch de presión Mash y tecnología TonePrint."
+    },
+    {
+        "id": "tc-hall-of-fame-2",
+        "brand": "TC Electronic",
+        "name": "Hall of Fame 2",
+        "category": "Digital Reverb",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Reverb estéreo con algoritmo Shimmer, MASH y ranuras TonePrint."
+    },
+    {
+        "id": "tc-plethora-x5",
+        "brand": "TC Electronic",
+        "name": "Plethora X5",
+        "category": "TonePrint Multi-FX Board",
+        "maDraw": 600,
+        "maSafety": 780,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Tablero virtual flexible de hasta 5 pedales TonePrint con MIDI e ins/outs estéreo."
+    },
+    {
+        "id": "tc-polytune-3",
+        "brand": "TC Electronic",
+        "name": "PolyTune 3",
+        "category": "Polyphonic Tuner & Buffer",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Afinador polifónico ultrafavorable con circuito BonaFide Buffer integrado."
+    },
+    {
+        "id": "wa-acs1-mkii",
+        "brand": "Walrus Audio",
+        "name": "ACS1 MKII",
+        "category": "Amp + Cab Simulator",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1uUQtd1LrsD7R9q_M2Z5KBwjb_1UCAA5n/view?usp=drivesdk",
+        "description": "Simulador estéreo de amplificadores e impulsos de pantalla IR."
+    },
+    {
+        "id": "wa-arp87",
+        "brand": "Walrus Audio",
+        "name": "ARP-87",
+        "category": "Multi-Function Delay",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Delay multifunción compacto con modos Digital, Analog, Lo-Fi y Slap."
+    },
+    {
+        "id": "wa-canvas-rehearsal",
+        "brand": "Walrus Audio",
+        "name": "Canvas Rehearsal",
+        "category": "Rehearsal Engine / DI",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1Rb5pR8jCFmcqxZeH24ljymFD3lzAgWfF/view?usp=drivesdk",
+        "description": "Final de cadena de ensayo con salida auriculares y Aux Bluetooth."
+    },
+    {
+        "id": "wa-deep-six-v4",
+        "brand": "Walrus Audio",
+        "name": "Deep Six V4",
         "category": "Compressor",
-        "maDraw": 5,
-        "maSafety": 7,
+        "maDraw": 30,
+        "maSafety": 39,
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
-        "description": "El compresor analógico rojo en formato compacto para sustain y ataque percusivo."
+        "manualUrl": null,
+        "description": "Compresor estilo Universal Audio 1176 con perilla de Blend y tono."
+    },
+    {
+        "id": "wa-eras",
+        "brand": "Walrus Audio",
+        "name": "Eras",
+        "category": "Five-State High Gain Distortion",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Distorsión pesada de 5 estados con control de mezcla analógica de señal limpia."
+    },
+    {
+        "id": "wa-julianna",
+        "brand": "Walrus Audio",
+        "name": "Julianna",
+        "category": "Analog Chorus / Vibrato",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Chorus y vibrato analógico estéreo con LFO de forma de onda secundaria."
+    },
+    {
+        "id": "wa-lore",
+        "brand": "Walrus Audio",
+        "name": "Lore",
+        "category": "Reverse Soundscape Generator",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Generador de paisajes sonoros reversos y time-warp ambiencial."
+    },
+    {
+        "id": "wa-mako-d1-v2",
+        "brand": "Walrus Audio",
+        "name": "Mako D1 V2",
+        "category": "High-Fidelity Stereo Delay",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Delay estéreo multialgorítmico de alta fidelidad con control de ataque."
+    },
+    {
+        "id": "wa-mako-r1",
+        "brand": "Walrus Audio",
+        "name": "Mako R1",
+        "category": "High-Fidelity Stereo Reverb",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Reverb de grado de estudio con algoritmos Spring, Hall, Plate, BFR y Refract."
+    },
+    {
+        "id": "wa-slo",
+        "brand": "Walrus Audio",
+        "name": "Slö",
+        "category": "Multi-Texture Reverb",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": null,
+        "description": "Reverb de múltiples texturas ambientales con modos Dark, Rise y Dream."
+    },
+    {
+        "id": "wa-sloeer",
+        "brand": "Walrus Audio",
+        "name": "Slöer",
+        "category": "Stereo Multi-Texture Reverb",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": null,
+        "description": "Versión estéreo expandida con 5 modos de reverb y control de ancho de campo."
+    },
+    {
+        "id": "wa-xero",
+        "brand": "Walrus Audio",
+        "name": "Xero Polylooper",
+        "category": "Dual Stereo Looper",
+        "maDraw": 300,
+        "maSafety": 390,
+        "io": "Stereo I/O",
+        "manualUrl": "https://drive.google.com/file/d/1Td9dJGVjlaQE4gJGbQPlWcYM6-T7T2Mm/view?usp=drivesdk",
+        "description": "Looper polifónico de doble canal estéreo con sincronización MIDI."
+    },
+    {
+        "id": "ye-defiant-jazz",
+        "brand": "Yesterday Effects",
+        "name": "Defiant Jazz",
+        "category": "Pre-Amp / Drive",
+        "maDraw": 100,
+        "maSafety": 130,
+        "io": "Mono I/O",
+        "manualUrl": "https://drive.google.com/file/d/1Wb113-Kg1B69lu4AZdlTTFPIBN1QIENm/view?usp=drivesdk",
+        "description": "Pre-amp analógico inspirado en Roland JC-120."
     }
 ];
 
@@ -2644,41 +2657,52 @@ function injectCatalogData(dataArray) {
 // AUTOMATIC MASTER CATALOG LOADING FROM JSON WITH SAFE FALLBACK
 async function loadMasterCatalogFromJSON() {
     try {
-        const isCleanV33Migrated = localStorage.getItem('pedal_db_v33_clean_migrated');
-        if (!isCleanV33Migrated) {
-            // Upgrade migration to V33 Clean Architecture:
-            // Reset pedalDatabase to empty personal collection (or retain custom user pedals)
-            localStorage.setItem('pedal_db_v33_clean_migrated', 'true');
-            const oldSavedDb = localStorage.getItem('pedal_db');
-            pedalDatabase.length = 0;
-            if (oldSavedDb) {
-                try {
-                    const parsed = JSON.parse(oldSavedDb);
-                    if (Array.isArray(parsed)) {
-                        const customOnly = parsed.filter(p => p.id && (p.id.startsWith('custom-') || p.id.startsWith('ps-custom-')));
-                        customOnly.forEach(p => pedalDatabase.push(p));
-                    }
-                } catch(e){}
-            }
-            localStorage.setItem('pedal_db', JSON.stringify(pedalDatabase));
-            return;
-        }
-
+        const isInit = localStorage.getItem('pedal_db_initialized');
         const savedDb = localStorage.getItem('pedal_db');
-        if (savedDb) {
+        if (isInit && savedDb) {
             const parsed = JSON.parse(savedDb);
             if (Array.isArray(parsed)) {
-                pedalDatabase.length = 0;
-                parsed.forEach(p => pedalDatabase.push(p));
+                injectCatalogData(parsed);
+                return;
             }
         }
+        try {
+            const response = await fetch('pedals.json');
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    injectCatalogData(data);
+                    localStorage.setItem('pedal_db_initialized', 'true');
+                    return;
+                }
+            }
+        } catch (error) {
+            console.warn('Cargando catálogo base de respaldo (135 pedales).', error);
+        }
+        if (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_PEDALS_FALLBACK)) {
+            injectCatalogData(DEFAULT_PEDALS_FALLBACK);
+            localStorage.setItem('pedal_db_initialized', 'true');
+        }
     } catch (error) {
-        console.error('Error al cargar la colección personal:', error);
+        console.error('Error al cargar el catálogo maestro:', error);
     }
 }
 
+// RESTORE FACTORY CATALOG UTILITY
 function restoreFactoryCatalog() {
-    // Deprecated in v33
+    const confirmRestore = confirm("¿Deseas restaurar el catálogo base de pedales? Esto volverá a cargar los 143 pedales de fábrica.");
+    if (confirmRestore) {
+        pushHistory();
+        localStorage.removeItem('pedal_db');
+        selectedPedalIds.clear();
+        injectCatalogData(DEFAULT_PEDALS_FALLBACK);
+        renderBrandFilters();
+        renderCatalog('ALL');
+        renderSignalChain();
+        if (pedalDatabase.length > 0) {
+            inspectPedal(pedalDatabase[0].id);
+        }
+    }
 }
 
 function getPedalPowerAssignment(pedalId) {
@@ -2857,30 +2881,6 @@ function renderCatalog(brandFilter = 'ALL') {
     if (!effectsGrid || !utilityGrid) return;
     effectsGrid.innerHTML = '';
     utilityGrid.innerHTML = '';
-
-    if (pedalDatabase.length === 0) {
-        effectsGrid.innerHTML = `
-            <div class="col-span-full bg-[#121316] border border-[#2A2D36] rounded-2xl p-8 text-center space-y-4 my-2">
-                <div class="w-16 h-16 bg-[#F15A24]/10 rounded-full flex items-center justify-center mx-auto border border-[#F15A24]/30">
-                    <i class="fa-solid fa-guitar text-2xl text-[#F15A24]"></i>
-                </div>
-                <h4 class="text-base font-bold text-[#FFFFFF]">Tu colección personal está vacía</h4>
-                <p class="text-xs text-[#9CA3AF] max-w-md mx-auto leading-relaxed">
-                    Aún no tenés pedales guardados en tu inventario. Podés agregar pedales desde nuestro catálogo maestro de 144 de fábrica o crear tu propio pedal personalizado.
-                </p>
-                <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
-                        <i class="fa-solid fa-book-open"></i> Explorar Catálogo Maestro (144)
-                    </button>
-                    <button onclick="openNewPedalModal()" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
-                        <i class="fa-solid fa-plus text-[#F15A24]"></i> Crear Pedal Personalizado
-                    </button>
-                </div>
-            </div>
-        `;
-        utilityGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">Sin pedales de utilidad en tu colección.</span>`;
-        return;
-    }
     
     const filteredPedals = pedalDatabase.filter(p => {
         const matchesBrand = (brandFilter === 'ALL' || p.brand === brandFilter);
@@ -2895,20 +2895,47 @@ function renderCatalog(brandFilter = 'ALL') {
         return matchesBrand && matchesCat && matchesSearch;
     });
 
+    // Ensure sorted order in personal collection
+    filteredPedals.sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
+
     const effects = filteredPedals.filter(p => getEffectCategory(p) !== 'Utilidad & Ruteo');
     const utilities = filteredPedals.filter(p => getEffectCategory(p) === 'Utilidad & Ruteo');
     
-    if (effects.length === 0) {
-        effectsGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales de efecto en tu colección que coincidan con los filtros.</span>`;
+    if (pedalDatabase.length === 0) {
+        effectsGrid.innerHTML = `
+            <div class="col-span-full bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-8 text-center space-y-4 my-2">
+                <div class="w-14 h-14 bg-[#F15A24]/10 border border-[#F15A24]/30 rounded-2xl flex items-center justify-center mx-auto text-[#F15A24] text-xl">
+                    <i class="fa-solid fa-guitar"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-base font-bold text-[#FFFFFF]">Tu colección personal está vacía</h3>
+                    <p class="text-xs text-[#9CA3AF] max-w-md mx-auto leading-relaxed">
+                        Explorá el Catálogo Maestro de 144 pedales para agregar tu equipamiento o agregá un pedal personalizado.
+                    </p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-3 pt-2">
+                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                        <i class="fa-solid fa-layer-group"></i> + Agregar desde Catálogo (144)
+                    </button>
+                    <button onclick="openNewPedalModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
+                        <i class="fa-solid fa-plus"></i> + Crear Pedal Personalizado
+                    </button>
+                </div>
+            </div>
+        `;
+    } else if (effects.length === 0) {
+        effectsGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales de efecto en tu colección con este filtro.</span>`;
     } else {
         effects.forEach(pedal => effectsGrid.appendChild(createPedalCatalogCard(pedal)));
     }
-    if (utilities.length === 0) {
-        utilityGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales de utilidad en tu colección que coincidan con los filtros.</span>`;
+
+    if (utilities.length === 0 && pedalDatabase.length > 0) {
+        utilityGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales de utilidad en tu colección con este filtro.</span>`;
     } else {
         utilities.forEach(pedal => utilityGrid.appendChild(createPedalCatalogCard(pedal)));
     }
 }
+
 
 function createPedalCatalogCard(pedal) {
     const card = document.createElement('div');
@@ -4266,186 +4293,27 @@ function generateGroupedOptions(selectedPedalId) {
 }
 
 // MODALS & PEDAL EDITING CONTROL
-
-// ==========================================
-// MASTER CATALOG MODAL JS FUNCTIONS
-// ==========================================
-let masterCatalogBrandFilter = 'ALL';
-let masterCatalogCategoryFilter = 'ALL';
-let masterCatalogSearchQuery = '';
-
-function openMasterCatalogModal() {
-    masterCatalogBrandFilter = 'ALL';
-    masterCatalogCategoryFilter = 'ALL';
-    masterCatalogSearchQuery = '';
-    const searchInput = document.getElementById('master-catalog-search');
-    if (searchInput) searchInput.value = '';
-    
-    renderMasterCatalogBrandFilters();
-    renderMasterCatalogCategoryFilters();
-    renderMasterCatalog();
-    document.getElementById('master-catalog-modal').classList.remove('hidden');
-}
-
-function closeMasterCatalogModal() {
-    document.getElementById('master-catalog-modal').classList.add('hidden');
-}
-
-function handleMasterCatalogSearch(q) {
-    masterCatalogSearchQuery = q || '';
-    renderMasterCatalog();
-}
-
-function renderMasterCatalogBrandFilters() {
-    const container = document.getElementById('master-catalog-brand-filters');
-    if (!container) return;
-    const brands = ['ALL', ...new Set(DEFAULT_PEDALS_FALLBACK.map(p => p.brand))].sort();
-    container.innerHTML = brands.map(b => `
-        <button onclick="filterMasterCatalogByBrand('${b}')" class="px-2 py-0.5 rounded-lg border text-[11px] font-mono transition-all ${
-            b === masterCatalogBrandFilter 
-            ? 'bg-[#F15A24]/10 border-[#F15A24]/40 text-[#F15A24] font-bold' 
-            : 'bg-[#1C1E24] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
-        }">
-            ${b === 'ALL' ? 'Todas las Marcas' : b}
-        </button>
-    `).join('');
-}
-
-function filterMasterCatalogByBrand(b) {
-    masterCatalogBrandFilter = b;
-    renderMasterCatalogBrandFilters();
-    renderMasterCatalog();
-}
-
-function renderMasterCatalogCategoryFilters() {
-    const container = document.getElementById('master-catalog-category-filters');
-    if (!container) return;
-    const categories = ['ALL', 'Saturación & Ganancia', 'Delay & Eco', 'Reverberación & Espacio', 'Modulación', 'Lo-Fi, Glitch & Texturas', 'Pitch & Sintetizador', 'Dinámica & Modelado', 'Loopers de Frase', 'Utilidad & Ruteo'];
-    container.innerHTML = categories.map(c => `
-        <button onclick="filterMasterCatalogByCategory('${c}')" class="px-2 py-0.5 rounded-lg border text-[11px] font-mono transition-all ${
-            c === masterCatalogCategoryFilter 
-            ? 'bg-[#F15A24]/10 border-[#F15A24]/40 text-[#F15A24] font-bold' 
-            : 'bg-[#1C1E24] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
-        }">
-            ${c === 'ALL' ? 'Todas las Categorías' : c}
-        </button>
-    `).join('');
-}
-
-function filterMasterCatalogByCategory(c) {
-    masterCatalogCategoryFilter = c;
-    renderMasterCatalogCategoryFilters();
-    renderMasterCatalog();
-}
-
-function renderMasterCatalog() {
-    const grid = document.getElementById('master-catalog-grid');
-    const countEl = document.getElementById('master-catalog-count');
-    if (!grid) return;
-
-    let filtered = DEFAULT_PEDALS_FALLBACK.filter(p => {
-        const matchesBrand = masterCatalogBrandFilter === 'ALL' || p.brand === masterCatalogBrandFilter;
-        const effCat = getEffectCategory(p);
-        const matchesCategory = masterCatalogCategoryFilter === 'ALL' || effCat === masterCatalogCategoryFilter;
-        const q = masterCatalogSearchQuery.toLowerCase();
-        const matchesSearch = !q || 
-            (p.name && p.name.toLowerCase().includes(q)) || 
-            (p.brand && p.brand.toLowerCase().includes(q)) || 
-            (p.category && p.category.toLowerCase().includes(q)) || 
-            (p.description && p.description.toLowerCase().includes(q));
-        return matchesBrand && matchesCategory && matchesSearch;
-    });
-
-    if (countEl) countEl.textContent = `Mostrando ${filtered.length} de 144 pedales`;
-
-    if (filtered.length === 0) {
-        grid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full text-center py-8">No se encontraron pedales en el catálogo maestro con esos filtros.</span>`;
-        return;
-    }
-
-    grid.innerHTML = filtered.map(pedal => {
-        const effCat = getEffectCategory(pedal);
-        const isAlreadyInCollection = pedalDatabase.some(p => p.id === pedal.id || (p.name.toLowerCase() === pedal.name.toLowerCase() && p.brand.toLowerCase() === pedal.brand.toLowerCase()));
-        
-        return `
-            <div class="bg-[#121316] border border-[#2A2D36] rounded-xl p-3 flex flex-col justify-between gap-3 shadow-md hover:border-[#F15A24]/50 transition-all">
-                <div class="space-y-2">
-                    <div class="flex items-start justify-between gap-2">
-                        <div>
-                            <span class="text-[10px] font-mono font-bold text-[#F15A24] uppercase tracking-wider block">${pedal.brand}</span>
-                            <h4 class="text-sm font-bold text-[#FFFFFF] leading-snug">${pedal.name}</h4>
-                        </div>
-                        <span class="text-[10px] font-mono bg-[#1C1E24] text-[#00A8CC] border border-[#00A8CC]/30 px-2 py-0.5 rounded-md shrink-0">
-                            ${effCat}
-                        </span>
-                    </div>
-                    <p class="text-[11px] text-[#9CA3AF] line-clamp-2 leading-relaxed">${pedal.description || pedal.category}</p>
-                    <div class="flex items-center gap-3 text-[11px] font-mono text-[#9CA3AF]">
-                        <span>⚡ ${pedal.maDraw || pedal.maBase || 20} mA</span>
-                        <span>🔌 ${pedal.io || 'Mono I/O'}</span>
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t border-[#2A2D36]">
-                    ${isAlreadyInCollection ? `
-                        <button disabled class="w-full bg-[#1C1E24] text-[#10B981] border border-[#10B981]/40 px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 opacity-80 cursor-default">
-                            <i class="fa-solid fa-check"></i> En tu colección
-                        </button>
-                    ` : `
-                        <button onclick="addFactoryPedalToCollection('${pedal.id}')" class="w-full bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-3 py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm">
-                            <i class="fa-solid fa-plus text-xs"></i> Agregar a mi colección
-                        </button>
-                    `}
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function addFactoryPedalToCollection(factoryId) {
-    const factoryPedal = DEFAULT_PEDALS_FALLBACK.find(p => p.id === factoryId);
-    if (!factoryPedal) return;
-
-    const exists = pedalDatabase.some(p => p.id === factoryPedal.id || (p.name.toLowerCase() === factoryPedal.name.toLowerCase() && p.brand.toLowerCase() === factoryPedal.brand.toLowerCase()));
-    if (exists) return;
-
-    pushHistory();
-    const maBase = factoryPedal.maDraw || factoryPedal.maBase || 20;
-    const newPedal = {
-        id: factoryPedal.id,
-        name: factoryPedal.name,
-        brand: factoryPedal.brand,
-        category: factoryPedal.category,
-        maBase: maBase,
-        maWithMargin: Math.round(maBase * 1.3),
-        powerSource: 'Strymon Zuma / CIOKS 7',
-        isStereo: factoryPedal.io === 'Stereo I/O',
-        desc: factoryPedal.description || '',
-        manualUrl: factoryPedal.manualUrl || null,
-        imageUrl: factoryPedal.imageUrl || null,
-        notes: ''
-    };
-
-    pedalDatabase.push(newPedal);
-    saveStateToLocalStorage();
-    renderBrandFilters();
-    renderCategoryFilters();
-    renderCatalog(currentBrandFilter);
-    renderMasterCatalog();
-}
-
 function openNewPedalModal() {
     editingPedalId = null;
     tempPhotoBase64 = null;
     const titleEl = document.getElementById('np-modal-title');
-    if (titleEl) titleEl.textContent = 'Registrar Nuevo Pedal al Catálogo';
+    if (titleEl) titleEl.textContent = 'Registrar Nuevo Pedal Personalizado';
     
     document.getElementById('np-name').value = '';
     document.getElementById('np-brand').value = '';
-    document.getElementById('np-mabase').value = '20';
+    document.getElementById('np-mabase').value = '';
     document.getElementById('np-io-type').value = 'STEREO';
     document.getElementById('np-category-type').value = 'EFFECT';
-    document.getElementById('np-effect-category').value = '';
+    
+    const catSelect = document.getElementById('np-effect-category');
+    if (catSelect) {
+        catSelect.value = '';
+        catSelect.disabled = false;
+        catSelect.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-[#1A1C23]');
+    }
+    const lockNote = document.getElementById('np-category-lock-note');
+    if (lockNote) lockNote.classList.add('hidden');
+
     document.getElementById('np-category').value = '';
     document.getElementById('np-manual-url').value = '';
     document.getElementById('np-photo-file').value = '';
@@ -4595,6 +4463,193 @@ function executeRegisterNewPedal() {
     renderCategoryFilters();
     renderCatalog(currentBrandFilter);
     closeNewPedalModal();
+}
+
+// MASTER CATALOG MODAL JS LOGIC
+let masterCatalogBrandFilter = 'ALL';
+let masterCatalogCategoryFilter = 'ALL';
+let masterCatalogSearchQuery = '';
+
+function openMasterCatalogModal() {
+    masterCatalogBrandFilter = 'ALL';
+    masterCatalogCategoryFilter = 'ALL';
+    masterCatalogSearchQuery = '';
+    const searchInput = document.getElementById('master-catalog-search-input');
+    if (searchInput) searchInput.value = '';
+    
+    renderMasterCatalogBrandFilters();
+    renderMasterCatalogCategoryFilters();
+    renderMasterCatalog();
+    document.getElementById('master-catalog-modal').classList.remove('hidden');
+}
+
+function closeMasterCatalogModal() {
+    document.getElementById('master-catalog-modal').classList.add('hidden');
+}
+
+function renderMasterCatalogBrandFilters() {
+    const container = document.getElementById('master-catalog-brand-filters');
+    if (!container) return;
+    const brands = ['ALL', ...new Set(DEFAULT_PEDALS_FALLBACK.map(p => p.brand))].sort();
+    container.innerHTML = brands.map(b => `
+        <button onclick="filterMasterCatalogByBrand('${b}')" class="px-2.5 py-1 rounded-lg border text-xs font-mono transition-all ${
+            b === masterCatalogBrandFilter 
+            ? 'bg-[#F15A24]/10 border-[#F15A24]/50 text-[#F15A24] font-bold' 
+            : 'bg-[#1C1E24] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
+        }">
+            ${b === 'ALL' ? 'Todas las Marcas' : b}
+        </button>
+    `).join('');
+}
+
+function filterMasterCatalogByBrand(brand) {
+    masterCatalogBrandFilter = brand;
+    renderMasterCatalogBrandFilters();
+    renderMasterCatalog();
+}
+
+function renderMasterCatalogCategoryFilters() {
+    const container = document.getElementById('master-catalog-category-filters');
+    if (!container) return;
+    const categories = ['ALL', 'Dinámica & Modelado', 'Saturación & Ganancia', 'Pitch & Sintetizador', 'Modulación', 'Delay & Eco', 'Reverberación & Espacio', 'Lo-Fi, Glitch & Texturas', 'Loopers de Frase', 'Utilidad & Ruteo'];
+    container.innerHTML = categories.map(c => `
+        <button onclick="filterMasterCatalogByCategory('${c}')" class="px-2.5 py-1 rounded-lg border text-xs font-medium transition-all ${
+            c === masterCatalogCategoryFilter 
+            ? 'bg-[#00A8CC]/10 border-[#00A8CC]/50 text-[#00A8CC] font-bold' 
+            : 'bg-[#1C1E24] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
+        }">
+            ${c === 'ALL' ? 'Todas las Categorías' : c}
+        </button>
+    `).join('');
+}
+
+function filterMasterCatalogByCategory(cat) {
+    masterCatalogCategoryFilter = cat;
+    renderMasterCatalogCategoryFilters();
+    renderMasterCatalog();
+}
+
+function handleMasterCatalogSearch(query) {
+    masterCatalogSearchQuery = query;
+    renderMasterCatalog();
+}
+
+function renderMasterCatalog() {
+    const grid = document.getElementById('master-catalog-grid');
+    const counter = document.getElementById('master-catalog-counter');
+    if (!grid) return;
+
+    let filtered = DEFAULT_PEDALS_FALLBACK.filter(p => {
+        const matchesBrand = masterCatalogBrandFilter === 'ALL' || p.brand === masterCatalogBrandFilter;
+        const effCat = getEffectCategory(p);
+        const matchesCategory = masterCatalogCategoryFilter === 'ALL' || effCat === masterCatalogCategoryFilter;
+        const q = masterCatalogSearchQuery.toLowerCase();
+        const matchesSearch = !q || 
+            (p.name && p.name.toLowerCase().includes(q)) || 
+            (p.brand && p.brand.toLowerCase().includes(q)) || 
+            (p.category && p.category.toLowerCase().includes(q)) || 
+            (p.description && p.description.toLowerCase().includes(q));
+        return matchesBrand && matchesCategory && matchesSearch;
+    });
+
+    // Ensure strict alphabetical sorting in grid: Brand (A-Z) > Name (A-Z)
+    filtered.sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
+
+    if (counter) {
+        counter.textContent = `Mostrando ${filtered.length} de 144 pedales de fábrica`;
+    }
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full py-12 text-center text-[#9CA3AF] space-y-2">
+                <i class="fa-solid fa-magnifying-glass text-2xl text-[#2A2D36]"></i>
+                <p class="text-xs font-mono">No se encontraron pedales en el catálogo con los filtros aplicados.</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+        const inCollection = pedalDatabase.some(userP => userP.id === p.id || (userP.name.toLowerCase() === p.name.toLowerCase() && userP.brand.toLowerCase() === p.brand.toLowerCase()));
+        const effCat = getEffectCategory(p);
+        const iconHTML = getPedalIconHTML(p);
+        const maBase = p.maDraw || p.maBase || 20;
+
+        return `
+            <div class="bg-[#121316] border border-[#2A2D36] hover:border-[#F15A24]/40 rounded-xl p-3.5 space-y-3 transition-all flex flex-col justify-between shadow-md">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-lg bg-[#1C1E24] border border-[#2A2D36] flex items-center justify-center shrink-0 overflow-hidden">
+                            ${iconHTML}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <span class="text-[10px] font-mono font-bold text-[#F15A24] uppercase block truncate">${p.brand}</span>
+                            <h4 class="text-xs font-bold text-[#FFFFFF] truncate" title="${p.name}">${p.name}</h4>
+                            <span class="inline-block text-[9px] font-mono bg-[#1C1E24] text-[#00A8CC] border border-[#00A8CC]/30 px-1.5 py-0.5 rounded mt-1">
+                                ${effCat}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-[11px] text-[#9CA3AF] line-clamp-2 leading-relaxed font-sans">${p.description || p.desc || ''}</p>
+                    
+                    <div class="flex items-center gap-2 text-[10px] font-mono text-[#9CA3AF] pt-1 border-t border-[#2A2D36]/50">
+                        <span class="text-[#F15A24] font-bold"><i class="fa-solid fa-bolt"></i> ${maBase}mA</span>
+                        <span>•</span>
+                        <span>${p.voltage || '9V'}</span>
+                        <span>•</span>
+                        <span>${p.io || (p.isStereo ? 'Stereo I/O' : 'Mono I/O')}</span>
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-[#2A2D36]">
+                    ${inCollection ? `
+                        <button disabled class="w-full bg-[#1C1E24] text-[#9CA3AF] border border-[#2A2D36] px-3 py-1.5 rounded-xl text-xs font-bold cursor-not-allowed opacity-60 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-check text-[#00A8CC]"></i> En tu colección
+                        </button>
+                    ` : `
+                        <button onclick="addFactoryPedalToCollection('${p.id}')" class="w-full bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow transition-all active:scale-95">
+                            <i class="fa-solid fa-plus"></i> Agregar a mi colección
+                        </button>
+                    `}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function addFactoryPedalToCollection(factoryId) {
+    const factoryPedal = DEFAULT_PEDALS_FALLBACK.find(p => p.id === factoryId);
+    if (!factoryPedal) return;
+
+    const exists = pedalDatabase.some(p => p.id === factoryPedal.id || (p.name.toLowerCase() === factoryPedal.name.toLowerCase() && p.brand.toLowerCase() === factoryPedal.brand.toLowerCase()));
+    if (exists) return;
+
+    pushHistory();
+    const maBase = factoryPedal.maDraw || factoryPedal.maBase || 20;
+    const effCat = getEffectCategory(factoryPedal);
+    const newPedal = {
+        id: factoryPedal.id,
+        name: factoryPedal.name,
+        brand: factoryPedal.brand,
+        category: factoryPedal.category ? `${effCat} / ${factoryPedal.category}` : effCat,
+        effectCategory: effCat,
+        maBase: maBase,
+        maWithMargin: factoryPedal.maSafety || Math.round(maBase * 1.3),
+        powerSource: 'Strymon Zuma / CIOKS 7',
+        isStereo: factoryPedal.io ? factoryPedal.io.includes('Stereo') : (factoryPedal.isStereo || false),
+        desc: factoryPedal.description || factoryPedal.desc || '',
+        manualUrl: factoryPedal.manualUrl || null,
+        imageUrl: factoryPedal.imageUrl || null,
+        notes: ''
+    };
+
+    pedalDatabase.push(newPedal);
+    saveStateToLocalStorage();
+    renderBrandFilters();
+    renderCategoryFilters();
+    renderCatalog(currentBrandFilter);
+    renderMasterCatalog();
 }
 
 function openNewPowerSupplyModal() {
@@ -5240,12 +5295,51 @@ function executeRegisterNewWishlistPedal() {
     closeNewWishlistPedalModal();
 }
 
+// AUTOMATIC ONE-TIME CLEAN MIGRATION FOR V34
+(function autoMigrateV34() {
+    try {
+        const isV34Clean = localStorage.getItem('pedalboard_v34_clean_migrated');
+        if (!isV34Clean) {
+            localStorage.setItem('pedalboard_v34_clean_migrated', 'true');
+            // Remove full factory dump from old pedal_db so user starts clean!
+            localStorage.removeItem('pedal_db');
+            localStorage.removeItem('pedal_db_initialized');
+            if (typeof pedalDatabase !== 'undefined') {
+                pedalDatabase.length = 0;
+            }
+        }
+    } catch(e) {}
+})();
+
+function loadSavedState() {
+    try {
+        const pDb = localStorage.getItem('pedal_db');
+        if (pDb) {
+            pedalDatabase.length = 0;
+            const parsed = JSON.parse(pDb);
+            if (Array.isArray(parsed)) {
+                parsed.forEach(p => pedalDatabase.push(p));
+            }
+        }
+        const psDb = localStorage.getItem('power_db');
+        if (psDb) {
+            powerSuppliesDatabase.length = 0;
+            const parsed = JSON.parse(psDb);
+            if (Array.isArray(parsed)) {
+                parsed.forEach(ps => powerSuppliesDatabase.push(ps));
+            }
+        }
+    } catch (error) {
+        console.error('Error al cargar la colección personal:', error);
+    }
+}
+
+function restoreFactoryCatalog() {
+    // Deprecated in V34
+}
+
 window.onload = async () => {
     loadSavedState();
-    const isInit = localStorage.getItem('pedal_db_initialized');
-    if (!isInit || pedalDatabase.length === 0) {
-        await loadMasterCatalogFromJSON();
-    }
     switchTab('catalog');
     renderFavoriteBadges();
     renderSignalChain();
@@ -5254,80 +5348,11 @@ window.onload = async () => {
     renderCatalog('ALL');
     renderPowerSupplies();
     renderWishlist();
-    if (currentChainIds.length > 0 && currentChainIds[0] !== 'EMPTY' && pedalDatabase.some(p => p.id === currentChainIds[0])) {
+    if (currentChainIds.length > 0 && currentChainIds[0] !== 'EMPTY') {
         inspectPedal(currentChainIds[0]);
-    } else if (pedalDatabase.length > 0) {
-        inspectPedal(pedalDatabase[0].id);
-    } else if (powerSuppliesDatabase.length > 0) {
-        inspectPowerSupply(powerSuppliesDatabase[0].id);
-    } else {
-        renderInspector(null);
     }
-    document.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-            if (e.shiftKey) {
-                e.preventDefault();
-                redoChainState();
-            } else {
-                e.preventDefault();
-                undoChainState();
-            }
-        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-            e.preventDefault();
-            redoChainState();
-        }
-    });
 };
 </script>
-
-<!-- MASTER CATALOG MODAL (EXPLORAR E IMPORTAR A MI COLECCIÓN) -->
-<div id="master-catalog-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[90vh]">
-        <!-- HEADER -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
-            <div>
-                <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] flex items-center gap-2.5">
-                    <i class="fa-solid fa-book-open text-[#F15A24]"></i> Catálogo Maestro de Pedales (144 de Fábrica)
-                </h3>
-                <p class="text-xs text-[#9CA3AF] mt-0.5">Explorá la base de datos oficial e incorporá pedales a tu colección personal con 1-clic.</p>
-            </div>
-            <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm self-end sm:self-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36]">
-                <i class="fa-solid fa-xmark text-base"></i>
-            </button>
-        </div>
-
-        <!-- SEARCH AND FILTERS -->
-        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
-            <!-- SEARCH INPUT -->
-            <div class="relative">
-                <input type="text" id="master-catalog-search" oninput="handleMasterCatalogSearch(this.value)" placeholder="🔍 Buscar por marca, modelo o tipo de efecto (ej: Boss, Tube Screamer, Reverb)..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all">
-            </div>
-
-            <!-- MARCAS -->
-            <div class="space-y-1">
-                <span class="text-[11px] font-mono font-bold text-[#F15A24] uppercase tracking-wider block">Filtrar por Marca:</span>
-                <div id="master-catalog-brand-filters" class="flex flex-wrap gap-1.5 text-xs font-medium"></div>
-            </div>
-
-            <!-- CATEGORÍAS DE EFECTO -->
-            <div class="space-y-1 pt-1">
-                <span class="text-[11px] font-mono font-bold text-[#F15A24] uppercase tracking-wider block">Filtrar por Categoría:</span>
-                <div id="master-catalog-category-filters" class="flex flex-wrap gap-1.5 text-xs font-medium"></div>
-            </div>
-        </div>
-
-        <!-- CATALOG GRID -->
-        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[250px] max-h-[50vh] overflow-y-auto pr-1"></div>
-
-        <!-- FOOTER -->
-        <div class="flex justify-between items-center pt-3 border-t border-[#2A2D36]">
-            <span id="master-catalog-count" class="text-xs font-mono text-[#9CA3AF]">Mostrando 144 pedales</span>
-            <button onclick="closeMasterCatalogModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] px-4 py-2 rounded-xl text-xs font-bold transition-all">
-                Cerrar Ventana
-            </button>
-        </div>
-    </div>
-</div>
 
 <!-- MASTER CATALOG FOR WISHLIST MODAL -->
 <div id="master-wishlist-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -5404,4 +5429,60 @@ window.onload = async () => {
     </div>
 </div>
 </body>
-</html>
+</html><!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
+<div id="master-catalog-modal" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh]">
+        <!-- MODAL HEADER -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
+            <div>
+                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo Maestro de Pedales de Fábrica
+                </h3>
+                <p class="text-xs text-[#9CA3AF]">
+                    Explorá la base de datos de 144 pedales ordenados de A-Z y agregá los que tengas a tu colección personal.
+                </p>
+            </div>
+            <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- SEARCH AND FILTERS TOOLBAR -->
+        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <input type="text" id="master-catalog-search-input" oninput="handleMasterCatalogSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo (ej: TS9, Strymon, Reverb)..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
+                </div>
+            </div>
+            
+            <!-- BRAND FILTERS -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-[#F15A24] uppercase tracking-wider block font-mono">
+                    <i class="fa-solid fa-filter"></i> Filtrar por Marca:
+                </label>
+                <div id="master-catalog-brand-filters" class="flex flex-wrap gap-1 text-xs"></div>
+            </div>
+
+            <!-- CATEGORY FILTERS -->
+            <div class="space-y-1.5 pt-1">
+                <label class="text-[11px] font-bold text-[#F15A24] uppercase tracking-wider block font-mono">
+                    <i class="fa-solid fa-sliders"></i> Filtrar por Categoría de Efecto:
+                </label>
+                <div id="master-catalog-category-filters" class="flex flex-wrap gap-1 text-xs"></div>
+            </div>
+        </div>
+
+        <!-- MASTER CATALOG GRID -->
+        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[300px]"></div>
+
+        <!-- MODAL FOOTER -->
+        <div class="flex justify-between items-center pt-3 border-t border-[#2A2D36] text-xs text-[#9CA3AF]">
+            <span id="master-catalog-counter">Mostrando 144 pedales</span>
+            <button onclick="closeMasterCatalogModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] px-5 py-2 rounded-xl font-bold transition-all">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+
