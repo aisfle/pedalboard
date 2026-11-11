@@ -2733,7 +2733,25 @@ function loadSavedState() {
         const pDb = localStorage.getItem('pedal_db');
         if (pDb) {
             pedalDatabase.length = 0;
-            JSON.parse(pDb).forEach(p => pedalDatabase.push(p));
+            try {
+                const parsed = JSON.parse(pDb);
+                if (Array.isArray(parsed)) {
+                    // Check if this is the legacy 100+ factory pedals dump from v30/v31
+                    const isLegacyFactoryDump = parsed.length > 50 && parsed.some(p => p.id === 'boss-bd2w' || p.id === 'ibanez-ts9' || p.id === 'proco-rat-2');
+                    if (isLegacyFactoryDump) {
+                        console.log('Detectado dump heredado de pedales de fábrica. Limpiando colección personal...');
+                        const customOnly = parsed.filter(p => p.id && (p.id.startsWith('custom-') || p.id.startsWith('ps-custom-')));
+                        customOnly.forEach(p => pedalDatabase.push(p));
+                        localStorage.setItem('pedal_db', JSON.stringify(pedalDatabase));
+                    } else {
+                        parsed.forEach(p => pedalDatabase.push(p));
+                    }
+                }
+            } catch(e) {
+                console.error('Error al parsear pedal_db de localStorage:', e);
+            }
+        } else {
+            pedalDatabase.length = 0;
         }
         const psDb = localStorage.getItem('power_db');
         if (psDb) {
