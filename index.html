@@ -107,8 +107,8 @@
             <!-- TOP ACTION BAR: PRIORITY REGISTRATION BUTTONS -->
             <div class="bg-[#1C1E24] border-2 border-[#F15A24] rounded-2xl p-5 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                 <div class="space-y-1 min-w-[280px] flex-1">
-                    <h2 class="text-lg font-bold text-[#FFFFFF] tracking-tight flex items-center gap-2 whitespace-nowrap">
-                        <i class="fa-solid fa-guitar text-[#F15A24]"></i> Mi colección e inventario
+                    <h2 class="text-lg font-bold text-[#FFFFFF] tracking-tight whitespace-nowrap">
+                        Mi colección e inventario
                     </h2>
                     <p class="text-xs text-[#9CA3AF] max-w-xl leading-relaxed">
                         Administra tus pedales personales, armá cadenas de efecto y configurá tus fuentes de alimentación.
@@ -116,13 +116,13 @@
                 </div>
                 <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0 max-w-full">
                     <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-layer-group"></i> + Agregar desde Catálogo (144)
+                        + Cargar pedal desde el catálogo
                     </button>
                     <button onclick="openNewPedalModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 hover:border-[#00A8CC] font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-plus"></i> + Crear Pedal Personalizado
+                        + Cargar Pedal personalizado
                     </button>
                     <button onclick="openNewPowerSupplyModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 whitespace-nowrap">
-                        <i class="fa-solid fa-bolt text-[#F15A24]"></i> + Nueva fuente
+                        + Cargar fuente
                     </button>
                 </div>
             </div>
@@ -335,7 +335,7 @@
                 </div>
                 <div class="flex items-center gap-2.5 flex-wrap">
                     <button onclick="openMasterCatalogWishlistModal()" class="bg-[#8B5CF6]/10 hover:bg-[#8B5CF6]/20 text-[#8B5CF6] border border-[#8B5CF6]/40 px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
-                        <i class="fa-solid fa-book-open"></i> Explorar Catálogo Maestro (135)
+                        <i class="fa-solid fa-book-open"></i> Explorar Catálogo de Pedales
                     </button>
                     <button onclick="openNewWishlistPedalModal()" class="bg-[#8B5CF6] hover:bg-[#7c3aed] text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-md">
                         <i class="fa-solid fa-plus"></i> Agregar a Wishlist
@@ -2677,7 +2677,7 @@ async function loadMasterCatalogFromJSON() {
                 }
             }
         } catch (error) {
-            console.warn('Cargando catálogo base de respaldo (135 pedales).', error);
+            console.warn('Cargando catálogo base de respaldo (pedales).', error);
         }
         if (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_PEDALS_FALLBACK)) {
             injectCatalogData(DEFAULT_PEDALS_FALLBACK);
@@ -2690,7 +2690,7 @@ async function loadMasterCatalogFromJSON() {
 
 // RESTORE FACTORY CATALOG UTILITY
 function restoreFactoryCatalog() {
-    const confirmRestore = confirm("¿Deseas restaurar el catálogo base de pedales? Esto volverá a cargar los 143 pedales de fábrica.");
+    const confirmRestore = confirm("¿Deseas restaurar el catálogo base de pedales? Esto volverá a cargar los pedales de fábrica.");
     if (confirmRestore) {
         pushHistory();
         localStorage.removeItem('pedal_db');
@@ -2922,21 +2922,27 @@ function renderCatalog(brandFilter = 'ALL') {
     if (pedalDatabase.length === 0) {
         effectsGrid.innerHTML = `
             <div class="col-span-full bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-8 text-center space-y-4 my-2">
-                <div class="w-14 h-14 bg-[#F15A24]/10 border border-[#F15A24]/30 rounded-2xl flex items-center justify-center mx-auto text-[#F15A24] text-xl">
-                    <i class="fa-solid fa-guitar"></i>
+                <div class="w-14 h-14 bg-[#F15A24]/10 border border-[#F15A24]/30 rounded-2xl flex items-center justify-center mx-auto text-[#F15A24]">
+                    <svg class="w-7 h-7 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+                        <circle cx="9" cy="6" r="1.5" fill="currentColor"/>
+                        <circle cx="15" cy="6" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="11" r="1" fill="#F15A24"/>
+                        <circle cx="12" cy="17" r="2.5"/>
+                    </svg>
                 </div>
                 <div class="space-y-1">
                     <h3 class="text-base font-bold text-[#FFFFFF]">Tu colección personal está vacía</h3>
                     <p class="text-xs text-[#9CA3AF] max-w-md mx-auto leading-relaxed">
-                        Explorá el Catálogo Maestro de 144 pedales para agregar tu equipamiento o agregá un pedal personalizado.
+                        Explorá el Catálogo de pedales para agregar tu equipamiento o agregá un pedal personalizado.
                     </p>
                 </div>
                 <div class="flex flex-wrap justify-center gap-3 pt-2">
-                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95">
-                        <i class="fa-solid fa-layer-group"></i> + Agregar desde Catálogo (144)
+                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95">
+                        + Cargar pedal desde el catálogo
                     </button>
-                    <button onclick="openNewPedalModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
-                        <i class="fa-solid fa-plus"></i> + Crear Pedal Personalizado
+                    <button onclick="openNewPedalModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 hover:border-[#00A8CC] font-bold px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
+                        + Cargar Pedal personalizado
                     </button>
                 </div>
             </div>
@@ -4574,7 +4580,7 @@ function renderMasterCatalog() {
     filtered.sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
 
     if (counter) {
-        counter.textContent = `Mostrando ${filtered.length} de 144 pedales de fábrica`;
+        counter.textContent = `Mostrando ${filtered.length} pedales`;
     }
 
     if (filtered.length === 0) {
@@ -5377,7 +5383,7 @@ window.onload = async () => {
     <div class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl max-h-[85vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3 shrink-0">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-book-open text-[#8B5CF6]"></i> Catálogo Maestro de Fábrica (135 Pedales)
+                <i class="fa-solid fa-book-open text-[#8B5CF6]"></i> Catálogo de Pedales de Fábrica
             </h3>
             <button onclick="closeMasterWishlistModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm">
                 <i class="fa-solid fa-xmark"></i>
@@ -5454,10 +5460,10 @@ window.onload = async () => {
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
             <div>
                 <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo Maestro de Pedales de Fábrica
+                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo de Pedales de Fábrica
                 </h3>
                 <p class="text-xs text-[#9CA3AF]">
-                    Explorá la base de datos de 144 pedales ordenados de A-Z y agregá los que tengas a tu colección personal.
+                    Explorá los pedales del catálogo ordenados de A-Z y agregá los que tengas a tu colección personal.
                 </p>
             </div>
             <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
@@ -5495,11 +5501,12 @@ window.onload = async () => {
 
         <!-- MODAL FOOTER -->
         <div class="flex justify-between items-center pt-3 border-t border-[#2A2D36] text-xs text-[#9CA3AF]">
-            <span id="master-catalog-counter">Mostrando 144 pedales</span>
+            <span id="master-catalog-counter">Mostrando pedales</span>
             <button onclick="closeMasterCatalogModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] px-5 py-2 rounded-xl font-bold transition-all">
                 Cerrar
             </button>
         </div>
     </div>
 </div>
+
 
