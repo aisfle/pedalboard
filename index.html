@@ -197,42 +197,53 @@
 
         <!-- VISTA 2: MIS CADENAS DE PEDALES -->
         <div id="view-chain" class="hidden space-y-6 !mt-0">
-            <div class="bg-[#1C1E24] border-2 border-[#00A8CC] p-5 !mt-0 rounded-2xl shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-                <div class="space-y-1 min-w-[240px] flex-1">
-                    <h2 class="text-base sm:text-lg font-bold text-[#FFFFFF] tracking-tight">
-                        Mis cadenas
-                    </h2>
-                    <p class="text-xs text-[#9CA3AF] leading-relaxed">
-                        Diseña el ruteo de tu señal, analiza consumos eléctricos en tiempo real y guarda tus presets favoritos.
-                    </p>
-                </div>
-                <div class="flex flex-wrap items-center justify-between lg:justify-end gap-3 shrink-0">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <div class="bg-[#121316] px-3 py-1.5 rounded-xl border border-[#2A2D36] font-mono space-y-0.5 min-w-[160px]">
+            <div class="bg-[#1C1E24] border-2 border-[#00A8CC] p-5 !mt-0 rounded-2xl shadow-xl space-y-4">
+                <!-- FILA 1: TÍTULO / DESCRIPCIÓN + TELEMETRÍA (CONSUMO Y PEDALES) -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
+                    <div class="space-y-1">
+                        <h2 class="text-base sm:text-lg font-bold text-[#FFFFFF] tracking-tight">
+                            Mis cadenas
+                        </h2>
+                        <p class="text-xs text-[#9CA3AF] leading-relaxed">
+                            Diseña el ruteo de tu señal, analiza consumos eléctricos en tiempo real y guarda tus presets favoritos.
+                        </p>
+                    </div>
+                    <!-- TELEMETRÍA COMPACTA -->
+                    <div class="flex items-center gap-2.5 flex-wrap shrink-0">
+                        <div class="bg-[#121316] px-3.5 py-1.5 rounded-xl border border-[#2A2D36] font-mono space-y-0.5 min-w-[160px]">
                             <span class="text-[#9CA3AF] text-[10px] font-bold block border-b border-[#2A2D36] pb-0.5">Consumo de cadena</span>
-                            <div class="flex items-center justify-between gap-2 text-[11px]">
+                            <div class="flex items-center justify-between gap-3 text-[11px]">
                                 <span class="text-[#9CA3AF]">Consumo Base:</span>
                                 <span id="base-ma" class="text-[#00A8CC] font-bold">0 mA</span>
                             </div>
-                            <div class="flex items-center justify-between gap-2 text-[11px]">
+                            <div class="flex items-center justify-between gap-3 text-[11px]">
                                 <span class="text-[#9CA3AF]">Consumo +30%:</span>
                                 <span id="total-ma" class="text-[#F15A24] font-bold">0 mA</span>
                             </div>
                         </div>
-                        <div class="bg-[#121316] px-3 py-2 rounded-xl border border-[#2A2D36] font-mono text-xs text-[#00A8CC] font-bold flex items-center gap-2">
+                        <div class="bg-[#121316] px-3.5 py-3 rounded-xl border border-[#2A2D36] font-mono text-xs text-[#00A8CC] font-bold flex items-center gap-2">
                             <i class="fa-solid fa-sliders text-[#00A8CC]"></i>
                             <span id="total-count-badge">0 Pedales</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 text-xs font-mono flex-wrap">
-                        <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="bg-[#121316] hover:bg-[#2A2D36] text-[#FFFFFF] border border-[#2A2D36] px-3 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
+                </div>
+
+                <!-- FILA 2: BARRA DE ACCIONES DE LA CADENA -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36]">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-mono font-bold text-[#00A8CC] uppercase tracking-wider px-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles text-[#00A8CC]"></i> Controles:
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs font-mono flex-wrap justify-end">
+                        <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
                             <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
                         </button>
-                        <button onclick="openSaveFavoriteModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-3 py-2 rounded-xl flex items-center gap-2 shadow-lg transition-all active:scale-95">
-                            <i class="fa-solid fa-bookmark"></i> Guardar Cadena
-                        </button>
-                        <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="bg-[#121316] hover:bg-[#2A2D36] text-[#00A8CC] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                        <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
                             <i class="fa-solid fa-plus text-xs"></i> Nueva cadena
+                        </button>
+                        <button onclick="openSaveFavoriteModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg transition-all active:scale-95">
+                            <i class="fa-solid fa-bookmark"></i> Guardar Preset
                         </button>
                     </div>
                 </div>
