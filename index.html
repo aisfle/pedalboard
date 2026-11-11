@@ -239,6 +239,9 @@
                         <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
                             <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
                         </button>
+                        <button onclick="redoChainState()" title="Rehacer cambio (Ctrl+Y / Ctrl+Shift+Z)" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all active:scale-95 shadow-sm">
+                            <i class="fa-solid fa-rotate-right text-[#00A8CC]"></i> Redo
+                        </button>
                         <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
                             <i class="fa-solid fa-plus text-xs"></i> Nueva cadena
                         </button>
@@ -254,9 +257,6 @@
                     <span class="text-xs font-mono font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-star text-[#F15A24]"></i> Cadenas Favoritas / Presets Guardados
                     </span>
-                    <button onclick="openSaveFavoriteModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95">
-                        <i class="fa-solid fa-bookmark"></i> Guardar Preset Actual
-                    </button>
                 </div>
 
                 <div class="space-y-1.5">
@@ -741,6 +741,7 @@ let chainSlotModes = {};
 let currentPowerAssignments = {};
 let currentChainPowerSupplyIds = [];
 let chainHistory = [];
+let redoStack = [];
 let selectedPedalIds = new Set();
 let currentBrandFilter = 'ALL';
 
@@ -3065,11 +3066,21 @@ function pushHistory() {
         pedals: JSON.stringify(pedalDatabase),
         power: JSON.stringify(powerSuppliesDatabase)
     });
-    if (chainHistory.length > 25) chainHistory.shift();
+    if (chainHistory.length > 30) chainHistory.shift();
+    redoStack = []; // Reset redo stack on new action
 }
 
 function undoChainState() {
     if (chainHistory.length > 0) {
+        redoStack.push({
+            chain: JSON.stringify(currentChainIds),
+            modes: JSON.stringify(chainSlotModes),
+            powerAssignments: JSON.stringify(currentPowerAssignments),
+            chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
+            pedals: JSON.stringify(pedalDatabase),
+            power: JSON.stringify(powerSuppliesDatabase)
+        });
+
         const prev = chainHistory.pop();
         currentChainIds = JSON.parse(prev.chain);
         chainSlotModes = JSON.parse(prev.modes);
@@ -3080,6 +3091,37 @@ function undoChainState() {
         pedalDatabase.length = 0;
         parsedPedals.forEach(p => pedalDatabase.push(p));
         const parsedPower = JSON.parse(prev.power);
+        powerSuppliesDatabase.length = 0;
+        parsedPower.forEach(ps => powerSuppliesDatabase.push(ps));
+        renderSignalChain();
+        renderCatalog(currentBrandFilter);
+        renderPowerSupplies();
+        renderInspector(activeInspectorId);
+        saveStateToLocalStorage();
+    }
+}
+
+function redoChainState() {
+    if (redoStack.length > 0) {
+        chainHistory.push({
+            chain: JSON.stringify(currentChainIds),
+            modes: JSON.stringify(chainSlotModes),
+            powerAssignments: JSON.stringify(currentPowerAssignments),
+            chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
+            pedals: JSON.stringify(pedalDatabase),
+            power: JSON.stringify(powerSuppliesDatabase)
+        });
+
+        const next = redoStack.pop();
+        currentChainIds = JSON.parse(next.chain);
+        chainSlotModes = JSON.parse(next.modes);
+        currentPowerAssignments = next.powerAssignments ? JSON.parse(next.powerAssignments) : {};
+        currentChainPowerSupplyIds = next.chainPowerSupplies ? JSON.parse(next.chainPowerSupplies) : [];
+
+        const parsedPedals = JSON.parse(next.pedals);
+        pedalDatabase.length = 0;
+        parsedPedals.forEach(p => pedalDatabase.push(p));
+        const parsedPower = JSON.parse(next.power);
         powerSuppliesDatabase.length = 0;
         parsedPower.forEach(ps => powerSuppliesDatabase.push(ps));
         renderSignalChain();
@@ -4981,8 +5023,16 @@ window.onload = async () => {
     }
     document.addEventListener('keydown', function(e) {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+            if (e.shiftKey) {
+                e.preventDefault();
+                redoChainState();
+            } else {
+                e.preventDefault();
+                undoChainState();
+            }
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
             e.preventDefault();
-            undoChainState();
+            redoChainState();
         }
     });
 };
