@@ -2901,25 +2901,54 @@ function loadSavedState() {
     }
 }
 
+
+function handlePedalImgError(img) {
+    if (!img) return;
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling;
+    if (fallback) {
+        fallback.classList.remove('hidden');
+        fallback.style.display = 'flex';
+    }
+}
+
+function handlePowerSupplyImgError(img) {
+    if (!img) return;
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling;
+    if (fallback) {
+        fallback.classList.remove('hidden');
+        fallback.style.display = 'flex';
+    }
+}
+
 function getPedalIconHTML(pedal, sizeClasses = 'w-10 h-10') {
-    const svgInner = `<div class="w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1"><svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg></div>`;
+    const svgFallback = `<div class="w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1"><svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg></div>`;
     const pedalId = pedal ? pedal.id : null;
     const primaryUrl = (pedal && pedal.imageUrl) ? pedal.imageUrl : (pedalId ? `assets/img/pedales/${pedalId}.png` : null);
     
     if (primaryUrl) {
-        const fallbackJpg = pedalId ? `assets/img/pedales/${pedalId}.jpg` : '';
-        const escapeSvg = svgInner.replace(/'/g, "\'");
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative"><img src="${primaryUrl}" class="w-full h-full object-contain" onerror="this.onerror=null; if('${fallbackJpg}'){ this.src='${fallbackJpg}'; this.onerror=function(){ this.parentNode.innerHTML='${escapeSvg}'; }; } else { this.parentNode.innerHTML='${escapeSvg}'; }"></div>`;
+        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative">
+            <img src="${primaryUrl}" alt="${pedal ? pedal.name : 'Pedal'}" class="w-full h-full object-contain" onerror="handlePedalImgError(this)">
+            <div class="pedal-svg-fallback hidden w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1">
+                <svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg>
+            </div>
+        </div>`;
     }
-    return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${svgInner}</div>`;
+    return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${svgFallback}</div>`;
 }
 
 function getPowerSupplyIconHTML(ps, sizeClasses = 'w-10 h-10') {
-    const plug = `<div class="w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs bg-[#00A8CC]/10"><i class="fa-solid fa-plug"></i></div>`;
+    const plugFallback = `<div class="ps-plug-fallback w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs"><i class="fa-solid fa-plug"></i></div>`;
     if (ps && ps.imageUrl) {
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative"><img src="${ps.imageUrl}" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs bg-[#00A8CC]/10\'><i class=\'fa-solid fa-plug\'></i></div>';"></div>`;
+        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative">
+            <img src="${ps.imageUrl}" alt="${ps.model || 'Fuente'}" class="w-full h-full object-contain" onerror="handlePowerSupplyImgError(this)">
+            <div class="ps-plug-fallback hidden w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs">
+                <i class="fa-solid fa-plug"></i>
+            </div>
+        </div>`;
     }
-    return `<div class="${sizeClasses} rounded-lg border border-[#2A2D36] bg-[#121316] flex items-center justify-center shrink-0">${plug}</div>`;
+    return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${plugFallback}</div>`;
 }
 
 function computePowerSupplyStats(psId) {
@@ -4167,22 +4196,28 @@ function renderInspector(itemId, currentSlotMode = null) {
                 }
             }
         }
-        const photoSection = pedal.imageUrl ?
-            `<div class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36]">
-                <img src="${pedal.imageUrl}" class="max-h-44 object-contain rounded-lg" onerror="this.onerror=null; this.style.display='none'; this.parentNode.insertAdjacentHTML('afterbegin', '<div class=&quot;w-24 h-24 my-4 flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 rounded-2xl border border-[#F15A24]/30&quot;><svg class=&quot;w-12 h-12 text-[#F15A24]&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><rect x=&quot;5&quot; y=&quot;2&quot; width=&quot;14&quot; height=&quot;20&quot; rx=&quot;3&quot; ry=&quot;3&quot;/><circle cx=&quot;9&quot; cy=&quot;6&quot; r=&quot;1.5&quot; fill=&quot;currentColor&quot;/><circle cx=&quot;15&quot; cy=&quot;6&quot; r=&quot;1.5&quot; fill=&quot;currentColor&quot;/><circle cx=&quot;12&quot; cy=&quot;11&quot; r=&quot;1&quot; fill=&quot;#F15A24&quot;/><circle cx=&quot;12&quot; cy=&quot;17&quot; r=&quot;2.5&quot;/></svg></div>');">
-                <label title="Cambiar foto" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] text-xs">
-                    <i class="fa-solid fa-camera"></i>
-                    <input type="file" accept="image/*" onchange="handlePedalPhotoUpload(event, 'INSPECTOR', '${pedal.id}')" class="hidden">
-                </label>
-             </div>` :
-            `<div class="bg-[#121316] p-4 rounded-xl border border-dashed border-[#2A2D36] flex flex-col items-center justify-center gap-2 text-[#9CA3AF]">
-                <i class="fa-solid fa-camera text-2xl text-[#9CA3AF]"></i>
-                <span class="text-xs">Sin foto adjunta</span>
-                <label class="bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border border-[#2A2D36] transition-all">
-                    Subir Foto (< 1 MB)
-                    <input type="file" accept="image/*" onchange="handlePedalPhotoUpload(event, 'INSPECTOR', '${pedal.id}')" class="hidden">
-                </label>
-             </div>`;
+        const photoSection = pedal.imageUrl ? `
+        <div class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36] min-h-[120px] items-center">
+            <img src="${pedal.imageUrl}" alt="${pedal.name}" class="max-h-44 object-contain rounded-lg" onerror="handlePedalImgError(this)">
+            <div class="pedal-svg-fallback hidden w-full h-36 flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-4 rounded-lg">
+                <svg class="w-16 h-16 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg>
+            </div>
+            <label title="Cambiar foto" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
+                <i class="fa-solid fa-camera"></i>
+                <input type="file" accept="image/*" class="hidden" onchange="handlePedalPhotoUpload('${pedal.id}', this)">
+            </label>
+        </div>
+    ` : `
+        <div class="relative group flex justify-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] items-center">
+            <div class="w-full h-32 flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-4 rounded-lg">
+                <svg class="w-16 h-16 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg>
+            </div>
+            <label title="Subir foto" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
+                <i class="fa-solid fa-camera"></i>
+                <input type="file" accept="image/*" class="hidden" onchange="handlePedalPhotoUpload('${pedal.id}', this)">
+            </label>
+        </div>
+    `;
 
         const isDriveFolder = pedal.manualUrl && pedal.manualUrl.includes('/folders/');
         const btnIcon = isDriveFolder ? 'fa-folder-open' : 'fa-file-pdf';
@@ -4279,22 +4314,28 @@ function renderInspector(itemId, currentSlotMode = null) {
         `;
     } else if (ps) {
         const isTabChain = activeTab === 'chain';
-        const psPhotoSection = ps.imageUrl ?
-            `<div class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36]">
-                <img src="${ps.imageUrl}" class="max-h-44 object-contain rounded-lg">
-                <label title="Cambiar foto de la fuente" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] text-xs">
-                    <i class="fa-solid fa-camera"></i>
-                    <input type="file" accept="image/*" onchange="handlePowerSupplyPhotoUpload(event, 'INSPECTOR', '${ps.id}')" class="hidden">
-                </label>
-             </div>` :
-            `<div class="bg-[#121316] p-4 rounded-xl border border-dashed border-[#2A2D36] flex flex-col items-center justify-center gap-2 text-[#9CA3AF]">
-                <i class="fa-solid fa-bolt text-2xl text-[#00A8CC]/60"></i>
-                <span class="text-xs">Sin foto adjunta</span>
-                <label class="bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border border-[#2A2D36] transition-all">
-                    Subir Foto (< 1 MB)
-                    <input type="file" accept="image/*" onchange="handlePowerSupplyPhotoUpload(event, 'INSPECTOR', '${ps.id}')" class="hidden">
-                </label>
-             </div>`;
+        const psPhotoSection = ps.imageUrl ? `
+        <div class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36] min-h-[120px] items-center">
+            <img src="${ps.imageUrl}" alt="${ps.model}" class="max-h-44 object-contain rounded-lg" onerror="handlePowerSupplyImgError(this)">
+            <div class="ps-plug-fallback hidden w-full h-36 flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xl">
+                <i class="fa-solid fa-plug text-4xl"></i>
+            </div>
+            <label title="Cambiar foto de la fuente" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
+                <i class="fa-solid fa-camera"></i>
+                <input type="file" accept="image/*" class="hidden" onchange="handlePowerSupplyPhotoUpload('${ps.id}', this)">
+            </label>
+        </div>
+    ` : `
+        <div class="relative group flex justify-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] items-center">
+            <div class="w-full h-32 flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xl">
+                <i class="fa-solid fa-plug text-4xl"></i>
+            </div>
+            <label title="Subir foto de la fuente" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
+                <i class="fa-solid fa-camera"></i>
+                <input type="file" accept="image/*" class="hidden" onchange="handlePowerSupplyPhotoUpload('${ps.id}', this)">
+            </label>
+        </div>
+    `;
 
         let outletsListHtml = '';
         if (ps.outlets && Array.isArray(ps.outlets)) {
