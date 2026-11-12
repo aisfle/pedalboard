@@ -720,7 +720,7 @@ function switchTab(tab) {
         if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
         renderWishlist();
     }
-    if (activeInspectorId) {
+    if (tab !== 'wishlist' && activeInspectorId) {
         renderInspector(activeInspectorId);
     }
 }
@@ -2850,6 +2850,18 @@ function saveStateToLocalStorage() {
 
 function loadSavedState() {
     try {
+        const wDb = localStorage.getItem('wishlist_db');
+        if (wDb) {
+            wishlistDatabase.length = 0;
+            try {
+                const parsedW = JSON.parse(wDb);
+                if (Array.isArray(parsedW)) {
+                    parsedW.forEach(w => wishlistDatabase.push(w));
+                }
+            } catch(e) {
+                console.error('Error al parsear wishlist_db de localStorage:', e);
+            }
+        }
         const pDb = localStorage.getItem('pedal_db');
         if (pDb) {
             pedalDatabase.length = 0;
@@ -5718,6 +5730,18 @@ function executeRegisterNewWishlistPedal() {
 
 function loadSavedState() {
     try {
+        const wDb = localStorage.getItem('wishlist_db');
+        if (wDb) {
+            wishlistDatabase.length = 0;
+            try {
+                const parsedW = JSON.parse(wDb);
+                if (Array.isArray(parsedW)) {
+                    parsedW.forEach(w => wishlistDatabase.push(w));
+                }
+            } catch(e) {
+                console.error('Error al parsear wishlist_db de localStorage:', e);
+            }
+        }
         const pDb = localStorage.getItem('pedal_db');
         if (pDb) {
             pedalDatabase.length = 0;
