@@ -2632,7 +2632,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 325,
         "voltage": "9V",
         "io": "Stereo I/O",
-        "manualUrl": "Ver Manual PDF",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
         "imageUrl": "assets/img/pedales/cb-big-time.png",
         "description": "Delay granular y motor de estiramiento de tiempo para congelar y estirar audio en tiempo real."
     },
@@ -2647,7 +2647,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 260,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "Ver Manual PDF",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
         "imageUrl": "assets/img/pedales/cb-brothers.png",
         "description": "Doble canal analógico de boost, overdrive y fuzz desarrollado con Resonant Electronic. Ruteo A/B/Paralelo."
     },
@@ -2662,7 +2662,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 195,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "Ver Manual PDF",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
         "imageUrl": "assets/img/pedales/cb-condor-hifi.png",
         "description": "Preamplificador, ecualizador y filtro analógico de ultra-bajo ruido con circuito HiFi actualizado."
     },
@@ -2677,7 +2677,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 650,
         "voltage": "9V",
         "io": "Stereo I/O",
-        "manualUrl": "Ver Manual PDF",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
         "imageUrl": "assets/img/pedales/cb-cxm-1978.png",
         "description": "Reverberador estéreo de grado de estudio con faders automatizados, desarrollado junto a Meris."
     },
@@ -2692,7 +2692,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 260,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "Ver Manual PDF",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
         "imageUrl": "assets/img/pedales/cb-mood-mki.png",
         "description": "Micro-looper y generador de texturas ambientales MKI en colaboración con Drolo FX y Old Blood Noise Endeavors."
     },
@@ -2707,7 +2707,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 130,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "Ver Manual PDF",
+        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
         "imageUrl": "assets/img/pedales/cb-wombtone.png",
         "description": "Phaser analógico de 2, 4 o 6 etapas con modulaciones líquidas, control de mezcla y rampa MIDI."
     }
@@ -2902,17 +2902,19 @@ function loadSavedState() {
 }
 
 function getPedalIconHTML(pedal, sizeClasses = 'w-10 h-10') {
+    const svg = `<div class="w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1"><svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg></div>`;
     if (pedal && pedal.imageUrl) {
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center"><img src="${pedal.imageUrl}" class="w-full h-full object-contain"></div>`;
+        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative"><img src="${pedal.imageUrl}" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1\'><svg class=\'w-3/5 h-3/5 text-[#F15A24]\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><rect x=\'5\' y=\'2\' width=\'14\' height=\'20\' rx=\'3\' ry=\'3\'/><circle cx=\'9\' cy=\'6\' r=\'1.5\' fill=\'currentColor\'/><circle cx=\'15\' cy=\'6\' r=\'1.5\' fill=\'currentColor\'/><circle cx=\'12\' cy=\'11\' r=\'1\' fill=\'#F15A24\'/><circle cx=\'12\' cy=\'17\' r=\'2.5\'/></svg></div>';"></div>`;
     }
-    return '';
+    return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${svg}</div>`;
 }
 
 function getPowerSupplyIconHTML(ps, sizeClasses = 'w-10 h-10') {
+    const plug = `<div class="w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs bg-[#00A8CC]/10"><i class="fa-solid fa-plug"></i></div>`;
     if (ps && ps.imageUrl) {
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center"><img src="${ps.imageUrl}" class="w-full h-full object-contain"></div>`;
+        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative"><img src="${ps.imageUrl}" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs bg-[#00A8CC]/10\'><i class=\'fa-solid fa-plug\'></i></div>';"></div>`;
     }
-    return `<div class="${sizeClasses} rounded-lg border border-[#2A2D36] bg-[#121316] flex items-center justify-center shrink-0 text-[#00A8CC] font-bold font-mono text-xs"><i class="fa-solid fa-plug"></i></div>`;
+    return `<div class="${sizeClasses} rounded-lg border border-[#2A2D36] bg-[#121316] flex items-center justify-center shrink-0">${plug}</div>`;
 }
 
 function computePowerSupplyStats(psId) {
@@ -3213,6 +3215,14 @@ function saveItemNotes(type, id) {
     }
     saveStateToLocalStorage();
     alert('¡Notas guardadas correctamente!');
+}
+
+
+function isValidManualUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    const u = url.trim();
+    if (u === '' || u === 'Ver Manual PDF' || u === 'null') return false;
+    return u.startsWith('http://') || u.startsWith('https://') || u.startsWith('assets/');
 }
 
 function openEditManualModal(type, id) {
@@ -4154,7 +4164,7 @@ function renderInspector(itemId, currentSlotMode = null) {
         }
         const photoSection = pedal.imageUrl ?
             `<div class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36]">
-                <img src="${pedal.imageUrl}" class="max-h-44 object-contain rounded-lg">
+                <img src="${pedal.imageUrl}" class="max-h-44 object-contain rounded-lg" onerror="this.onerror=null; this.style.display='none'; this.parentNode.insertAdjacentHTML('afterbegin', '<div class=&quot;w-24 h-24 my-4 flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 rounded-2xl border border-[#F15A24]/30&quot;><svg class=&quot;w-12 h-12 text-[#F15A24]&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><rect x=&quot;5&quot; y=&quot;2&quot; width=&quot;14&quot; height=&quot;20&quot; rx=&quot;3&quot; ry=&quot;3&quot;/><circle cx=&quot;9&quot; cy=&quot;6&quot; r=&quot;1.5&quot; fill=&quot;currentColor&quot;/><circle cx=&quot;15&quot; cy=&quot;6&quot; r=&quot;1.5&quot; fill=&quot;currentColor&quot;/><circle cx=&quot;12&quot; cy=&quot;11&quot; r=&quot;1&quot; fill=&quot;#F15A24&quot;/><circle cx=&quot;12&quot; cy=&quot;17&quot; r=&quot;2.5&quot;/></svg></div>');">
                 <label title="Cambiar foto" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] text-xs">
                     <i class="fa-solid fa-camera"></i>
                     <input type="file" accept="image/*" onchange="handlePedalPhotoUpload(event, 'INSPECTOR', '${pedal.id}')" class="hidden">
@@ -4169,7 +4179,7 @@ function renderInspector(itemId, currentSlotMode = null) {
                 </label>
              </div>`;
 
-        const manualButtonHtml = pedal.manualUrl ? `
+        const manualButtonHtml = isValidManualUrl(pedal.manualUrl) ? `
             <div class="pt-1 flex items-center gap-2">
                 <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 text-[#00A8CC] border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
                     <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
@@ -4334,7 +4344,7 @@ function renderInspector(itemId, currentSlotMode = null) {
                 `;
             }).join('');
         }
-        const psManualButtonHtml = ps.manualUrl ? `
+        const psManualButtonHtml = isValidManualUrl(ps.manualUrl) ? `
             <div class="pt-1 flex items-center gap-2">
                 <a href="${ps.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 text-[#00A8CC] border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
                     <i class="fa-solid fa-file-pdf"></i> Abrir Manual / Documentación PDF
