@@ -2632,7 +2632,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 325,
         "voltage": "9V",
         "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "manualUrl": "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM",
         "imageUrl": "assets/img/pedales/cb-big-time.png",
         "description": "Delay granular y motor de estiramiento de tiempo para congelar y estirar audio en tiempo real."
     },
@@ -2647,7 +2647,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 260,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "manualUrl": "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM",
         "imageUrl": "assets/img/pedales/cb-brothers.png",
         "description": "Doble canal analógico de boost, overdrive y fuzz desarrollado con Resonant Electronic. Ruteo A/B/Paralelo."
     },
@@ -2662,7 +2662,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 195,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "manualUrl": "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM",
         "imageUrl": "assets/img/pedales/cb-condor-hifi.png",
         "description": "Preamplificador, ecualizador y filtro analógico de ultra-bajo ruido con circuito HiFi actualizado."
     },
@@ -2677,7 +2677,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 650,
         "voltage": "9V",
         "io": "Stereo I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "manualUrl": "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM",
         "imageUrl": "assets/img/pedales/cb-cxm-1978.png",
         "description": "Reverberador estéreo de grado de estudio con faders automatizados, desarrollado junto a Meris."
     },
@@ -2692,7 +2692,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 260,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "manualUrl": "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM",
         "imageUrl": "assets/img/pedales/cb-mood-mki.png",
         "description": "Micro-looper y generador de texturas ambientales MKI en colaboración con Drolo FX y Old Blood Noise Endeavors."
     },
@@ -2707,7 +2707,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "maSafety": 130,
         "voltage": "9V",
         "io": "Mono I/O",
-        "manualUrl": "https://drive.google.com/drive/folders/16y4fI0MbNl0BXJ9y5qj6WHr5zZ033hDE?usp=drive_link",
+        "manualUrl": "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM",
         "imageUrl": "assets/img/pedales/cb-wombtone.png",
         "description": "Phaser analógico de 2, 4 o 6 etapas con modulaciones líquidas, control de mezcla y rampa MIDI."
     }
@@ -2902,11 +2902,16 @@ function loadSavedState() {
 }
 
 function getPedalIconHTML(pedal, sizeClasses = 'w-10 h-10') {
-    const svg = `<div class="w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1"><svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg></div>`;
-    if (pedal && pedal.imageUrl) {
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative"><img src="${pedal.imageUrl}" class="w-full h-full object-contain" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1\'><svg class=\'w-3/5 h-3/5 text-[#F15A24]\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><rect x=\'5\' y=\'2\' width=\'14\' height=\'20\' rx=\'3\' ry=\'3\'/><circle cx=\'9\' cy=\'6\' r=\'1.5\' fill=\'currentColor\'/><circle cx=\'15\' cy=\'6\' r=\'1.5\' fill=\'currentColor\'/><circle cx=\'12\' cy=\'11\' r=\'1\' fill=\'#F15A24\'/><circle cx=\'12\' cy=\'17\' r=\'2.5\'/></svg></div>';"></div>`;
+    const svgInner = `<div class="w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1"><svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg></div>`;
+    const pedalId = pedal ? pedal.id : null;
+    const primaryUrl = (pedal && pedal.imageUrl) ? pedal.imageUrl : (pedalId ? `assets/img/pedales/${pedalId}.png` : null);
+    
+    if (primaryUrl) {
+        const fallbackJpg = pedalId ? `assets/img/pedales/${pedalId}.jpg` : '';
+        const escapeSvg = svgInner.replace(/'/g, "\'");
+        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative"><img src="${primaryUrl}" class="w-full h-full object-contain" onerror="this.onerror=null; if('${fallbackJpg}'){ this.src='${fallbackJpg}'; this.onerror=function(){ this.parentNode.innerHTML='${escapeSvg}'; }; } else { this.parentNode.innerHTML='${escapeSvg}'; }"></div>`;
     }
-    return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${svg}</div>`;
+    return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${svgInner}</div>`;
 }
 
 function getPowerSupplyIconHTML(ps, sizeClasses = 'w-10 h-10') {
@@ -4179,10 +4184,15 @@ function renderInspector(itemId, currentSlotMode = null) {
                 </label>
              </div>`;
 
+        const isDriveFolder = pedal.manualUrl && pedal.manualUrl.includes('/folders/');
+        const btnIcon = isDriveFolder ? 'fa-folder-open' : 'fa-file-pdf';
+        const btnText = isDriveFolder ? 'Explorar Carpeta de Manuales en Drive' : 'Abrir Manual PDF';
+        const btnColor = isDriveFolder ? 'text-[#F15A24] bg-[#F15A24]/10 hover:bg-[#F15A24]/20 border-[#F15A24]/30' : 'text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border-[#00A8CC]/30';
+
         const manualButtonHtml = isValidManualUrl(pedal.manualUrl) ? `
             <div class="pt-1 flex items-center gap-2">
-                <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 text-[#00A8CC] border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
-                    <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
+                <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 ${btnColor} border font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
+                    <i class="fa-solid ${btnIcon}"></i> ${btnText}
                 </a>
                 <button onclick="openEditManualModal('PEDAL', '${pedal.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs">
                     <i class="fa-solid fa-pen"></i>
