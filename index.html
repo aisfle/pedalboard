@@ -229,19 +229,17 @@
                         </span>
                     </div>
                     <div class="flex items-center gap-2 text-xs font-mono flex-wrap w-full sm:w-auto justify-end">
-                        <div class="flex items-center gap-2 w-full sm:w-auto">
-                            <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
-                                <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
-                            </button>
-                            <button onclick="redoChainState()" title="Rehacer cambio (Ctrl+Y / Ctrl+Shift+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
-                                <i class="fa-solid fa-rotate-right text-[#00A8CC]"></i> Redo
-                            </button>
-                            <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#00A8CC] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
-                                <i class="fa-solid fa-plus text-xs"></i> Nueva cadena
-                            </button>
-                        </div>
-                        <button onclick="openSaveFavoriteModal()" class="w-full sm:w-auto justify-center bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg transition-all active:scale-95">
-                            <i class="fa-solid fa-bookmark"></i> Guardar Preset
+                        <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="flex-1 sm:flex-none justify-center bg-[#00A8CC] hover:bg-[#0092b3] text-[#FFFFFF] px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-md whitespace-nowrap">
+                            <i class="fa-solid fa-plus text-xs"></i> + Nueva cadena
+                        </button>
+                        <button onclick="openSaveFavoriteModal()" title="Guardar preset de la cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#F15A24] border border-[#F15A24] px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
+                            <i class="fa-solid fa-bookmark text-[#F15A24]"></i> Guardar preset
+                        </button>
+                        <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                            <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
+                        </button>
+                        <button onclick="redoChainState()" title="Rehacer cambio (Ctrl+Y / Ctrl+Shift+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                            <i class="fa-solid fa-rotate-right text-[#00A8CC]"></i> Redo
                         </button>
                     </div>
                 </div>
@@ -5288,7 +5286,82 @@ function importFullBackup(event) {
 
 
 // ==================== WISHLIST / WANT-LIST FUNCTIONS ====================
-function renderWishlist() {
+let selectedWishlistPedalId = null;
+
+function inspectWishlistPedal(id) {
+    const item = wishlistDatabase.find(p => p.id === id);
+    if (!item) return;
+    
+    selectedWishlistPedalId = id;
+    renderWishlist(false);
+    
+    const maBase = item.maBase || 20;
+    const maSafety = Math.round(maBase * 1.3);
+    const photoHtml = getPedalIconHTML(item, 'w-16 h-16');
+    const effCat = getEffectCategory(item);
+    const manualBtnHtml = item.manualUrl 
+        ? `<a href="${item.manualUrl}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-[#8B5CF6] hover:underline font-mono bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 px-3 py-1.5 rounded-lg transition-all"><i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF</a>` 
+        : '';
+        
+    const container = document.getElementById('inspector-content');
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="space-y-4 animate-fade-in">
+            <!-- INSPECTOR HEADER -->
+            <div class="flex items-start justify-between gap-2 border-b border-[#2A2D36] pb-3">
+                <div>
+                    <span class="text-[10px] font-mono font-bold text-[#8B5CF6] uppercase block tracking-wider">${item.brand}</span>
+                    <h3 class="text-base font-bold text-[#FFFFFF]">${item.name}</h3>
+                    <span class="inline-block text-[10px] font-mono bg-[#121316] text-[#8B5CF6] border border-[#8B5CF6]/30 px-2 py-0.5 rounded mt-1">
+                        ${effCat}
+                    </span>
+                </div>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/30 shrink-0">
+                    Deseado
+                </span>
+            </div>
+
+            <!-- PHOTO & MA SPECS -->
+            <div class="bg-[#121316] border border-[#8B5CF6]/40 p-3 rounded-xl flex items-center gap-3">
+                ${photoHtml}
+                <div class="space-y-1 font-mono text-xs">
+                    <div class="text-[#8B5CF6] font-bold">
+                        Consumo Base: ${maBase} mA
+                    </div>
+                    <div class="text-[#00A8CC]">
+                        Recomendado (+30%): ${maSafety} mA
+                    </div>
+                    <div class="text-[#9CA3AF] text-[11px]">
+                        ${item.voltage || '9V'} • ${item.isStereo ? 'Stereo I/O' : 'Mono I/O'}
+                    </div>
+                </div>
+            </div>
+
+            ${manualBtnHtml ? `<div class="pt-1">${manualBtnHtml}</div>` : ''}
+
+            <!-- DESCRIPTION / SPECIFICATION -->
+            <div class="space-y-2 pt-2 border-t border-[#2A2D36]">
+                <label class="text-xs font-mono font-bold text-[#8B5CF6] block uppercase tracking-wider">Descripción / Detalle</label>
+                <p class="text-xs text-[#FFFFFF] leading-relaxed bg-[#121316] p-3 rounded-xl border border-[#2A2D36] font-sans">
+                    ${item.desc || item.description || 'Sin descripción.'}
+                </p>
+            </div>
+
+            <!-- WISHLIST ACTIONS -->
+            <div class="space-y-2 pt-3 border-t border-[#2A2D36]">
+                <button onclick="moveWishlistToCollection('${item.id}')" class="w-full bg-[#8B5CF6] hover:bg-[#7c3aed] text-white py-2.5 rounded-xl text-xs font-bold text-center flex items-center justify-center transition-all shadow-md active:scale-95">
+                    ¡Lo compré! Enviar a mi colección
+                </button>
+                <button onclick="removeFromWishlist('${item.id}')" class="w-full text-xs text-[#9CA3AF] hover:text-[#F15A24] py-1.5 transition-all flex items-center justify-center gap-1 font-mono">
+                    <i class="fa-solid fa-trash-can"></i> Quitar de Wishlist
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function renderWishlist(updateInspector = true) {
     const grid = document.getElementById('wishlist-grid');
     const counter = document.getElementById('wishlist-counter');
     if (!grid) return;
@@ -5297,6 +5370,7 @@ function renderWishlist() {
     grid.innerHTML = '';
     
     if (wishlistDatabase.length === 0) {
+        selectedWishlistPedalId = null;
         grid.innerHTML = `
             <div class="col-span-full text-center py-12 bg-[#121316] border border-[#2A2D36] rounded-2xl p-6 space-y-3">
                 <i class="fa-solid fa-gift text-4xl text-[#8B5CF6]/40"></i>
@@ -5304,7 +5378,23 @@ function renderWishlist() {
                 <p class="text-xs text-[#9CA3AF] max-w-md mx-auto">Explora el catálogo maestro o registra pedales desde cero utilizando los botones de la barra superior para agendarlos en tu Wishlist.</p>
             </div>
         `;
+        const container = document.getElementById('inspector-content');
+        if (container && currentTab === 'wishlist') {
+            container.innerHTML = `
+                <div class="text-center py-12 text-[#9CA3AF] space-y-2">
+                    <i class="fa-solid fa-gift text-2xl text-[#8B5CF6]/40"></i>
+                    <p class="text-xs font-mono">Selecciona un pedal en tu Wishlist para ver sus detalles.</p>
+                </div>
+            `;
+        }
         return;
+    }
+    
+    if (updateInspector) {
+        if (!selectedWishlistPedalId || !wishlistDatabase.some(p => p.id === selectedWishlistPedalId)) {
+            selectedWishlistPedalId = wishlistDatabase[0].id;
+        }
+        inspectWishlistPedal(selectedWishlistPedalId);
     }
     
     wishlistDatabase.forEach(item => {
@@ -5313,7 +5403,9 @@ function renderWishlist() {
         const descText = item.description || item.desc || '';
         const descHtml = descText ? `<p title="${descText.replace(/"/g, '&quot;')}" class="text-xs text-[#9CA3AF] line-clamp-2 hover:line-clamp-none italic transition-all cursor-help mt-1.5">${descText}</p>` : '';
         
-        card.className = "bg-[#1C1E24] border border-[#8B5CF6]/30 hover:border-[#8B5CF6] p-3.5 rounded-xl transition-all hover:shadow-lg flex flex-col justify-between group relative";
+        const isSelected = selectedWishlistPedalId === item.id;
+        card.className = `bg-[#1C1E24] border p-3.5 rounded-xl transition-all hover:shadow-lg flex flex-col justify-between group relative cursor-pointer ${isSelected ? 'border-2 border-[#8B5CF6] bg-[#8B5CF6]/10 ring-2 ring-[#8B5CF6]/30' : 'border-[#8B5CF6]/30 hover:border-[#8B5CF6]'}`;
+        card.onclick = () => inspectWishlistPedal(item.id);
         
         card.innerHTML = `
             <div>
@@ -5336,11 +5428,11 @@ function renderWishlist() {
             </div>
             
             <div class="mt-3 pt-2 border-t border-[#2A2D36] space-y-2">
-                <button onclick="moveWishlistToCollection('${item.id}')" class="w-full bg-[#8B5CF6] hover:bg-[#7c3aed] text-white py-2 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
+                <button onclick="event.stopPropagation(); moveWishlistToCollection('${item.id}')" class="w-full bg-[#8B5CF6] hover:bg-[#7c3aed] text-white py-2 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
                     ¡Lo compré! Enviar a mi colección
                 </button>
             </div>
-            <button onclick="removeFromWishlist('${item.id}')" title="Quitar de Wishlist" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-20">
+            <button onclick="event.stopPropagation(); removeFromWishlist('${item.id}')" title="Quitar de Wishlist" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-20">
                 <i class="fa-solid fa-trash-can text-xs"></i>
             </button>
         `;
