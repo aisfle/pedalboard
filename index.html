@@ -4461,10 +4461,9 @@ function renderInspector(itemId, currentSlotMode = null) {
         </div>
     `;
 
-        const isDriveFolder = pedal.manualUrl && pedal.manualUrl.includes('/folders/');
-        const btnIcon = isDriveFolder ? 'fa-folder-open' : 'fa-file-pdf';
-        const btnText = isDriveFolder ? 'Explorar Carpeta de Manuales en Drive' : 'Abrir Manual PDF';
-        const btnColor = isDriveFolder ? 'text-[#F15A24] bg-[#F15A24]/10 hover:bg-[#F15A24]/20 border-[#F15A24]/30' : 'text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border-[#00A8CC]/30';
+        const btnIcon = 'fa-file-pdf';
+        const btnText = 'Abrir Manual PDF';
+        const btnColor = 'text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border-[#00A8CC]/30';
 
         const isFactory = isFactoryPedal(pedal);
         let manualButtonHtml = '';
@@ -5554,9 +5553,8 @@ function renderWishlistInspector(id) {
     const effCat = getEffectCategory(item);
     const isFactory = isFactoryPedal(item);
     
-    const isDriveFolder = item.manualUrl && item.manualUrl.includes('/folders/');
-    const btnIcon = isDriveFolder ? 'fa-folder-open' : 'fa-file-pdf';
-    const btnText = isDriveFolder ? 'Explorar Carpeta de Manuales en Drive' : 'Abrir Manual PDF';
+    const btnIcon = 'fa-file-pdf';
+    const btnText = 'Abrir Manual PDF';
     const btnColor = 'text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border-[#00A8CC]/30';
 
     let manualBtnHtml = '';
