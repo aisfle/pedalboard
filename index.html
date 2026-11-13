@@ -780,6 +780,17 @@ function getEffectCategory(p) {
         "ye-defiant-jazz": "Dinámica & modelado",
         "tc-plethora-x5": "Dinámica & modelado",
 
+        
+        // Nuevos pedales Boss V6
+        "boss-bp1w": "Saturación & ganancia",
+        "boss-ds1x": "Saturación & ganancia",
+        "boss-eq200": "Utilidad & ruteo",
+        "boss-md500": "Modulación",
+        "boss-od1x": "Saturación & ganancia",
+        "boss-pn2": "Modulación",
+        "boss-ps6": "Pitch & sintetizador",
+        "boss-rv200": "Reverberación & espacio",
+        "boss-sde3": "Delay & eco",
         // Saturación & ganancia
         "ibanez-ts9": "Saturación & ganancia",
         "klon-centaur": "Saturación & ganancia",
@@ -836,6 +847,7 @@ function getEffectCategory(p) {
         "boss-ph3": "Modulación",
         "mxr-phase-90": "Modulación",
         "obne-visitor": "Modulación",
+        "obne-float": "Modulación",
         "obne-excess-v2": "Modulación",
         "obne-dweller": "Modulación",
         "cb-warped-vinyl": "Modulación",
@@ -962,7 +974,7 @@ function getEffectCategory(p) {
         return 'Reverberación & espacio';
     }
 
-    if (['chorus', 'phaser', 'flanger', 'tremolo', 'vibrato', 'slicer', 'ring mod', 'modulation', 'dimension'].some(k => cat.includes(k) || name.includes(k))) {
+    if (['chorus', 'phaser', 'flanger', 'tremolo', 'vibrato', 'slicer', 'ring mod', 'modulation', 'dimension', 'filter', 'wah', 'auto-wah'].some(k => cat.includes(k) || name.includes(k))) {
         return 'Modulación';
     }
 
@@ -1061,6 +1073,15 @@ const BASE_MANUALS_DRIVE = "https://drive.google.com/drive/folders/1kxwlPFH2J0b7
 
 // DEFAULT FALLBACK CATALOG WITH 135 PEDALS
 const DEFAULT_PEDALS_FALLBACK = [
+    {"id": "boss-bp1w", "brand": "Boss", "name": "BP-1w Booster/Preamp (Waza Craft)", "type": "Efecto", "category": "Waza Craft Preamp & Booster", "maDraw": 60, "maBase": 60, "maSafety": 78, "voltage": "9V DC", "isStereo": false, "io": "Mono I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-bp1w.jpg", "description": "Preamplificador y booster analógico Waza Craft con modos CE-1, RE-201 y Natural."},
+    {"id": "boss-ds1x", "brand": "Boss", "name": "DS-1X Distortion", "type": "Efecto", "category": "MDP Custom Distortion", "maDraw": 45, "maBase": 45, "maSafety": 58, "voltage": "9V DC", "isStereo": false, "io": "Mono I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-ds1x.jpg", "description": "Distorsión de alta definición con procesamiento en tiempo real MDP que preserva la claridad del acorde."},
+    {"id": "boss-eq200", "brand": "Boss", "name": "EQ-200 Graphic Equalizer", "type": "Utilidad", "category": "Dual 10-Band Graphic EQ", "maDraw": 170, "maBase": 170, "maSafety": 221, "voltage": "9V DC", "isStereo": true, "io": "Stereo I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-eq200.jpg", "description": "Ecualizador gráfico estéreo de 10 bandas con pantalla gráfica, memorias de presets y procesamiento a 32-bit."},
+    {"id": "boss-md500", "brand": "Boss", "name": "MD-500 Modulation", "type": "Efecto", "category": "Advanced Modulation Processor", "maDraw": 225, "maBase": 225, "maSafety": 292, "voltage": "9V DC", "isStereo": true, "io": "Stereo I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-md500.jpg", "description": "Procesador de modulación de buque insignia de 32-bit/96kHz con 12 modos y funcionamiento estéreo dual."},
+    {"id": "boss-od1x", "brand": "Boss", "name": "OD-1X OverDrive", "type": "Efecto", "category": "MDP Custom Overdrive", "maDraw": 45, "maBase": 45, "maSafety": 58, "voltage": "9V DC", "isStereo": false, "io": "Mono I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-od1x.jpg", "description": "Overdrive moderno con tecnología MDP que responde dinámicamente al ataque y registro de la guitarra."},
+    {"id": "boss-pn2", "brand": "Boss", "name": "PN-2 Tremolo/Pan", "type": "Efecto", "category": "Stereo Tremolo & Auto Pan", "maDraw": 20, "maBase": 20, "maSafety": 26, "voltage": "9V DC", "isStereo": true, "io": "Stereo I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-pn2.jpg", "description": "Trémolo estéreo vintage y panner automático con formas de onda cuadrada y suave."},
+    {"id": "boss-ps6", "brand": "Boss", "name": "PS-6 Harmonist", "type": "Efecto", "category": "Polyphonic Pitch Shifter & Harmonizer", "maDraw": 45, "maBase": 45, "maSafety": 58, "voltage": "9V DC", "isStereo": true, "io": "Stereo I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-ps6.jpg", "description": "Armonizador inteligente polifónico de 4 modos con pitch shift, detune y efecto S-Bend."},
+    {"id": "boss-rv200", "brand": "Boss", "name": "RV-200 Reverb", "type": "Efecto", "category": "Smart Reverb Processor", "maDraw": 260, "maBase": 260, "maSafety": 338, "voltage": "9V DC", "isStereo": true, "io": "Stereo I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-rv200.jpg", "description": "Procesador de reverberación de la serie 200 con 12 algoritmos hi-fi y control de densidad espacial."},
+    {"id": "boss-sde3", "brand": "Boss", "name": "SDE-3 Digital Delay", "type": "Efecto", "category": "Vintage Digital Delay", "maDraw": 75, "maBase": 75, "maSafety": 98, "voltage": "9V DC", "isStereo": true, "io": "Stereo I/O", "manualUrl": null, "imageUrl": "assets/img/pedales/boss-sde3.jpg", "description": "Homenaje al legendario delay de rack Roland SDE-3000 con modo Offset estéreo y modulación vintage."},
     {
         "id": "boss-bd2w",
         "brand": "Boss",
@@ -4649,16 +4670,16 @@ function renderInspector(itemId, currentSlotMode = null) {
                 
                 <div class="space-y-2 pt-2 border-t border-[#2A2D36] font-sans">
                     <div>
-                        <label class="text-[10px] text-[#9CA3AF] font-mono block mb-1">Fuente Asignada (Lectura):</label>
+                        <label class="text-[10px] text-[#9CA3AF] font-mono block mb-1">Fuente asignada (lectura):</label>
                         <div class="w-full bg-[#1C1E24] text-[#00A8CC] border border-[#2A2D36] rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold flex items-center justify-between">
                             <span>${currentPs ? `${currentPs.brand} ${currentPs.model}` : 'Sin fuente asignada'}</span>
                             <i class="fa-solid fa-lock text-[10px] text-[#9CA3AF]" title="Control centralizado desde el panel de la Fuente"></i>
                         </div>
                     </div>
                     <div>
-                        <label class="text-[10px] text-[#9CA3AF] font-mono block mb-1">Salida Física Especifica (Lectura):</label>
+                        <label class="text-[10px] text-[#9CA3AF] font-mono block mb-1">Salida física específica (lectura):</label>
                         <div class="w-full bg-[#1C1E24] text-[#00A8CC] border border-[#2A2D36] rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold flex items-center justify-between">
-                            <span>${assignedOutletObj ? `${assignedOutletObj.label} (${assignedOutletObj.voltage} @ ${assignedOutletObj.maxMa}mA)` : 'Sin Salida Asignada'}</span>
+                            <span>${assignedOutletObj ? `${assignedOutletObj.label} (${assignedOutletObj.voltage} @ ${assignedOutletObj.maxMa}mA)` : 'Sin salida asignada'}</span>
                             <i class="fa-solid fa-lock text-[10px] text-[#9CA3AF]" title="Control centralizado desde el panel de la Fuente"></i>
                         </div>
                     </div>
