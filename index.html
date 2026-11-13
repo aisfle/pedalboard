@@ -356,7 +356,19 @@
 
     <!-- RIGHT SIDEBAR: DYNAMIC INSPECTOR PANEL -->
     <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#F15A24] p-6 flex flex-col overflow-y-auto shrink-0">
-        <div id="inspector-content" class="space-y-6"></div>
+        <div id="inspector-content" class="space-y-6">
+            <div class="text-center py-12 text-[#9CA3AF] space-y-4 animate-fade-in">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/40 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
+                    <i class="fa-solid fa-layer-group text-2xl"></i>
+                </div>
+                <h3 class="text-sm font-bold text-[#FFFFFF] uppercase tracking-wider">Colección e Inventario</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-left bg-[#121316] p-4 rounded-xl border border-[#2A2D36] space-y-2">
+                    Esta sección está dedicada para que armes tu colección personal de pedales.<br><br>
+                    Tenés dos formas de agregarlos a tu inventario: explorando y cargando modelos desde el <strong class="text-[#FFFFFF]">Catálogo Maestro</strong>, o registrando tus propios <strong class="text-[#00A8CC]">pedales y fuentes de alimentación personalizados</strong>.<br><br>
+                    Seleccioná cualquier elemento de tu colección para inspeccionar sus detalles, consumos en mA, manuales PDF y notas.
+                </p>
+            </div>
+        </div>
     </aside>
 </div>
 
@@ -720,8 +732,12 @@ function switchTab(tab) {
         if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
         renderWishlist(true);
     }
-    if (tab !== 'wishlist' && activeInspectorId) {
-        renderInspector(activeInspectorId);
+    if (tab !== 'wishlist') {
+        if (activeInspectorId && (pedalDatabase.some(p => p.id === activeInspectorId) || powerSuppliesDatabase.some(ps => ps.id === activeInspectorId))) {
+            renderInspector(activeInspectorId);
+        } else {
+            renderTabEmptyInspector(tab);
+        }
     }
 }
 
@@ -4402,21 +4418,62 @@ function isFactoryPedal(p) {
     return false;
 }
 
+
+function renderTabEmptyInspector(tabName) {
+    const container = document.getElementById('inspector-content');
+    if (!container) return;
+
+    if (tabName === 'catalog') {
+        container.innerHTML = `
+            <div class="text-center py-12 text-[#9CA3AF] space-y-4 animate-fade-in">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/40 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
+                    <i class="fa-solid fa-layer-group text-2xl"></i>
+                </div>
+                <h3 class="text-sm font-bold text-[#FFFFFF] uppercase tracking-wider">Colección e Inventario</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-left bg-[#121316] p-4 rounded-xl border border-[#2A2D36] space-y-2">
+                    Esta sección está dedicada para que armes tu colección personal de pedales.<br><br>
+                    Tenés dos formas de agregarlos a tu inventario: explorando y cargando modelos desde el <strong class="text-[#FFFFFF]">Catálogo Maestro</strong>, o registrando tus propios <strong class="text-[#00A8CC]">pedales y fuentes de alimentación personalizados</strong>.<br><br>
+                    Seleccioná cualquier elemento de tu colección para inspeccionar sus detalles, consumos en mA, manuales PDF y notas.
+                </p>
+            </div>
+        `;
+    } else if (tabName === 'chain') {
+        container.innerHTML = `
+            <div class="text-center py-12 text-[#9CA3AF] space-y-4 animate-fade-in">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#00A8CC]/40 flex items-center justify-center mx-auto text-[#00A8CC] shadow-inner">
+                    <i class="fa-solid fa-diagram-project text-2xl"></i>
+                </div>
+                <h3 class="text-sm font-bold text-[#FFFFFF] uppercase tracking-wider">Ruteo y Telemetría de Señal</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-left bg-[#121316] p-4 rounded-xl border border-[#2A2D36] space-y-2">
+                    En <strong class="text-[#00A8CC]">Mis cadenas</strong> podés diseñar la secuencia de audio de tu pedalboard en tiempo real.<br><br>
+                    Analizá el consumo eléctrico acumulado en mA, asigná las salidas físicas de energía desde tus fuentes alimentadoras y guardá o recuperá tus configuraciones favoritas como presets para volver a usarlas cuando quieras.
+                </p>
+            </div>
+        `;
+    } else if (tabName === 'wishlist') {
+        container.innerHTML = `
+            <div class="text-center py-12 text-[#9CA3AF] space-y-4 animate-fade-in">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#8B5CF6]/40 flex items-center justify-center mx-auto text-[#8B5CF6] shadow-inner">
+                    <i class="fa-solid fa-gift text-2xl"></i>
+                </div>
+                <h3 class="text-sm font-bold text-[#FFFFFF] uppercase tracking-wider">Tu Lista de Deseos</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-left bg-[#121316] p-4 rounded-xl border border-[#2A2D36] space-y-2">
+                    En <strong class="text-[#8B5CF6]">Wishlist</strong> guardá esos pedales que NECESITÁS tener algún día.<br><br>
+                    Podés agregarlos de dos maneras: buscándolos en el <strong class="text-[#FFFFFF]">Catálogo Maestro</strong> o creándolos de forma <strong class="text-[#8B5CF6]">personalizada</strong>.<br><br>
+                    Cuando finalmente te compres uno, envialo a tu colección principal con un solo clic desde su tarjeta.
+                </p>
+            </div>
+        `;
+    }
+}
+
 function renderInspector(itemId, currentSlotMode = null) {
     const container = document.getElementById('inspector-content');
     if (!container) return;
     const pedal = pedalDatabase.find(p => p.id === itemId);
     const ps = powerSuppliesDatabase.find(p => p.id === itemId);
     if (!pedal && !ps) {
-        container.innerHTML = `
-            <div class="text-center py-16 text-[#9CA3AF] space-y-3">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center mx-auto text-[#00A8CC]/60 shadow-inner">
-                    <i class="fa-solid fa-sliders text-2xl"></i>
-                </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF]">Inspector del Rig</h3>
-                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed">No hay ningún pedal ni fuente seleccionada. Puedes comenzar registrando tu primer pedal o fuente de alimentación para armar tu tablero.</p>
-            </div>
-        `;
+        renderTabEmptyInspector(activeTab || 'catalog');
         return;
     }
     if (pedal) {
@@ -5535,15 +5592,7 @@ function renderWishlistInspector(id) {
     if (!container) return;
 
     if (!item) {
-        container.innerHTML = `
-            <div class="text-center py-16 text-[#9CA3AF] space-y-3">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center mx-auto text-[#8B5CF6]/60 shadow-inner">
-                    <i class="fa-solid fa-gift text-2xl"></i>
-                </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF]">Lista de Deseos</h3>
-                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed">Selecciona un pedal de tu Wishlist para inspeccionar sus especificaciones.</p>
-            </div>
-        `;
+        renderTabEmptyInspector('wishlist');
         return;
     }
 
