@@ -4720,6 +4720,18 @@ function isFactoryPedal(p) {
 }
 
 
+
+function closeInspector() {
+    activeInspectorId = null;
+    selectedWishlistPedalId = null;
+    if (activeTab === 'wishlist') {
+        renderWishlist(false);
+        renderWishlistInspector(null);
+    } else {
+        renderInspector(null);
+    }
+}
+
 function renderTabEmptyInspector(tabName) {
     const container = document.getElementById('inspector-content');
     if (!container) return;
@@ -4774,32 +4786,7 @@ function renderInspector(itemId, currentSlotMode = null) {
     const pedal = pedalDatabase.find(p => p.id === itemId);
     const ps = powerSuppliesDatabase.find(p => p.id === itemId);
     if (!pedal && !ps) {
-        if (activeTab === 'chain') {
-            container.innerHTML = `<div class="text-center py-12 text-[#9CA3AF] space-y-3">
-    <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#00A8CC]/30 flex items-center justify-center mx-auto text-[#00A8CC] shadow-inner">
-        <i class="fa-solid fa-diagram-project text-2xl"></i>
-    </div>
-    <h3 class="text-sm font-bold text-[#FFFFFF]">Cadena de señal y ruteo</h3>
-    <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-        En esta sección podés diseñar la <strong class="text-[#00A8CC]">secuencia de pedales</strong> de tu pedalboard.<br><br>
-        Vas a poder analizar el consumo eléctrico acumulado en mA de tus pedales, asignar las salidas físicas de energía desde tus fuentes alimentadoras y guardar tus configuraciones preferidas como presets (botón <strong class="text-[#00A8CC]">Guardar preset</strong>) para cargarlas y editarlas la cantidad de veces que quieras.<br><br>
-        Si querés empezar un armado desde cero, usá el botón <strong class="text-[#00A8CC]">Nueva cadena</strong>.<br><br>
-        Tené en cuenta que el mínimo para constituir una cadena es de <strong>2 pedales</strong> + <strong>1 fuente</strong>.
-    </p>
-</div>`;
-        } else {
-            container.innerHTML = `<div class="text-center py-12 text-[#9CA3AF] space-y-3">
-    <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/30 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
-        <i class="fa-solid fa-layer-group text-2xl"></i>
-    </div>
-    <h3 class="text-sm font-bold text-[#FFFFFF]">Colección e inventario</h3>
-    <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-        Esta sección está dedicada para que armes tu colección personal de pedales.<br><br>
-        Tenés dos formas de agregarlos a tu inventario: mediante el catálogo general (botón <strong class="text-[#F15A24]">Cargar pedal desde el catálogo</strong>) y, si no lo encontrás ahí, lo podés registrar manualmente (botón <strong class="text-[#F15A24]">Cargar pedal personalizado</strong>). Lo mismo con tus fuentes de energía.<br><br>
-        Seleccionando cualquier elemento de tu colección vas a poder inspeccionar sus detalles, manuales e incluso dejar <strong class="text-[#F15A24]">notas personalizadas</strong> para que siempre tengas a mano esos seteos especiales.
-    </p>
-</div>`;
-        }
+        renderTabEmptyInspector(activeTab);
         return;
     }
     if (pedal) {
@@ -4887,7 +4874,10 @@ function renderInspector(itemId, currentSlotMode = null) {
                     <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/20">
                         ${pedal.brand}
                     </span>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold order-last ml-1">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                         <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#F15A24]/10 text-[#F15A24] border border-[#F15A24] px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 mr-2">
                             <i class="fa-solid fa-pen-to-square"></i> Editar
                         </button>
@@ -5054,9 +5044,14 @@ function renderInspector(itemId, currentSlotMode = null) {
 
         container.innerHTML = `
             <div class="space-y-2 border-b border-[#2A2D36] pb-4">
-                <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/20">
-                    ${ps.brand}
-                </span>
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/20">
+                        ${ps.brand}
+                    </span>
+                    <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
                 <h2 class="text-2xl font-bold text-[#FFFFFF]">${ps.model}</h2>
                 <p class="text-xs text-[#9CA3AF] font-mono">${ps.outlets ? ps.outlets.length : 0} Salidas físicas disponibles</p>
             </div>
@@ -5918,17 +5913,7 @@ function renderWishlistInspector(id) {
     if (!container) return;
 
     if (!item) {
-        container.innerHTML = `<div class="text-center py-12 text-[#9CA3AF] space-y-3">
-    <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#8B5CF6]/30 flex items-center justify-center mx-auto text-[#8B5CF6] shadow-inner">
-        <i class="fa-solid fa-gift text-2xl"></i>
-    </div>
-    <h3 class="text-sm font-bold text-[#FFFFFF]">Tu lista de deseos</h3>
-    <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-        En <strong class="text-[#8B5CF6]">Wishlist</strong> guardá esos pedales que <strong class="text-[#8B5CF6]">NECESITÁS</strong> tener algún día.<br><br>
-        Podés agregarlos de dos maneras: buscando modelos en el catálogo general (botón <strong class="text-[#8B5CF6]">Cargar pedal desde el catálogo</strong>) o registrándolos de forma manual si no los encontrás (botón <strong class="text-[#8B5CF6]">Cargar pedal personalizado</strong>).<br><br>
-        Cuando finalmente te compres uno, envialo a tu colección principal con un solo clic usando el botón <strong class="text-[#8B5CF6]">¡Lo compré! Enviar a mi colección</strong> dentro de su tarjeta.
-    </p>
-</div>`;
+        renderTabEmptyInspector('wishlist');
         return;
     }
 
@@ -5984,9 +5969,14 @@ function renderWishlistInspector(id) {
                         ${effCat}
                     </span>
                 </div>
-                <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/30 shrink-0">
-                    Deseado
-                </span>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/30 shrink-0">
+                        Deseado
+                    </span>
+                    <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="bg-[#121316] border border-[#8B5CF6]/40 p-3 rounded-xl flex items-center gap-3">
