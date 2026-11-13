@@ -736,7 +736,7 @@ function switchTab(tab) {
         if (activeInspectorId && (pedalDatabase.some(p => p.id === activeInspectorId) || powerSuppliesDatabase.some(ps => ps.id === activeInspectorId))) {
             renderInspector(activeInspectorId);
         } else {
-            renderTabEmptyInspector(tab);
+            renderInspector(null);
         }
     }
 }
@@ -6107,7 +6107,7 @@ window.onload = async () => {
     renderCategoryFilters();
     renderCatalog('ALL');
     renderPowerSupplies();
-    renderWishlist(true);
+    renderWishlist(false);
     if (currentChainIds.length > 0 && currentChainIds[0] !== 'EMPTY') {
         inspectPedal(currentChainIds[0]);
     }
