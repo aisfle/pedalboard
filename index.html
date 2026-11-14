@@ -3473,8 +3473,9 @@ function getPedalIconHTML(pedal, sizeClasses = 'w-10 h-10') {
     const primaryUrl = (pedal && pedal.imageUrl) ? pedal.imageUrl : (pedalId ? `assets/img/pedales/${pedalId}.png` : null);
     
     if (primaryUrl) {
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative">
-            <img src="${primaryUrl}" alt="${pedal ? pedal.name : 'Pedal'}" class="w-full h-full object-contain" onerror="handlePedalImgError(this)">
+        const pedalTitleEscaped = pedal ? pedal.name.replace(/'/g, "\\'") : 'Pedal';
+        return `<div onclick="event.stopPropagation(); openImageZoomModal('${primaryUrl}', '${pedalTitleEscaped}')" title="Clic para ampliar foto" class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] hover:border-[#00A8CC] bg-[#121316] flex items-center justify-center relative cursor-zoom-in transition-all group/thumb">
+            <img src="${primaryUrl}" alt="${pedal ? pedal.name : 'Pedal'}" class="w-full h-full object-contain group-hover/thumb:scale-105 transition-all" onerror="handlePedalImgError(this)">
             <div class="pedal-svg-fallback hidden w-full h-full flex items-center justify-center text-[#F15A24] bg-[#F15A24]/10 p-1">
                 <svg class="w-3/5 h-3/5 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="11" r="1" fill="#F15A24"/><circle cx="12" cy="17" r="2.5"/></svg>
             </div>
@@ -3544,7 +3545,7 @@ function checkGlobalElectricalSafety() {
             }
             outletPedals.forEach(p => {
                 if (outlet.voltage !== '9V') {
-                    criticalAlerts.push(`⚡ <strong>Peligro Crítico de Voltaje en ${p.name}:</strong> Conectado a ${ps.brand} ${outlet.label} configurada en <strong>${outlet.voltage}</strong>. Este pedal requiere strictly <strong>9V DC</strong>. Cambia la salida inmediatamente a 9V para evitar daños irreparables al circuito.`);
+                    criticalAlerts.push(`<div class="w-full text-center space-y-1 py-0.5"><div class="font-bold text-xs sm:text-sm text-[#F15A24]">⚡ Peligro Crítico de Voltaje en ${p.name}</div><div class="text-[11px] sm:text-xs font-sans text-[#F15A24]/90">Este pedal requiere estrictamente <strong>9V DC</strong>. Cambiá la salida inmediatamente a 9V para evitar daños irreparables al circuito.</div></div>`);
                 }
             });
         });
@@ -6421,6 +6422,34 @@ window.onload = async () => {
         inspectPedal(currentChainIds[0]);
     }
 };
+
+function openImageZoomModal(imageUrl, title = 'Vista Previa') {
+    if (!imageUrl) return;
+    const modal = document.getElementById('image-zoom-modal');
+    const imgEl = document.getElementById('image-zoom-img');
+    const titleEl = document.getElementById('image-zoom-title');
+    if (modal && imgEl) {
+        imgEl.src = imageUrl;
+        if (titleEl) titleEl.textContent = title;
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeImageZoomModal(e) {
+    if (e && e.target && e.target.id !== 'image-zoom-modal' && !e.target.closest('button')) return;
+    const modal = document.getElementById('image-zoom-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const zoomModal = document.getElementById('image-zoom-modal');
+        if (zoomModal && !zoomModal.classList.contains('hidden')) {
+            closeImageZoomModal();
+        }
+    }
+});
+
 </script>
 
 <!-- MASTER CATALOG FOR WISHLIST MODAL -->
@@ -6526,6 +6555,22 @@ window.onload = async () => {
         </div>
     </div>
 </div>
+
+    <!-- IMAGE ZOOM MODAL -->
+    <div id="image-zoom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeImageZoomModal(event)">
+        <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
+                <h3 id="image-zoom-title" class="text-sm font-bold text-[#FFFFFF] truncate max-w-[85%]">Vista Previa del Pedal</h3>
+                <button onclick="closeImageZoomModal()" title="Cerrar vista previa" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex justify-center items-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] min-h-[220px]">
+                <img id="image-zoom-img" src="" alt="Pedal Ampliado" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-md">
+            </div>
+        </div>
+    </div>
+
 </body>
 </html><!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
 <div id="master-catalog-modal" onclick="closeMasterCatalogModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
