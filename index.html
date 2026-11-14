@@ -280,6 +280,8 @@
                     </div>
                 </div>
                 <div id="chain-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3"></div>
+                <div id="stereo-collapse-notice" class="hidden"></div>
+                <div id="interpedal-cables-summary" class="hidden"></div>
             </section>
 
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-5 shadow-xl space-y-4">
@@ -3528,28 +3530,14 @@ function computePowerSupplyStats(psId) {
 
 function checkGlobalElectricalSafety() {
     let criticalAlerts = [];
-    const activePedalIdsInChain = currentChainIds.filter(id => id && id !== 'EMPTY');
     const activePowerSuppliesInChain = powerSuppliesDatabase.filter(ps => currentChainPowerSupplyIds.includes(ps.id));
     activePowerSuppliesInChain.forEach(ps => {
-        if (!ps.outlets) return;
-        ps.outlets.forEach(outlet => {
-            let outletPedals = pedalDatabase.filter(p => {
-                if (!activePedalIdsInChain.includes(p.id)) return false;
-                const assign = getPedalPowerAssignment(p.id);
-                return assign.psId === ps.id && assign.outletId === outlet.id;
-            });
-            let outletMaSum = outletPedals.reduce((sum, p) => sum + p.maWithMargin, 0);
-            if (outletMaSum > outlet.maxMa) {
-                const pedalNames = outletPedals.map(p => `<strong>${p.name}</strong> (${p.maWithMargin}mA)`).join(', ');
-                criticalAlerts.push(`⚠️ <strong>Sobrecarga en ${ps.brand} ${ps.model} (${outlet.label}):</strong> ${pedalNames} supera el límite máximo permitido por la salida (${outletMaSum} mA / máx ${outlet.maxMa} mA). <em>Se recomienda reasignar el pedal a una salida con mayor margen ó a otra fuente.</em>`);
-            }
-            outletPedals.forEach(p => {
-                if (outlet.voltage !== '9V') {
-                    criticalAlerts.push(`<div class="w-full text-center space-y-1 py-0.5"><div class="font-bold text-xs sm:text-sm text-[#F15A24]">⚡ Peligro Crítico de Voltaje en ${p.name}</div><div class="text-[11px] sm:text-xs font-sans text-[#F15A24]/90">Este pedal requiere estrictamente <strong>9V DC</strong>. Cambiá la salida inmediatamente a 9V para evitar daños irreparables al circuito.</div></div>`);
-                }
-            });
-        });
+        const stats = computePowerSupplyStats(ps.id);
+        if (stats.isOverloaded) {
+            criticalAlerts.push(`⚠️ <strong>Capacidad Total Excedida en ${ps.brand} ${ps.model}:</strong> El consumo acumulado (${stats.usedMa} mA) supera la capacidad máxima total de la fuente (${stats.totalCapacity} mA).`);
+        }
     });
+
     const banner = document.getElementById('safety-alert-banner');
     const msgEl = document.getElementById('safety-alert-msg');
     if (banner && msgEl) {
@@ -4347,6 +4335,96 @@ function renderSignalChain() {
     if (totalMaEl) totalMaEl.textContent = `${totalMaSum} mA`;
     if (totalCountBadgeEl) totalCountBadgeEl.textContent = `${activeCount} Pedales`;
 
+    // --- STEREO TO MONO COLLAPSE NOTICE ---
+    let showStereoCollapseNotice = false;
+    let hasSeenStereo = false;
+    currentChainIds.forEach((pedalId, index) => {
+        if (!pedalId || pedalId === 'EMPTY') return;
+        const slotMode = chainSlotModes[index] || (index >= 5 ? 'STEREO' : 'MONO');
+        if (slotMode === 'STEREO') {
+            hasSeenStereo = true;
+        } else if (slotMode === 'MONO' && hasSeenStereo) {
+            showStereoCollapseNotice = true;
+        }
+    });
+
+    const noticeEl = document.getElementById('stereo-collapse-notice');
+    if (noticeEl) {
+        if (showStereoCollapseNotice) {
+            noticeEl.innerHTML = `
+                <div class="bg-[#F59E0B]/10 border border-[#F59E0B]/40 text-[#F59E0B] p-3 rounded-xl text-xs font-sans flex items-center gap-2 mt-3 animate-fade-in">
+                    <i class="fa-solid fa-circle-info text-base shrink-0"></i>
+                    <span><strong>Aviso:</strong> El pedal mono colapsará la señal estéreo a partir de este punto.</span>
+                </div>
+            `;
+            noticeEl.classList.remove('hidden');
+        } else {
+            noticeEl.classList.add('hidden');
+            noticeEl.innerHTML = '';
+        }
+    }
+
+    // --- INTERPEDAL CABLE COUNTER ---
+    let monoCablesCount = 0;
+    let stereoCablesCount = 0;
+    let splitterCablesCount = 0;
+
+    const activeChainSlots = [];
+    currentChainIds.forEach((pedalId, index) => {
+        if (pedalId && pedalId !== 'EMPTY') {
+            const pedal = pedalDatabase.find(p => p.id === pedalId);
+            const slotMode = chainSlotModes[index] || (index >= 5 ? 'STEREO' : 'MONO');
+            activeChainSlots.push({ pedalId, pedal, slotMode, index });
+        }
+    });
+
+    for (let i = 0; i < activeChainSlots.length - 1; i++) {
+        const slotA = activeChainSlots[i];
+        const slotB = activeChainSlots[i + 1];
+
+        if (slotA.slotMode === 'MONO' && slotB.slotMode === 'MONO') {
+            monoCablesCount++;
+        } else if (slotA.slotMode === 'MONO' && slotB.slotMode === 'STEREO') {
+            monoCablesCount++;
+        } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'STEREO') {
+            stereoCablesCount++;
+        } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'MONO') {
+            splitterCablesCount++;
+        }
+    }
+
+    const cablesSummaryEl = document.getElementById('interpedal-cables-summary');
+    if (cablesSummaryEl) {
+        if (activeChainSlots.length > 1) {
+            cablesSummaryEl.innerHTML = `
+                <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 mt-3 font-sans">
+                    <h4 class="text-xs font-bold text-[#FFFFFF] uppercase tracking-wider flex items-center justify-between">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-plug text-[#00A8CC]"></i> Cables Interpedales Requeridos</span>
+                        <span class="text-[10px] font-mono text-[#9CA3AF] font-normal">${activeChainSlots.length - 1} conexiones de audio</span>
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono pt-1">
+                        <div class="bg-[#1C1E24] p-2.5 rounded-lg border border-[#2A2D36] flex justify-between items-center">
+                            <span class="text-[#9CA3AF]">Cable Patch Mono (TS):</span>
+                            <span class="font-bold text-[#FFFFFF] bg-[#00A8CC]/20 text-[#00A8CC] px-2 py-0.5 rounded">${monoCablesCount}</span>
+                        </div>
+                        <div class="bg-[#1C1E24] p-2.5 rounded-lg border border-[#2A2D36] flex justify-between items-center">
+                            <span class="text-[#9CA3AF]">Cable Patch Stereo (TRS/Dual):</span>
+                            <span class="font-bold text-[#FFFFFF] bg-[#9E7BB5]/20 text-[#9E7BB5] px-2 py-0.5 rounded">${stereoCablesCount}</span>
+                        </div>
+                        <div class="bg-[#1C1E24] p-2.5 rounded-lg border border-[#2A2D36] flex justify-between items-center">
+                            <span class="text-[#9CA3AF]">Cable Splitter (Y):</span>
+                            <span class="font-bold text-[#FFFFFF] bg-[#F15A24]/20 text-[#F15A24] px-2 py-0.5 rounded">${splitterCablesCount}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            cablesSummaryEl.classList.remove('hidden');
+        } else {
+            cablesSummaryEl.classList.add('hidden');
+            cablesSummaryEl.innerHTML = '';
+        }
+    }
+
     checkGlobalElectricalSafety();
     renderChainPowerSupplies();
     renderEnergySummaryTable();
@@ -4677,10 +4755,17 @@ function assignPedalToOutlet(psId, outletId, pedalId) {
     if (!pedal) return;
     const psObj = powerSuppliesDatabase.find(p => p.id === psId);
     const outletObj = psObj?.outlets?.find(o => o.id === outletId);
-    if (outletObj && pedal.maWithMargin > outletObj.maxMa) {
-        powerAssignmentError = `⚠️ ¡Error! El pedal "${pedal.name}" (${pedal.maWithMargin} mA) supera el límite máximo de ${outletObj.maxMa} mA de la ${outletObj.label}.`;
-        renderInspector(psId);
-        return;
+    if (outletObj) {
+        if (outletObj.voltage !== '9V') {
+            powerAssignmentError = `⚠️ ¡Error! El pedal "${pedal.name}" no es compatible con la salida de ${outletObj.voltage}.`;
+            renderInspector(psId);
+            return;
+        }
+        if (pedal.maWithMargin > outletObj.maxMa) {
+            powerAssignmentError = `⚠️ ¡Error! El pedal "${pedal.name}" (${pedal.maWithMargin} mA) supera el límite máximo de ${outletObj.maxMa} mA de la ${outletObj.label}.`;
+            renderInspector(psId);
+            return;
+        }
     }
     const currentAssign = getPedalPowerAssignment(pedalId);
     if (currentAssign.psId && (currentAssign.psId !== psId || currentAssign.outletId !== outletId)) {
@@ -4998,21 +5083,45 @@ function renderInspector(itemId, currentSlotMode = null) {
                         </div>
                     `;
                 }
-                let addPedalOptionsHtml = `<option value="">+ Conectar Pedal de la Cadena a ${out.label}...</option>`;
-                activePedalsInChain.forEach(p => {
-                    const pAssign = getPedalPowerAssignment(p.id);
-                    const isAlreadyAssigned = pAssign.psId && pAssign.outletId;
-                    const checkSymbol = isAlreadyAssigned ? '✓ ' : '';
-                    if (pAssign.psId === ps.id && pAssign.outletId === out.id) {
-                        return;
-                    }
-                    const isExceedingMa = p.maWithMargin > out.maxMa;
-                    if (isExceedingMa) {
-                        addPedalOptionsHtml += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${checkSymbol}${p.brand} - ${p.name} (${p.maWithMargin} mA) - Excede máx ${out.maxMa} mA</option>`;
-                    } else {
-                        addPedalOptionsHtml += `<option value="${p.id}">${checkSymbol}${p.brand} - ${p.name} (${p.maWithMargin} mA)</option>`;
-                    }
-                });
+                const isOutletOccupied = assignedPedals.length > 0;
+                let dropdownHtml = '';
+
+                if (isOutletOccupied) {
+                    dropdownHtml = `
+                        <select disabled class="w-full bg-[#1C1E24] text-[#9CA3AF] border border-[#2A2D36] rounded-lg px-2.5 py-1.5 text-xs font-mono opacity-60 cursor-not-allowed">
+                            <option value="" disabled selected>Salida ocupada por ${assignedPedals[0].name}</option>
+                        </select>
+                    `;
+                } else {
+                    let addPedalOptionsHtml = `<option value="">+ Conectar Pedal de la Cadena a ${out.label}...</option>`;
+                    activePedalsInChain.forEach(p => {
+                        const pAssign = getPedalPowerAssignment(p.id);
+                        if (pAssign.psId === ps.id && pAssign.outletId === out.id) {
+                            return;
+                        }
+                        const isVoltageIncompatible = out.voltage !== '9V';
+                        const isExceedingMa = p.maWithMargin > out.maxMa;
+                        const isAlreadyAssignedElsewhere = pAssign.psId && pAssign.outletId;
+
+                        if (isVoltageIncompatible) {
+                            addPedalOptionsHtml += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${p.brand} - ${p.name} (${p.maWithMargin} mA) - Incompatible con salida de ${out.voltage}</option>`;
+                        } else if (isExceedingMa) {
+                            addPedalOptionsHtml += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${p.brand} - ${p.name} (${p.maWithMargin} mA) - Excede máx ${out.maxMa} mA</option>`;
+                        } else if (isAlreadyAssignedElsewhere) {
+                            const existingPs = powerSuppliesDatabase.find(x => x.id === pAssign.psId);
+                            const existingOut = existingPs?.outlets?.find(o => o.id === pAssign.outletId);
+                            const locStr = existingOut ? existingOut.label : 'otra salida';
+                            addPedalOptionsHtml += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${p.brand} - ${p.name} - (Ya asignado a ${locStr})</option>`;
+                        } else {
+                            addPedalOptionsHtml += `<option value="${p.id}">${p.brand} - ${p.name} (${p.maWithMargin} mA)</option>`;
+                        }
+                    });
+                    dropdownHtml = `
+                        <select onchange="assignPedalToOutlet('${ps.id}', '${out.id}', this.value); this.value='';" class="w-full bg-[#1C1E24] text-[#FFFFFF] border border-[#2A2D36] rounded-lg px-2.5 py-1.5 text-xs font-mono focus:outline-none focus:border-[#00A8CC]">
+                            ${addPedalOptionsHtml}
+                        </select>
+                    `;
+                }
                 const connectedPedalsBadges = assignedPedals.length > 0 ? 
                     assignedPedals.map(p => `
                         <div class="inline-flex items-center gap-1.5 bg-[#1C1E24] text-[#FFFFFF] px-2 py-1 rounded text-[11px] font-mono border border-[#2A2D36]">
@@ -5034,9 +5143,7 @@ function renderInspector(itemId, currentSlotMode = null) {
                             ${connectedPedalsBadges}
                         </div>
                         <div class="pt-1">
-                            <select onchange="assignPedalToOutlet('${ps.id}', '${out.id}', this.value); this.value='';" class="w-full bg-[#1C1E24] text-[#FFFFFF] border border-[#2A2D36] rounded-lg px-2.5 py-1.5 text-xs font-mono focus:outline-none focus:border-[#00A8CC]">
-                                ${addPedalOptionsHtml}
-                            </select>
+                            ${dropdownHtml}
                         </div>
                     </div>
                 `;
@@ -5123,7 +5230,12 @@ function generateGroupedOptions(selectedPedalId) {
         pedals.forEach(p => {
             const assign = getPedalPowerAssignment(p.id);
             const checkPrefix = (assign.psId && assign.outletId) ? '✓ ' : '';
-            html += `<option value="${p.id}" ${p.id === selectedPedalId ? 'selected' : ''}>${checkPrefix}${p.name}</option>`;
+            const isAlreadyInChain = currentChainIds.includes(p.id) && p.id !== selectedPedalId;
+            if (isAlreadyInChain) {
+                html += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${checkPrefix}${p.name} - (Ya en la cadena)</option>`;
+            } else {
+                html += `<option value="${p.id}" ${p.id === selectedPedalId ? 'selected' : ''}>${checkPrefix}${p.name}</option>`;
+            }
         });
         html += `</optgroup>`;
     });
