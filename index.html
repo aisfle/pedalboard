@@ -4877,12 +4877,11 @@ function renderInspector(itemId, currentSlotMode = null) {
                         ${pedal.brand}
                     </span>
                     <div class="flex items-center gap-2">
-                        <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold order-last ml-1">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                        <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#F15A24]/10 text-[#F15A24] border border-[#F15A24] px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 mr-2">
-                            <i class="fa-solid fa-pen-to-square"></i> Editar
-                        </button>
+                        ${!isFactory ? `
+                            <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#F15A24]/10 text-[#F15A24] border border-[#F15A24] px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95">
+                                <i class="fa-solid fa-pen-to-square"></i> Editar
+                            </button>
+                        ` : ''}
                         <div class="flex items-center gap-1 font-mono text-xs">
                             <span class="text-[#9CA3AF] text-[10px]">Seteo:</span>
                             <select onchange="toggleInspectorPedalStereo('${pedal.id}', this.value)" ${isMonoOnly ? 'disabled' : ''} class="bg-[#1C1E24] ${modeToDisplay === 'STEREO' ? 'text-[#9E7BB5] border-[#9E7BB5]' : 'text-[#00A8CC] border-[#00A8CC]'} border rounded px-2 py-0.5 text-xs font-bold focus:outline-none ${isMonoOnly ? 'opacity-60 cursor-not-allowed' : ''}">
@@ -4890,6 +4889,9 @@ function renderInspector(itemId, currentSlotMode = null) {
                                 ${!isMonoOnly ? `<option value="STEREO" ${modeToDisplay === 'STEREO' ? 'selected' : ''}>Stereo</option>` : ''}
                             </select>
                         </div>
+                        <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold ml-1.5">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
                     </div>
                 </div>
                 <h2 class="text-2xl font-bold text-[#FFFFFF]">${pedal.name}</h2>
