@@ -175,12 +175,18 @@
                         <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
                             <span class="text-[#9CA3AF] self-center">Plantillas de 1-Clic:</span>
                             <button onclick="addPresetPowerSupply('strymon-zuma')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Strymon Zuma</button>
+                            <button onclick="addPresetPowerSupply('strymon-ojai')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Strymon Ojai</button>
                             <button onclick="addPresetPowerSupply('cioks-7')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ CIOKS 7</button>
+                            <button onclick="addPresetPowerSupply('fender-lvl8')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Fender LVL8</button>
+                            <button onclick="addPresetPowerSupply('mxr-isobrick-m237')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ MXR Iso-Brick M237</button>
+                            <button onclick="addPresetPowerSupply('mxr-isobrick-mini')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ MXR Iso-Brick Mini</button>
+                            <button onclick="addPresetPowerSupply('truetone-cs7')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ 1 SPOT CS7</button>
+                            <button onclick="addPresetPowerSupply('truetone-cs12')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ 1 SPOT CS12</button>
+                            <button onclick="addPresetPowerSupply('voodoo-pp2plus')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Voodoo PP2+</button>
+                            <button onclick="addPresetPowerSupply('voodoo-pp3plus')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Voodoo PP3+</button>
                             <button onclick="addPresetPowerSupply('walrus-canvas-5')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Canvas 5</button>
                             <button onclick="addPresetPowerSupply('walrus-canvas-8')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Canvas 8</button>
-                            <button onclick="addPresetPowerSupply('voodoo-pp2plus')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Voodoo PP2+</button>
-                            <button onclick="addPresetPowerSupply('truetone-cs7')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ 1 SPOT CS7</button>
-                            <button onclick="addPresetPowerSupply('mxr-isobrick')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ MXR Iso-Brick</button>
+                            <button onclick="addPresetPowerSupply('walrus-canvas-22')" class="bg-[#1E2128] hover:bg-[#252932] text-[#9E7BB5] hover:text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24] px-2 py-0.5 rounded transition-all">+ Canvas 22</button>
                         </div>
                     </div>
                     <div id="power-supplies-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
@@ -1074,256 +1080,6 @@ let editingPedalId = null;
 const BASE_MANUALS_DRIVE = "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM";
 
 // DEFAULT FALLBACK CATALOG WITH 135 PEDALS
-const DEFAULT_POWER_SUPPLIES_FALLBACK = [
-    {
-        id: 'cioks-7',
-        brand: 'CIOKS',
-        model: 'CIOKS 7',
-        name: 'CIOKS 7',
-        outletsCount: 7,
-        totalCapacityMa: 4620,
-        outlets: Array.from({length: 7}, (_, i) => ({ id: 'c7-' + (i+1), label: 'Salida ' + (i+1), voltage: '9V', maxMa: 660 })),
-        details: '7 salidas aisladas configurables de ultra-alto amperaje (9V/12V/15V/18V DC @ 660mA c/u).',
-        manualUrl: 'https://drive.google.com/file/d/1bNQdb0uVlinNduIwsSNwwIpqTlxQ8YmM/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/cioks-7.jpg'
-    },
-    {
-        id: 'fender-lvl8',
-        brand: 'Fender',
-        model: 'Engine Room LVL8',
-        name: 'Fender Engine Room LVL8',
-        outletsCount: 8,
-        totalCapacityMa: 4000,
-        outlets: [
-            { id: 'fl-1', label: 'Salida 1', voltage: '9V', maxMa: 500 },
-            { id: 'fl-2', label: 'Salida 2', voltage: '9V', maxMa: 500 },
-            { id: 'fl-3', label: 'Salida 3', voltage: '9V', maxMa: 500 },
-            { id: 'fl-4', label: 'Salida 4', voltage: '9V', maxMa: 500 },
-            { id: 'fl-5', label: 'Salida 5', voltage: '9V', maxMa: 500 },
-            { id: 'fl-6', label: 'Salida 6', voltage: '9V', maxMa: 500 },
-            { id: 'fl-7', label: 'Salida 7 (9/12/18V)', voltage: '9V', maxMa: 500 },
-            { id: 'fl-8', label: 'Salida 8 (9/12/18V)', voltage: '9V', maxMa: 500 }
-        ],
-        details: '8 salidas aisladas (6x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).',
-        manualUrl: 'https://drive.google.com/file/d/1asCSOZf_IcTGCTXnLOkK3XZkl7SAAX48/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/fender-lvl8.jpg'
-    },
-    {
-        id: 'mxr-isobrick-m237',
-        brand: 'MXR',
-        model: 'Iso-Brick M237',
-        name: 'MXR Iso-Brick M237',
-        outletsCount: 10,
-        totalCapacityMa: 2700,
-        outlets: [
-            { id: 'm237-1', label: 'Salida 1 (9V)', voltage: '9V', maxMa: 100 },
-            { id: 'm237-2', label: 'Salida 2 (9V)', voltage: '9V', maxMa: 100 },
-            { id: 'm237-3', label: 'Salida 3 (9V)', voltage: '9V', maxMa: 300 },
-            { id: 'm237-4', label: 'Salida 4 (9V)', voltage: '9V', maxMa: 300 },
-            { id: 'm237-5', label: 'Salida 5 (9V)', voltage: '9V', maxMa: 450 },
-            { id: 'm237-6', label: 'Salida 6 (9V)', voltage: '9V', maxMa: 450 },
-            { id: 'm237-7', label: 'Salida 7 (18V)', voltage: '18V', maxMa: 250 },
-            { id: 'm237-8', label: 'Salida 8 (18V)', voltage: '18V', maxMa: 250 },
-            { id: 'm237-9', label: 'Salida 9 (SAG 6-15V)', voltage: '9V', maxMa: 250 },
-            { id: 'm237-10', label: 'Salida 10 (SAG 6-15V)', voltage: '9V', maxMa: 250 }
-        ],
-        details: '10 salidas aisladas (2x 100mA, 2x 300mA, 2x 450mA, 2x 18V 250mA, 2x SAG variable).',
-        manualUrl: 'https://drive.google.com/file/d/1VU_C4favW_M5Bt-31DMLl8n-rTp2f2Nj/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/mxr-isobrick-m237.jpg'
-    },
-    {
-        id: 'mxr-isobrick-mini',
-        brand: 'MXR',
-        model: 'Iso-Brick Mini M239',
-        name: 'MXR Iso-Brick Mini M239',
-        outletsCount: 5,
-        totalCapacityMa: 2000,
-        outlets: [
-            { id: 'm239-1', label: 'Salida 1 (9V)', voltage: '9V', maxMa: 300 },
-            { id: 'm239-2', label: 'Salida 2 (9V)', voltage: '9V', maxMa: 300 },
-            { id: 'm239-3', label: 'Salida 3 (9V)', voltage: '9V', maxMa: 300 },
-            { id: 'm239-4', label: 'Salida 4 (9V)', voltage: '9V', maxMa: 300 },
-            { id: 'm239-5', label: 'Salida 5 (9/18V)', voltage: '9V', maxMa: 800 }
-        ],
-        details: '5 salidas aisladas (4x 9V DC @ 300mA + 1x seleccionable 9V/18V DC @ 800mA).',
-        manualUrl: 'https://drive.google.com/file/d/135i9a4ZXtWe_aTan04o_dIg7DiCF5H-K/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/mxr-isobrick-mini.jpg'
-    },
-    {
-        id: 'strymon-ojai',
-        brand: 'Strymon',
-        model: 'Ojai',
-        name: 'Strymon Ojai',
-        outletsCount: 5,
-        totalCapacityMa: 2500,
-        outlets: Array.from({length: 5}, (_, i) => ({ id: 'ojai-' + (i+1), label: 'Salida ' + (i+1), voltage: '9V', maxMa: 500 })),
-        details: '5 salidas aisladas de ultra-alta corriente (5x 9V DC @ 500mA + puerto 24V Thru).',
-        manualUrl: 'https://drive.google.com/file/d/1JXOZwg2T_iapFLTY8KsKnUPwNpv-6CGx/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/strymon-ojai.jpg'
-    },
-    {
-        id: 'strymon-zuma',
-        brand: 'Strymon',
-        model: 'Zuma',
-        name: 'Strymon Zuma',
-        outletsCount: 9,
-        totalCapacityMa: 4500,
-        outlets: [
-            { id: 'zuma-1', label: 'Salida 1', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-2', label: 'Salida 2', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-3', label: 'Salida 3', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-4', label: 'Salida 4', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-5', label: 'Salida 5', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-6', label: 'Salida 6', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-7', label: 'Salida 7', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-8', label: 'Salida 8 (9/12/18V)', voltage: '9V', maxMa: 500 },
-            { id: 'zuma-9', label: 'Salida 9 (9/12/18V)', voltage: '9V', maxMa: 500 }
-        ],
-        details: '9 salidas aisladas (7x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).',
-        manualUrl: 'https://drive.google.com/file/d/1Xje78LJCpNbaLhIo5xi31_7iJezh0n-E/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/strymon-zuma.jpg'
-    },
-    {
-        id: 'truetone-cs7',
-        brand: 'Truetone',
-        model: '1 SPOT Pro CS7',
-        name: 'Truetone 1 SPOT Pro CS7',
-        outletsCount: 7,
-        totalCapacityMa: 1900,
-        outlets: [
-            { id: 'cs7-1', label: 'Salida 1 (18V)', voltage: '18V', maxMa: 100 },
-            { id: 'cs7-2', label: 'Salida 2 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs7-3', label: 'Salida 3 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs7-4', label: 'Salida 4 (9V)', voltage: '9V', maxMa: 500 },
-            { id: 'cs7-5', label: 'Salida 5 (9V)', voltage: '9V', maxMa: 500 },
-            { id: 'cs7-6', label: 'Salida 6 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs7-7', label: 'Salida 7 (9/12V)', voltage: '9V', maxMa: 200 }
-        ],
-        details: '7 salidas aisladas (1x 18V @ 100mA, 2x 9V/12V @ 200mA, 2x 9V DC @ 500mA, 2x 9V/12V @ 200mA).',
-        manualUrl: 'https://drive.google.com/file/d/1b4oTRJ-lywMNqxeeauXcoYl3EOqv5LKF/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/truetone-cs7.jpg'
-    },
-    {
-        id: 'truetone-cs12',
-        brand: 'Truetone',
-        model: '1 SPOT Pro CS12',
-        name: 'Truetone 1 SPOT Pro CS12',
-        outletsCount: 12,
-        totalCapacityMa: 3000,
-        outlets: [
-            { id: 'cs12-1', label: 'Salida 1 (18V)', voltage: '18V', maxMa: 100 },
-            { id: 'cs12-2', label: 'Salida 2 (18V)', voltage: '18V', maxMa: 100 },
-            { id: 'cs12-3', label: 'Salida 3 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs12-4', label: 'Salida 4 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs12-5', label: 'Salida 5 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs12-6', label: 'Salida 6 (9/12V)', voltage: '9V', maxMa: 200 },
-            { id: 'cs12-7', label: 'Salida 7 (9V AC)', voltage: '9V', maxMa: 800 },
-            { id: 'cs12-8', label: 'Salida 8 (9V)', voltage: '9V', maxMa: 100 },
-            { id: 'cs12-9', label: 'Salida 9 (9V)', voltage: '9V', maxMa: 100 },
-            { id: 'cs12-10', label: 'Salida 10 (9V)', voltage: '9V', maxMa: 100 },
-            { id: 'cs12-11', label: 'Salida 11 (9V)', voltage: '9V', maxMa: 100 },
-            { id: 'cs12-12', label: 'Salida 12 (SAG)', voltage: '9V', maxMa: 100 }
-        ],
-        details: '12 salidas aisladas (2x 18V, 4x 9/12V 200mA, 1x 9V AC 800mA, 4x 9V 100mA, 1x SAG variable).',
-        manualUrl: 'https://drive.google.com/file/d/1ncNqA8Q3AUUbLgH8LB1SXKbkubgYArWD/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/truetone-cs12.jpg'
-    },
-    {
-        id: 'voodoo-pp2plus',
-        brand: 'Voodoo Lab',
-        model: 'Pedal Power 2 Plus',
-        name: 'Voodoo Lab Pedal Power 2 Plus',
-        outletsCount: 8,
-        totalCapacityMa: 1100,
-        outlets: [
-            { id: 'pp2-1', label: 'Salida 1 (9/12V)', voltage: '9V', maxMa: 100 },
-            { id: 'pp2-2', label: 'Salida 2 (9/12V)', voltage: '9V', maxMa: 100 },
-            { id: 'pp2-3', label: 'Salida 3 (9/12V)', voltage: '9V', maxMa: 100 },
-            { id: 'pp2-4', label: 'Salida 4 (9/12V)', voltage: '9V', maxMa: 100 },
-            { id: 'pp2-5', label: 'Salida 5 (High Current)', voltage: '9V', maxMa: 250 },
-            { id: 'pp2-6', label: 'Salida 6 (High Current)', voltage: '9V', maxMa: 250 },
-            { id: 'pp2-7', label: 'Salida 7 (SAG 4-9V)', voltage: '9V', maxMa: 100 },
-            { id: 'pp2-8', label: 'Salida 8 (SAG 4-9V)', voltage: '9V', maxMa: 100 }
-        ],
-        details: '8 salidas aisladas (4x 9V/12V @ 100mA, 2x 9V/12V @ 250mA, 2x 9V @ 100mA con SAG).',
-        manualUrl: 'https://drive.google.com/file/d/1ddOU0izoOoqTe40UEosqhKJO4RmVmzY4/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/voodoo-pp2plus.jpg'
-    },
-    {
-        id: 'voodoo-pp3plus',
-        brand: 'Voodoo Lab',
-        model: 'Pedal Power 3 Plus',
-        name: 'Voodoo Lab Pedal Power 3 Plus',
-        outletsCount: 12,
-        totalCapacityMa: 6000,
-        outlets: Array.from({length: 12}, (_, i) => ({
-            id: 'pp3-' + (i+1),
-            label: i >= 10 ? 'Salida ' + (i+1) + ' (9/12V)' : 'Salida ' + (i+1),
-            voltage: '9V',
-            maxMa: 500
-        })),
-        details: '12 salidas aisladas de alta corriente (10x 9V DC @ 500mA + 2x conmutables 9V/12V DC @ 500mA).',
-        manualUrl: 'https://drive.google.com/file/d/1iilVTdpm18qoDkhagp_tFjf_1z6M2PQp/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/voodoo-pp3plus.jpg'
-    },
-    {
-        id: 'walrus-canvas-5',
-        brand: 'Walrus Audio',
-        model: 'Canvas Power 5',
-        name: 'Walrus Audio Canvas Power 5',
-        outletsCount: 5,
-        totalCapacityMa: 2500,
-        outlets: [
-            { id: 'c5-1', label: 'Salida 1', voltage: '9V', maxMa: 500 },
-            { id: 'c5-2', label: 'Salida 2', voltage: '9V', maxMa: 500 },
-            { id: 'c5-3', label: 'Salida 3', voltage: '9V', maxMa: 500 },
-            { id: 'c5-4', label: 'Salida 4', voltage: '9V', maxMa: 500 },
-            { id: 'c5-5', label: 'Salida 5 (9/12/18V)', voltage: '9V', maxMa: 500 }
-        ],
-        details: '5 salidas aisladas de 9V DC @ 500mA (1x conmutable 9V/12V/18V).',
-        manualUrl: 'https://drive.google.com/file/d/1dvApPzuL7bN3VnsB55VdEXxsUuwJKJTQ/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/walrus-canvas-5.jpg'
-    },
-    {
-        id: 'walrus-canvas-8',
-        brand: 'Walrus Audio',
-        model: 'Canvas Power 8',
-        name: 'Walrus Audio Canvas Power 8',
-        outletsCount: 8,
-        totalCapacityMa: 4000,
-        outlets: [
-            { id: 'c8-1', label: 'Salida 1', voltage: '9V', maxMa: 500 },
-            { id: 'c8-2', label: 'Salida 2', voltage: '9V', maxMa: 500 },
-            { id: 'c8-3', label: 'Salida 3', voltage: '9V', maxMa: 500 },
-            { id: 'c8-4', label: 'Salida 4', voltage: '9V', maxMa: 500 },
-            { id: 'c8-5', label: 'Salida 5', voltage: '9V', maxMa: 500 },
-            { id: 'c8-6', label: 'Salida 6', voltage: '9V', maxMa: 500 },
-            { id: 'c8-7', label: 'Salida 7 (9/12/18V)', voltage: '9V', maxMa: 500 },
-            { id: 'c8-8', label: 'Salida 8 (9/12/18V)', voltage: '9V', maxMa: 500 }
-        ],
-        details: '8 salidas aisladas de 9V DC @ 500mA (2x conmutables 9V/12V/18V).',
-        manualUrl: 'https://drive.google.com/file/d/1dvApPzuL7bN3VnsB55VdEXxsUuwJKJTQ/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/walrus-canvas-8.jpg'
-    },
-    {
-        id: 'walrus-canvas-22',
-        brand: 'Walrus Audio',
-        model: 'Canvas Power 22',
-        name: 'Walrus Audio Canvas Power 22',
-        outletsCount: 22,
-        totalCapacityMa: 11000,
-        outlets: Array.from({length: 22}, (_, i) => ({
-            id: 'c22-' + (i+1),
-            label: i >= 20 ? 'Salida ' + (i+1) + ' (9/12/18V)' : 'Salida ' + (i+1),
-            voltage: '9V',
-            maxMa: 500
-        })),
-        details: '22 salidas aisladas independientes (20x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).',
-        manualUrl: 'https://drive.google.com/file/d/1dvApPzuL7bN3VnsB55VdEXxsUuwJKJTQ/view?usp=drive_link',
-        imageUrl: 'assets/img/fuentes/walrus-canvas-22.jpg'
-    }
-];
-
 const DEFAULT_PEDALS_FALLBACK = [
   {
     "id": "boss-bd2w",
@@ -3736,11 +3492,20 @@ function getPedalIconHTML(pedal, sizeClasses = 'w-10 h-10') {
     return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center">${svgFallback}</div>`;
 }
 
+
+function isFactoryPowerSupply(ps) {
+    if (!ps) return false;
+    if (ps.isFactory) return true;
+    const factoryModels = ['Zuma', 'Ojai', 'CIOKS 7', 'Engine Room LVL8', 'Iso-Brick M237', 'Iso-Brick Mini M239', '1 SPOT Pro CS7', '1 SPOT Pro CS12', 'Pedal Power 2+', 'Pedal Power 3+', 'Canvas Power 5', 'Canvas Power 8', 'Canvas Power 22'];
+    return factoryModels.includes(ps.model);
+}
+
 function getPowerSupplyIconHTML(ps, sizeClasses = 'w-10 h-10') {
     const plugFallback = `<div class="ps-plug-fallback w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs"><i class="fa-solid fa-plug"></i></div>`;
     if (ps && ps.imageUrl) {
-        return `<div class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] bg-[#121316] flex items-center justify-center relative">
-            <img src="${ps.imageUrl}" alt="${ps.model || 'Fuente'}" class="w-full h-full object-contain" onerror="handlePowerSupplyImgError(this)">
+        const titleEscaped = ps ? (`${ps.brand || ''} ${ps.model || ''}`).trim().replace(/'/g, "\'") : 'Fuente de alimentación';
+        return `<div onclick="event.stopPropagation(); openImageZoomModal('${ps.imageUrl}', '${titleEscaped}')" title="Clic para ampliar foto" class="${sizeClasses} rounded-lg overflow-hidden shrink-0 border border-[#2A2D36] hover:border-[#00A8CC] bg-[#121316] flex items-center justify-center relative cursor-zoom-in transition-all group/thumb">
+            <img src="${ps.imageUrl}" alt="${ps.model || 'Fuente'}" class="w-full h-full object-contain group-hover/thumb:scale-105 transition-all" onerror="handlePowerSupplyImgError(this)">
             <div class="ps-plug-fallback hidden w-full h-full flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xs">
                 <i class="fa-solid fa-plug"></i>
             </div>
@@ -4047,9 +3812,18 @@ function isValidManualUrl(url) {
     return u.startsWith('http://') || u.startsWith('https://') || u.startsWith('assets/');
 }
 
-function openEditManualModal(type, id) {
-    currentManualEditTarget = { type, id };
-    const item = type === 'PEDAL' ? pedalDatabase.find(p => p.id === id) : powerSuppliesDatabase.find(p => p.id === id);
+function openEditManualModal(targetType, id) {
+    if (targetType === 'PEDAL' || targetType === 'WISHLIST') {
+        const p = (targetType === 'PEDAL' ? pedalDatabase : wishlistDatabase).find(x => x.id === id);
+        if (p && isFactoryPedal(p)) return;
+    } else if (targetType === 'POWER') {
+        const ps = powerSuppliesDatabase.find(x => x.id === id);
+        if (ps && isFactoryPowerSupply(ps)) return;
+    }
+    currentManualEditTarget = { targetType, id };
+    const item = targetType === 'PEDAL' ? pedalDatabase.find(p => p.id === id) :
+                 targetType === 'WISHLIST' ? wishlistDatabase.find(p => p.id === id) :
+                 powerSuppliesDatabase.find(p => p.id === id);
     document.getElementById('manual-url-input').value = item?.manualUrl || '';
     document.getElementById('edit-manual-modal').classList.remove('hidden');
 }
@@ -4320,116 +4094,240 @@ function handleDragEnd(e) {
 function addPresetPowerSupply(presetType) {
     pushHistory();
     let newPs = null;
+    const now = Date.now();
     if (presetType === 'strymon-zuma') {
         newPs = {
-            id: 'ps-zuma-' + Date.now(),
+            id: 'ps-zuma-' + now,
             brand: 'Strymon',
             model: 'Zuma',
-            name: 'Strymon Zuma Preset',
-            outlets: Array.from({length: 9}, (_, i) => ({ id: `zuma-preset-${Date.now()}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
-            details: '9 salidas aisladas de 9V DC @ 500mA.',
-            manualUrl: null,
-            imageUrl: null,
+            name: 'Strymon Zuma',
+            outlets: [
+                { id: `zuma-${now}-1`, label: 'Salida 1', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-2`, label: 'Salida 2', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-5`, label: 'Salida 5', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-6`, label: 'Salida 6', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-7`, label: 'Salida 7', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-8`, label: 'Salida 8 (Toggle)', voltage: '9V', maxMa: 500 },
+                { id: `zuma-${now}-9`, label: 'Salida 9 (Toggle)', voltage: '9V', maxMa: 500 }
+            ],
+            details: '9 salidas aisladas (7x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).',
+            manualUrl: 'https://drive.google.com/file/d/1Xje78LJCpNbaLhIo5xi31_7iJezh0n-E/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/strymon-zuma.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'strymon-ojai') {
+        newPs = {
+            id: 'ps-ojai-' + now,
+            brand: 'Strymon',
+            model: 'Ojai',
+            name: 'Strymon Ojai',
+            outlets: Array.from({length: 5}, (_, i) => ({ id: `ojai-${now}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
+            details: '5 salidas aisladas de ultra-alta corriente (5x 9V DC @ 500mA + puerto 24V Thru).',
+            manualUrl: 'https://drive.google.com/file/d/1JXOZwg2T_iapFLTY8KsKnUPwNpv-6CGx/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/strymon-ojai.jpg',
+            isFactory: true,
             notes: ''
         };
     } else if (presetType === 'cioks-7') {
         newPs = {
-            id: 'ps-cioks7-' + Date.now(),
+            id: 'ps-cioks7-' + now,
             brand: 'CIOKS',
             model: 'CIOKS 7',
-            name: 'CIOKS 7 Preset',
-            outlets: Array.from({length: 7}, (_, i) => ({ id: `cioks-preset-${Date.now()}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 660 })),
-            details: '7 salidas aisladas de 9V DC @ 660mA.',
-            manualUrl: null,
-            imageUrl: null,
+            name: 'CIOKS 7',
+            outlets: Array.from({length: 7}, (_, i) => ({ id: `cioks-${now}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 660 })),
+            details: '7 salidas aisladas configurables (9V/12V/15V/18V DC @ 660mA c/u).',
+            manualUrl: 'https://drive.google.com/file/d/1bNQdb0uVlinNduIwsSNwwIpqTlxQ8YmM/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/cioks-7.jpg',
+            isFactory: true,
             notes: ''
         };
-    } else if (presetType === 'walrus-canvas-5') {
+    } else if (presetType === 'fender-lvl8') {
         newPs = {
-            id: 'ps-canvas5-' + Date.now(),
-            brand: 'Walrus Audio',
-            model: 'Canvas Power 5',
-            name: 'Canvas Power 5 Preset',
-            outlets: Array.from({length: 5}, (_, i) => ({ id: `canvas5-preset-${Date.now()}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
-            details: '5 salidas aisladas de 9V DC @ 500mA (toggle 12V/18V).',
-            manualUrl: null,
-            imageUrl: null,
-            notes: ''
-        };
-    } else if (presetType === 'walrus-canvas-8') {
-        newPs = {
-            id: 'ps-canvas8-' + Date.now(),
-            brand: 'Walrus Audio',
-            model: 'Canvas Power 8',
-            name: 'Canvas Power 8 Preset',
-            outlets: Array.from({length: 8}, (_, i) => ({ id: `canvas8-preset-${Date.now()}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
-            details: '8 salidas aisladas de 9V DC @ 500mA.',
-            manualUrl: null,
-            imageUrl: null,
-            notes: ''
-        };
-    } else if (presetType === 'voodoo-pp2plus') {
-        newPs = {
-            id: 'ps-voodoo-' + Date.now(),
-            brand: 'Voodoo Lab',
-            model: 'Pedal Power 2+',
-            name: 'Pedal Power 2+ Preset',
+            id: 'ps-lvl8-' + now,
+            brand: 'Fender',
+            model: 'Engine Room LVL8',
+            name: 'Fender Engine Room LVL8',
             outlets: [
-                { id: `pp2-${Date.now()}-1`, label: 'Salida 1', voltage: '9V', maxMa: 100 },
-                { id: `pp2-${Date.now()}-2`, label: 'Salida 2', voltage: '9V', maxMa: 100 },
-                { id: `pp2-${Date.now()}-3`, label: 'Salida 3', voltage: '9V', maxMa: 100 },
-                { id: `pp2-${Date.now()}-4`, label: 'Salida 4', voltage: '9V', maxMa: 100 },
-                { id: `pp2-${Date.now()}-5`, label: 'Salida 5', voltage: '9V', maxMa: 250 },
-                { id: `pp2-${Date.now()}-6`, label: 'Salida 6', voltage: '9V', maxMa: 250 },
-                { id: `pp2-${Date.now()}-7`, label: 'Salida 7', voltage: '9V', maxMa: 100 },
-                { id: `pp2-${Date.now()}-8`, label: 'Salida 8', voltage: '9V', maxMa: 100 }
+                { id: `lvl8-${now}-1`, label: 'Salida 1', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-2`, label: 'Salida 2', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-5`, label: 'Salida 5', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-6`, label: 'Salida 6', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-7`, label: 'Salida 7 (Toggle)', voltage: '9V', maxMa: 500 },
+                { id: `lvl8-${now}-8`, label: 'Salida 8 (Toggle)', voltage: '9V', maxMa: 500 }
             ],
-            details: '8 salidas (1-4: 100mA, 5-6: 250mA LRA, 7-8: 100mA).',
-            manualUrl: null,
-            imageUrl: null,
+            details: '8 salidas aisladas (6x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).',
+            manualUrl: 'https://drive.google.com/file/d/1asCSOZf_IcTGCTXnLOkK3XZkl7SAAX48/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/fender-lvl8.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'mxr-isobrick-m237' || presetType === 'mxr-isobrick') {
+        newPs = {
+            id: 'ps-isobrick-' + now,
+            brand: 'MXR',
+            model: 'Iso-Brick M237',
+            name: 'MXR Iso-Brick M237',
+            outlets: [
+                { id: `mxr-${now}-1`, label: 'Salida 1', voltage: '9V', maxMa: 100 },
+                { id: `mxr-${now}-2`, label: 'Salida 2', voltage: '9V', maxMa: 100 },
+                { id: `mxr-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 300 },
+                { id: `mxr-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 300 },
+                { id: `mxr-${now}-5`, label: 'Salida 5', voltage: '9V', maxMa: 450 },
+                { id: `mxr-${now}-6`, label: 'Salida 6', voltage: '9V', maxMa: 450 },
+                { id: `mxr-${now}-7`, label: 'Salida 7 (18V)', voltage: '18V', maxMa: 250 },
+                { id: `mxr-${now}-8`, label: 'Salida 8 (18V)', voltage: '18V', maxMa: 250 },
+                { id: `mxr-${now}-9`, label: 'Salida 9 (Var)', voltage: '9V', maxMa: 250 },
+                { id: `mxr-${now}-10`, label: 'Salida 10 (Var)', voltage: '9V', maxMa: 250 }
+            ],
+            details: '10 salidas aisladas (2x 9V @ 100mA, 2x 9V @ 300mA, 2x 9V @ 450mA, 2x 18V @ 250mA, 2x SAG 6V-15V @ 250mA).',
+            manualUrl: 'https://drive.google.com/file/d/1VU_C4favW_M5Bt-31DMLl8n-rTp2f2Nj/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/mxr-isobrick-m237.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'mxr-isobrick-mini') {
+        newPs = {
+            id: 'ps-isomini-' + now,
+            brand: 'MXR',
+            model: 'Iso-Brick Mini M239',
+            name: 'MXR Iso-Brick Mini M239',
+            outlets: [
+                { id: `isomini-${now}-1`, label: 'Salida 1', voltage: '9V', maxMa: 300 },
+                { id: `isomini-${now}-2`, label: 'Salida 2', voltage: '9V', maxMa: 300 },
+                { id: `isomini-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 300 },
+                { id: `isomini-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 300 },
+                { id: `isomini-${now}-5`, label: 'Salida 5 (Toggle 18V)', voltage: '9V', maxMa: 800 }
+            ],
+            details: '5 salidas aisladas (4x 9V DC @ 300mA + 1x seleccionable 9V/18V DC @ 800mA).',
+            manualUrl: 'https://drive.google.com/file/d/135i9a4ZXtWe_aTan04o_dIg7DiCF5H-K/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/mxr-isobrick-mini.jpg',
+            isFactory: true,
             notes: ''
         };
     } else if (presetType === 'truetone-cs7') {
         newPs = {
-            id: 'ps-cs7-' + Date.now(),
+            id: 'ps-cs7-' + now,
             brand: 'Truetone',
             model: '1 SPOT Pro CS7',
-            name: '1 SPOT Pro CS7 Preset',
+            name: '1 SPOT Pro CS7',
             outlets: [
-                { id: `cs7-${Date.now()}-1`, label: 'Salida 1 (18V)', voltage: '18V', maxMa: 100 },
-                { id: `cs7-${Date.now()}-2`, label: 'Salida 2', voltage: '9V', maxMa: 200 },
-                { id: `cs7-${Date.now()}-3`, label: 'Salida 3', voltage: '9V', maxMa: 200 },
-                { id: `cs7-${Date.now()}-4`, label: 'Salida 4', voltage: '9V', maxMa: 500 },
-                { id: `cs7-${Date.now()}-5`, label: 'Salida 5', voltage: '9V', maxMa: 500 },
-                { id: `cs7-${Date.now()}-6`, label: 'Salida 6', voltage: '9V', maxMa: 200 },
-                { id: `cs7-${Date.now()}-7`, label: 'Salida 7', voltage: '9V', maxMa: 200 }
+                { id: `cs7-${now}-1`, label: 'Salida 1 (18V)', voltage: '18V', maxMa: 100 },
+                { id: `cs7-${now}-2`, label: 'Salida 2', voltage: '9V', maxMa: 200 },
+                { id: `cs7-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 200 },
+                { id: `cs7-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 500 },
+                { id: `cs7-${now}-5`, label: 'Salida 5', voltage: '9V', maxMa: 500 },
+                { id: `cs7-${now}-6`, label: 'Salida 6', voltage: '9V', maxMa: 200 },
+                { id: `cs7-${now}-7`, label: 'Salida 7', voltage: '9V', maxMa: 200 }
             ],
-            details: '7 salidas (1x 18V @ 100mA, 2x 500mA, 4x 200mA).',
-            manualUrl: null,
-            imageUrl: null,
+            details: '7 salidas aisladas (1x 18V @ 100mA, 2x 9V/12V @ 200mA, 2x 9V DC @ 500mA, 2x 9V/12V @ 200mA).',
+            manualUrl: 'https://drive.google.com/file/d/1b4oTRJ-lywMNqxeeauXcoYl3EOqv5LKF/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/truetone-cs7.jpg',
+            isFactory: true,
             notes: ''
         };
-    } else if (presetType === 'mxr-isobrick') {
+    } else if (presetType === 'truetone-cs12') {
         newPs = {
-            id: 'ps-isobrick-' + Date.now(),
-            brand: 'MXR',
-            model: 'Iso-Brick M237',
-            name: 'MXR Iso-Brick Preset',
+            id: 'ps-cs12-' + now,
+            brand: 'Truetone',
+            model: '1 SPOT Pro CS12',
+            name: '1 SPOT Pro CS12',
             outlets: [
-                { id: `mxr-${Date.now()}-1`, label: 'Salida 1', voltage: '9V', maxMa: 100 },
-                { id: `mxr-${Date.now()}-2`, label: 'Salida 2', voltage: '9V', maxMa: 100 },
-                { id: `mxr-${Date.now()}-3`, label: 'Salida 3', voltage: '9V', maxMa: 300 },
-                { id: `mxr-${Date.now()}-4`, label: 'Salida 4', voltage: '9V', maxMa: 300 },
-                { id: `mxr-${Date.now()}-5`, label: 'Salida 5', voltage: '9V', maxMa: 450 },
-                { id: `mxr-${Date.now()}-6`, label: 'Salida 6', voltage: '9V', maxMa: 450 },
-                { id: `mxr-${Date.now()}-7`, label: 'Salida 7 (18V)', voltage: '18V', maxMa: 250 },
-                { id: `mxr-${Date.now()}-8`, label: 'Salida 8 (18V)', voltage: '18V', maxMa: 250 },
-                { id: `mxr-${Date.now()}-9`, label: 'Salida 9 (Var)', voltage: '9V', maxMa: 250 },
-                { id: `mxr-${Date.now()}-10`, label: 'Salida 10 (Var)', voltage: '9V', maxMa: 250 }
+                { id: `cs12-${now}-1`, label: 'Salida 1 (18V)', voltage: '18V', maxMa: 100 },
+                { id: `cs12-${now}-2`, label: 'Salida 2 (18V)', voltage: '18V', maxMa: 100 },
+                { id: `cs12-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 200 },
+                { id: `cs12-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 200 },
+                { id: `cs12-${now}-5`, label: 'Salida 5', voltage: '9V', maxMa: 200 },
+                { id: `cs12-${now}-6`, label: 'Salida 6', voltage: '9V', maxMa: 200 },
+                { id: `cs12-${now}-7`, label: 'Salida 7', voltage: '9V', maxMa: 500 },
+                { id: `cs12-${now}-8`, label: 'Salida 8', voltage: '9V', maxMa: 500 },
+                { id: `cs12-${now}-9`, label: 'Salida 9', voltage: '9V', maxMa: 100 },
+                { id: `cs12-${now}-10`, label: 'Salida 10', voltage: '9V', maxMa: 100 },
+                { id: `cs12-${now}-11`, label: 'Salida 11 (AC)', voltage: '9V', maxMa: 800 },
+                { id: `cs12-${now}-12`, label: 'Salida 12 (SAG)', voltage: '9V', maxMa: 100 }
             ],
-            details: '10 salidas aisladas de voltaje variado.',
-            manualUrl: null,
-            imageUrl: null,
+            details: '12 salidas aisladas (2x 18V @ 100mA, 4x 9V/12V @ 200mA, 1x 9V/9VAC @ 800mA, 4x 9V @ 100mA, 1x SAG variable).',
+            manualUrl: 'https://drive.google.com/file/d/1ncNqA8Q3AUUbLgH8LB1SXKbkubgYArWD/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/truetone-cs12.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'voodoo-pp2plus') {
+        newPs = {
+            id: 'ps-voodoo-' + now,
+            brand: 'Voodoo Lab',
+            model: 'Pedal Power 2 Plus',
+            name: 'Voodoo Lab Pedal Power 2 Plus',
+            outlets: [
+                { id: `pp2-${now}-1`, label: 'Salida 1', voltage: '9V', maxMa: 100 },
+                { id: `pp2-${now}-2`, label: 'Salida 2', voltage: '9V', maxMa: 100 },
+                { id: `pp2-${now}-3`, label: 'Salida 3', voltage: '9V', maxMa: 100 },
+                { id: `pp2-${now}-4`, label: 'Salida 4', voltage: '9V', maxMa: 100 },
+                { id: `pp2-${now}-5`, label: 'Salida 5', voltage: '9V', maxMa: 250 },
+                { id: `pp2-${now}-6`, label: 'Salida 6', voltage: '9V', maxMa: 250 },
+                { id: `pp2-${now}-7`, label: 'Salida 7', voltage: '9V', maxMa: 100 },
+                { id: `pp2-${now}-8`, label: 'Salida 8', voltage: '9V', maxMa: 100 }
+            ],
+            details: '8 salidas aisladas (4x 9V/12V @ 100mA, 2x 9V/12V @ 250mA, 2x 9V @ 100mA con SAG 4V-9V).',
+            manualUrl: 'https://drive.google.com/file/d/1ddOU0izoOoqTe40UEosqhKJO4RmVmzY4/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/voodoo-pp2plus.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'voodoo-pp3plus') {
+        newPs = {
+            id: 'ps-pp3plus-' + now,
+            brand: 'Voodoo Lab',
+            model: 'Pedal Power 3 Plus',
+            name: 'Voodoo Lab Pedal Power 3 Plus',
+            outlets: Array.from({length: 12}, (_, i) => ({ id: `pp3p-${now}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
+            details: '12 salidas aisladas de alta corriente (10x 9V DC @ 500mA + 2x conmutables 9V/12V DC @ 500mA).',
+            manualUrl: 'https://drive.google.com/file/d/1iilVTdpm18qoDkhagp_tFjf_1z6M2PQp/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/voodoo-pp3plus.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'walrus-canvas-5') {
+        newPs = {
+            id: 'ps-canvas5-' + now,
+            brand: 'Walrus Audio',
+            model: 'Canvas Power 5',
+            name: 'Walrus Audio Canvas Power 5',
+            outlets: Array.from({length: 5}, (_, i) => ({ id: `canvas5-${now}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
+            details: '5 salidas aisladas de 9V DC @ 500mA (conmutables a 12V/18V).',
+            manualUrl: 'https://drive.google.com/file/d/1dvApPzuL7bN3VnsB55VdEXxsUuwJKJTQ/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/walrus-canvas-5.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'walrus-canvas-8') {
+        newPs = {
+            id: 'ps-canvas8-' + now,
+            brand: 'Walrus Audio',
+            model: 'Canvas Power 8',
+            name: 'Walrus Audio Canvas Power 8',
+            outlets: Array.from({length: 8}, (_, i) => ({ id: `canvas8-${now}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
+            details: '8 salidas aisladas de 9V DC @ 500mA (2x conmutables 9V/12V/18V).',
+            manualUrl: 'https://drive.google.com/file/d/1dvApPzuL7bN3VnsB55VdEXxsUuwJKJTQ/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/walrus-canvas-8.jpg',
+            isFactory: true,
+            notes: ''
+        };
+    } else if (presetType === 'walrus-canvas-22') {
+        newPs = {
+            id: 'ps-canvas22-' + now,
+            brand: 'Walrus Audio',
+            model: 'Canvas Power 22',
+            name: 'Walrus Audio Canvas Power 22',
+            outlets: Array.from({length: 22}, (_, i) => ({ id: `canvas22-${now}-${i+1}`, label: `Salida ${i+1}`, voltage: '9V', maxMa: 500 })),
+            details: '22 salidas aisladas independientes (20x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).',
+            manualUrl: 'https://drive.google.com/file/d/1dvApPzuL7bN3VnsB55VdEXxsUuwJKJTQ/view?usp=drive_link',
+            imageUrl: 'assets/img/fuentes/walrus-canvas-22.jpg',
+            isFactory: true,
             notes: ''
         };
     }
@@ -4437,7 +4335,8 @@ function addPresetPowerSupply(presetType) {
         powerSuppliesDatabase.push(newPs);
         saveStateToLocalStorage();
         renderPowerSupplies();
-        renderCatalog('ALL');
+        renderSignalChain();
+        renderChainPowerSupplies();
         inspectPowerSupply(newPs.id);
     }
 }
@@ -5323,26 +5222,29 @@ function renderInspector(itemId, currentSlotMode = null) {
         `;
     } else if (ps) {
         const isTabChain = activeTab === 'chain';
+        const isFactoryPs = isFactoryPowerSupply(ps);
         const psPhotoSection = ps.imageUrl ? `
-        <div class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36] min-h-[120px] items-center">
-            <img src="${ps.imageUrl}" alt="${ps.model}" class="max-h-44 object-contain rounded-lg" onerror="handlePowerSupplyImgError(this)">
+        <div onclick="openImageZoomModal('${ps.imageUrl}', '${(ps.brand + ' ' + ps.model).replace(/'/g, "\'")}')" title="Clic para ampliar foto" class="relative group flex justify-center bg-[#121316] p-2 rounded-xl border border-[#2A2D36] hover:border-[#00A8CC] min-h-[120px] items-center cursor-zoom-in">
+            <img src="${ps.imageUrl}" alt="${ps.model}" class="max-h-44 object-contain rounded-lg group-hover:scale-105 transition-all" onerror="handlePowerSupplyImgError(this)">
             <div class="ps-plug-fallback hidden w-full h-36 flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xl">
                 <i class="fa-solid fa-plug text-4xl"></i>
             </div>
-            <label title="Cambiar foto de la fuente" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
+            ${!isFactoryPs ? `
+            <label onclick="event.stopPropagation()" title="Cambiar foto de la fuente" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
                 <i class="fa-solid fa-camera"></i>
                 <input type="file" accept="image/*" class="hidden" onchange="handlePowerSupplyPhotoUpload('${ps.id}', this)">
-            </label>
+            </label>` : ''}
         </div>
     ` : `
         <div class="relative group flex justify-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] items-center">
             <div class="w-full h-32 flex items-center justify-center text-[#00A8CC] font-bold font-mono text-xl">
                 <i class="fa-solid fa-plug text-4xl"></i>
             </div>
+            ${!isFactoryPs ? `
             <label title="Subir foto de la fuente" class="absolute bottom-3 right-3 bg-[#1C1E24]/80 hover:bg-[#20232B] text-[#00A8CC] p-2 rounded-lg cursor-pointer border border-[#2A2D36] hover:border-[#00A8CC] transition-all shadow-md">
                 <i class="fa-solid fa-camera"></i>
                 <input type="file" accept="image/*" class="hidden" onchange="handlePowerSupplyPhotoUpload('${ps.id}', this)">
-            </label>
+            </label>` : ''}
         </div>
     `;
 
@@ -5431,22 +5333,32 @@ function renderInspector(itemId, currentSlotMode = null) {
                 `;
             }).join('');
         }
-        const psManualButtonHtml = isValidManualUrl(ps.manualUrl) ? `
-            <div class="pt-1 flex items-center gap-2">
-                <a href="${ps.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 text-[#00A8CC] border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
-                    <i class="fa-solid fa-file-pdf"></i> Abrir Manual / Documentación PDF
-                </a>
-                <button onclick="openEditManualModal('POWER', '${ps.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-            </div>
-        ` : `
-            <div class="pt-1 flex items-center gap-2">
-                <button onclick="openEditManualModal('POWER', '${ps.id}')" class="flex-1 bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/50 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
-                    <i class="fa-solid fa-plus"></i> Agregar URL del manual
-                </button>
-            </div>
-        `;
+        const psManualButtonHtml = isValidManualUrl(ps.manualUrl) ? (
+            isFactoryPs ? `
+                <div class="pt-1">
+                    <a href="${ps.manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 text-[#00A8CC] border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                        <i class="fa-solid fa-file-pdf"></i> Abrir Manual / Documentación PDF
+                    </a>
+                </div>
+            ` : `
+                <div class="pt-1 flex items-center gap-2">
+                    <a href="${ps.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 text-[#00A8CC] border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                        <i class="fa-solid fa-file-pdf"></i> Abrir Manual / Documentación PDF
+                    </a>
+                    <button onclick="openEditManualModal('POWER', '${ps.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </div>
+            `
+        ) : (
+            !isFactoryPs ? `
+                <div class="pt-1 flex items-center gap-2">
+                    <button onclick="openEditManualModal('POWER', '${ps.id}')" class="flex-1 bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/50 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md">
+                        <i class="fa-solid fa-plus"></i> Agregar URL del manual
+                    </button>
+                </div>
+            ` : ''
+        );
 
         container.innerHTML = `
             <div class="space-y-2 border-b border-[#2A2D36] pb-4">
@@ -5698,36 +5610,6 @@ function executeRegisterNewPedal() {
 }
 
 // MASTER CATALOG MODAL JS LOGIC
-
-let activeMasterCatalogTab = 'PEDALS';
-
-function switchMasterCatalogTab(tab) {
-    activeMasterCatalogTab = tab;
-    masterCatalogBrandFilter = 'ALL';
-    masterCatalogCategoryFilter = 'ALL';
-    masterCatalogSearchQuery = '';
-    const searchInput = document.getElementById('master-catalog-search-input');
-    if (searchInput) searchInput.value = '';
-
-    const btnPedals = document.getElementById('master-tab-pedals-btn');
-    const btnPower = document.getElementById('master-tab-power-btn');
-    const catContainer = document.getElementById('master-catalog-category-filters-container');
-
-    if (tab === 'PEDALS') {
-        if (btnPedals) { btnPedals.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all bg-[#F15A24] text-[#FFFFFF] shadow-md"; }
-        if (btnPower) { btnPower.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-[#FFFFFF]"; }
-        if (catContainer) catContainer.classList.remove('hidden');
-    } else {
-        if (btnPedals) { btnPedals.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-[#FFFFFF]"; }
-        if (btnPower) { btnPower.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all bg-[#00A8CC] text-[#FFFFFF] shadow-md"; }
-        if (catContainer) catContainer.classList.add('hidden');
-    }
-
-    renderMasterCatalogBrandFilters();
-    renderMasterCatalogCategoryFilters();
-    renderMasterCatalog();
-}
-
 let masterCatalogBrandFilter = 'ALL';
 let masterCatalogCategoryFilter = 'ALL';
 let masterCatalogSearchQuery = '';
@@ -5752,16 +5634,11 @@ function closeMasterCatalogModal() {
 function renderMasterCatalogBrandFilters() {
     const container = document.getElementById('master-catalog-brand-filters');
     if (!container) return;
-    const sourceDb = (activeMasterCatalogTab === 'POWER') 
-        ? (typeof DEFAULT_POWER_SUPPLIES_FALLBACK !== 'undefined' ? DEFAULT_POWER_SUPPLIES_FALLBACK : [])
-        : (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' ? DEFAULT_PEDALS_FALLBACK : []);
-    
-    const activeColor = activeMasterCatalogTab === 'POWER' ? '#00A8CC' : '#F15A24';
-    const brands = ['ALL', ...new Set(sourceDb.map(p => p.brand))].sort();
+    const brands = ['ALL', ...new Set(DEFAULT_PEDALS_FALLBACK.map(p => p.brand))].sort();
     container.innerHTML = brands.map(b => `
         <button onclick="filterMasterCatalogByBrand('${b}')" class="px-2.5 py-1 rounded-lg border text-xs font-mono transition-all ${
             b === masterCatalogBrandFilter 
-            ? `bg-[${activeColor}]/10 border-[${activeColor}]/50 text-[${activeColor}] font-bold` 
+            ? 'bg-[#F15A24]/10 border-[#F15A24]/50 text-[#F15A24] font-bold' 
             : 'bg-[#1C1E24] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
         }">
             ${b === 'ALL' ? 'Todas las Marcas' : b}
@@ -5899,37 +5776,7 @@ function addFactoryPedalToCollection(factoryId) {
         id: factoryPedal.id,
         name: factoryPedal.name,
         brand: factoryPedal.brand,
-        category: factoryPedal.category ? `${effCat} / ${factoryPedal.category}
-
-function addFactoryPowerSupplyToCollection(factoryPsId) {
-    if (typeof DEFAULT_POWER_SUPPLIES_FALLBACK === 'undefined') return;
-    const factoryPs = DEFAULT_POWER_SUPPLIES_FALLBACK.find(ps => ps.id === factoryPsId);
-    if (!factoryPs) return;
-
-    const exists = powerSuppliesDatabase.some(ps => ps.id === factoryPs.id || (ps.model && ps.model.toLowerCase() === factoryPs.model.toLowerCase() && ps.brand.toLowerCase() === factoryPs.brand.toLowerCase()));
-    if (exists) return;
-
-    pushHistory();
-    const newPs = {
-        id: factoryPs.id,
-        brand: factoryPs.brand,
-        model: factoryPs.model,
-        name: factoryPs.name || (factoryPs.brand + " " + factoryPs.model),
-        outlets: JSON.parse(JSON.stringify(factoryPs.outlets)),
-        details: factoryPs.details || '',
-        manualUrl: factoryPs.manualUrl || null,
-        imageUrl: factoryPs.imageUrl || null,
-        notes: ''
-    };
-
-    powerSuppliesDatabase.push(newPs);
-    saveStateToLocalStorage();
-    renderPowerSupplies();
-    renderChainPowerSupplies();
-    renderMasterCatalog();
-}
-
-` : effCat,
+        category: factoryPedal.category ? `${effCat} / ${factoryPedal.category}` : effCat,
         effectCategory: effCat,
         maBase: maBase,
         maWithMargin: factoryPedal.maSafety || Math.round(maBase * 1.3),
@@ -6946,7 +6793,7 @@ document.addEventListener('keydown', (e) => {
             </div>
 
             <!-- CATEGORY FILTERS -->
-            <div id="master-catalog-category-filters-container" class="space-y-1.5 pt-1">
+            <div class="space-y-1.5 pt-1">
                 <label class="text-[11px] font-bold text-[#8B5CF6] uppercase tracking-wider block font-mono">
                     <i class="fa-solid fa-sliders"></i> Filtrar por categoría de efecto:
                 </label>
@@ -7024,19 +6871,12 @@ document.addEventListener('keydown', (e) => {
         <!-- MODAL HEADER -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
             <div>
-                <div class="space-y-2">
-                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo maestro de equipamiento
-                    </h3>
-                    <div class="flex items-center gap-2 pt-1">
-                        <button id="master-tab-pedals-btn" onclick="switchMasterCatalogTab('PEDALS')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all bg-[#F15A24] text-[#FFFFFF] shadow-md">
-                            <i class="fa-solid fa-guitar mr-1.5"></i> Pedales de fábrica (167)
-                        </button>
-                        <button id="master-tab-power-btn" onclick="switchMasterCatalogTab('POWER')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold font-mono transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-[#FFFFFF]">
-                            <i class="fa-solid fa-bolt mr-1.5"></i> Fuentes de alimentación (13)
-                        </button>
-                    </div>
-                </div>
+                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo de pedales de fábrica
+                </h3>
+                <p class="text-xs text-[#9CA3AF]">
+                    Explorá los pedales del catálogo ordenados de A-Z y agregá los que tengas a tu colección personal.
+                </p>
             </div>
             <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
                 <i class="fa-solid fa-xmark"></i>
@@ -7060,7 +6900,7 @@ document.addEventListener('keydown', (e) => {
             </div>
 
             <!-- CATEGORY FILTERS -->
-            <div id="master-catalog-category-filters-container" class="space-y-1.5 pt-1">
+            <div class="space-y-1.5 pt-1">
                 <label class="text-[11px] font-bold text-[#F15A24] uppercase tracking-wider block font-mono">
                     <i class="fa-solid fa-sliders"></i> Filtrar por categoría de efecto:
                 </label>
