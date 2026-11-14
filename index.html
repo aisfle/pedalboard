@@ -6556,20 +6556,7 @@ document.addEventListener('keydown', (e) => {
     </div>
 </div>
 
-    <!-- IMAGE ZOOM MODAL -->
-    <div id="image-zoom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeImageZoomModal(event)">
-        <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl" onclick="event.stopPropagation()">
-            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
-                <h3 id="image-zoom-title" class="text-sm font-bold text-[#FFFFFF] truncate max-w-[85%]">Vista Previa del Pedal</h3>
-                <button onclick="closeImageZoomModal()" title="Cerrar vista previa" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="flex justify-center items-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] min-h-[220px]">
-                <img id="image-zoom-img" src="" alt="Pedal Ampliado" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-md">
-            </div>
-        </div>
-    </div>
+    
 
 </body>
 </html><!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
@@ -6628,4 +6615,17 @@ document.addEventListener('keydown', (e) => {
     </div>
 </div>
 
-
+<!-- IMAGE ZOOM MODAL -->
+    <div id="image-zoom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeImageZoomModal(event)">
+        <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
+                <h3 id="image-zoom-title" class="text-sm font-bold text-[#FFFFFF] truncate max-w-[85%]">Vista Previa del Pedal</h3>
+                <button onclick="closeImageZoomModal()" title="Cerrar vista previa" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex justify-center items-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] min-h-[220px]">
+                <img id="image-zoom-img" src="" alt="Pedal Ampliado" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-md">
+            </div>
+        </div>
+    </div>
