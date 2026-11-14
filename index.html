@@ -4674,6 +4674,13 @@ function assignPedalToOutlet(psId, outletId, pedalId) {
     if (!pedalId) return;
     const pedal = pedalDatabase.find(p => p.id === pedalId);
     if (!pedal) return;
+    const psObj = powerSuppliesDatabase.find(p => p.id === psId);
+    const outletObj = psObj?.outlets?.find(o => o.id === outletId);
+    if (outletObj && pedal.maWithMargin > outletObj.maxMa) {
+        powerAssignmentError = `⚠️ ¡Error! El pedal "${pedal.name}" (${pedal.maWithMargin} mA) supera el límite máximo de ${outletObj.maxMa} mA de la ${outletObj.label}.`;
+        renderInspector(psId);
+        return;
+    }
     const currentAssign = getPedalPowerAssignment(pedalId);
     if (currentAssign.psId && (currentAssign.psId !== psId || currentAssign.outletId !== outletId)) {
         const existingPs = powerSuppliesDatabase.find(p => p.id === currentAssign.psId);
@@ -4998,7 +5005,12 @@ function renderInspector(itemId, currentSlotMode = null) {
                     if (pAssign.psId === ps.id && pAssign.outletId === out.id) {
                         return;
                     }
-                    addPedalOptionsHtml += `<option value="${p.id}">${checkSymbol}${p.brand} - ${p.name} (${p.maWithMargin} mA)</option>`;
+                    const isExceedingMa = p.maWithMargin > out.maxMa;
+                    if (isExceedingMa) {
+                        addPedalOptionsHtml += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${checkSymbol}${p.brand} - ${p.name} (${p.maWithMargin} mA) - Excede máx ${out.maxMa} mA</option>`;
+                    } else {
+                        addPedalOptionsHtml += `<option value="${p.id}">${checkSymbol}${p.brand} - ${p.name} (${p.maWithMargin} mA)</option>`;
+                    }
                 });
                 const connectedPedalsBadges = assignedPedals.length > 0 ? 
                     assignedPedals.map(p => `
