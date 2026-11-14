@@ -4318,14 +4318,27 @@ function renderSignalChain() {
         container.appendChild(card);
     });
     const addCard = document.createElement('div');
-    addCard.className = `border-2 border-dashed border-[#2A2D36] hover:border-[#F15A24]/60 bg-[#1C1E24]/30 hover:bg-[#F15A24]/5 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all min-h-[120px] group`;
-    addCard.onclick = addExtraSlot;
-    addCard.innerHTML = `
-        <div class="w-10 h-10 rounded-full bg-[#121316] group-hover:bg-[#F15A24] text-[#9CA3AF] group-hover:text-[#FFFFFF] flex items-center justify-center transition-all mb-2">
-            <i class="fa-solid fa-plus text-lg"></i>
-        </div>
-        <span class="text-xs font-semibold text-[#9CA3AF] group-hover:text-[#F15A24] transition-colors">Agregar Slot</span>
-    `;
+    const isCollectionFullyInChain = pedalDatabase.length > 0 && pedalDatabase.every(p => currentChainIds.includes(p.id));
+    if (isCollectionFullyInChain) {
+        addCard.className = `border-2 border-dashed border-[#2A2D36] opacity-40 bg-[#1C1E24]/20 rounded-xl p-4 flex flex-col items-center justify-center cursor-not-allowed min-h-[120px]`;
+        addCard.onclick = null;
+        addCard.title = "Todos los pedales de tu colección ya están agregados a la cadena";
+        addCard.innerHTML = `
+            <div class="w-10 h-10 rounded-full bg-[#121316] text-[#9CA3AF] flex items-center justify-center mb-2">
+                <i class="fa-solid fa-lock text-sm"></i>
+            </div>
+            <span class="text-xs font-semibold text-[#9CA3AF]">Todos asignados</span>
+        `;
+    } else {
+        addCard.className = `border-2 border-dashed border-[#2A2D36] hover:border-[#F15A24]/60 bg-[#1C1E24]/30 hover:bg-[#F15A24]/5 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all min-h-[120px] group`;
+        addCard.onclick = addExtraSlot;
+        addCard.innerHTML = `
+            <div class="w-10 h-10 rounded-full bg-[#121316] group-hover:bg-[#F15A24] text-[#9CA3AF] group-hover:text-[#FFFFFF] flex items-center justify-center transition-all mb-2">
+                <i class="fa-solid fa-plus text-lg"></i>
+            </div>
+            <span class="text-xs font-semibold text-[#9CA3AF] group-hover:text-[#F15A24] transition-colors">Agregar Slot</span>
+        `;
+    }
     container.appendChild(addCard);
 
     const baseMaEl = document.getElementById('base-ma');
@@ -4336,25 +4349,25 @@ function renderSignalChain() {
     if (totalCountBadgeEl) totalCountBadgeEl.textContent = `${activeCount} Pedales`;
 
     // --- STEREO TO MONO COLLAPSE NOTICE ---
-    let showStereoCollapseNotice = false;
+    let firstCollapseSlotNum = null;
     let hasSeenStereo = false;
     currentChainIds.forEach((pedalId, index) => {
         if (!pedalId || pedalId === 'EMPTY') return;
         const slotMode = chainSlotModes[index] || (index >= 5 ? 'STEREO' : 'MONO');
         if (slotMode === 'STEREO') {
             hasSeenStereo = true;
-        } else if (slotMode === 'MONO' && hasSeenStereo) {
-            showStereoCollapseNotice = true;
+        } else if (slotMode === 'MONO' && hasSeenStereo && firstCollapseSlotNum === null) {
+            firstCollapseSlotNum = index + 1;
         }
     });
 
     const noticeEl = document.getElementById('stereo-collapse-notice');
     if (noticeEl) {
-        if (showStereoCollapseNotice) {
+        if (firstCollapseSlotNum !== null) {
             noticeEl.innerHTML = `
                 <div class="bg-[#F59E0B]/10 border border-[#F59E0B]/40 text-[#F59E0B] p-3 rounded-xl text-xs font-sans flex items-center gap-2 mt-3 animate-fade-in">
                     <i class="fa-solid fa-circle-info text-base shrink-0"></i>
-                    <span><strong>Aviso:</strong> El pedal mono colapsará la señal estéreo a partir de este punto.</span>
+                    <span><strong>Aviso:</strong> El pedal mono colapsará la señal estéreo a partir de la posición #${firstCollapseSlotNum}.</span>
                 </div>
             `;
             noticeEl.classList.remove('hidden');
@@ -4378,6 +4391,12 @@ function renderSignalChain() {
         }
     });
 
+    function isSingleTRSPedal(p) {
+        if (!p) return false;
+        const b = (p.brand || '').toLowerCase();
+        return b.includes('chase bliss') || b.includes('kinotone') || (p.id && p.id.startsWith('cb-'));
+    }
+
     for (let i = 0; i < activeChainSlots.length - 1; i++) {
         const slotA = activeChainSlots[i];
         const slotB = activeChainSlots[i + 1];
@@ -4386,10 +4405,20 @@ function renderSignalChain() {
             monoCablesCount++;
         } else if (slotA.slotMode === 'MONO' && slotB.slotMode === 'STEREO') {
             monoCablesCount++;
-        } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'STEREO') {
-            stereoCablesCount++;
         } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'MONO') {
-            splitterCablesCount++;
+            monoCablesCount++;
+        } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'STEREO') {
+            const trsA = isSingleTRSPedal(slotA.pedal);
+            const trsB = isSingleTRSPedal(slotB.pedal);
+            if (trsA && !trsB) {
+                splitterCablesCount++;
+            } else if (!trsA && trsB) {
+                splitterCablesCount++;
+            } else if (trsA && trsB) {
+                stereoCablesCount++;
+            } else {
+                monoCablesCount += 2;
+            }
         }
     }
 
@@ -4449,6 +4478,9 @@ function swapPedalViaSelect(index, newId) {
 }
 
 function addExtraSlot() {
+    if (pedalDatabase.length > 0 && pedalDatabase.every(p => currentChainIds.includes(p.id))) {
+        return;
+    }
     pushHistory();
     currentChainIds.push('EMPTY');
     renderSignalChain();
@@ -5232,7 +5264,7 @@ function generateGroupedOptions(selectedPedalId) {
             const checkPrefix = (assign.psId && assign.outletId) ? '✓ ' : '';
             const isAlreadyInChain = currentChainIds.includes(p.id) && p.id !== selectedPedalId;
             if (isAlreadyInChain) {
-                html += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${checkPrefix}${p.name} - (Ya en la cadena)</option>`;
+                html += `<option value="${p.id}" disabled class="text-[#9CA3AF] opacity-50 bg-[#121316]">${checkPrefix}${p.name}</option>`;
             } else {
                 html += `<option value="${p.id}" ${p.id === selectedPedalId ? 'selected' : ''}>${checkPrefix}${p.name}</option>`;
             }
