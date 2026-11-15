@@ -1075,6 +1075,7 @@ let draggedIndex = null;
 let activeInspectorId = null;
 let activeSplitOutletId = null;
 let tempPhotoBase64 = null;
+let tempWishlistPhotoBase64 = null;
 let tempPowerPhotoBase64 = null;
 let powerAssignmentError = null;
 let currentManualEditTarget = null;
@@ -4272,9 +4273,9 @@ function handlePedalPhotoUpload(arg1, arg2, arg3 = null) {
 
     if (!file) return;
 
-    const errorEl = document.getElementById(targetType === 'NEW' ? 'np-photo-error' : 'insp-photo-error');
-    const previewEl = document.getElementById(targetType === 'NEW' ? 'np-photo-preview' : 'insp-photo-preview');
-    const previewContainer = document.getElementById(targetType === 'NEW' ? 'np-photo-preview-container' : 'insp-photo-preview-container');
+    const errorEl = document.getElementById(targetType === 'NEW' ? 'np-photo-error' : (targetType === 'WISHLIST_NEW' ? 'nw-photo-error' : 'insp-photo-error'));
+    const previewEl = document.getElementById(targetType === 'NEW' ? 'np-photo-preview' : (targetType === 'WISHLIST_NEW' ? 'nw-photo-preview' : 'insp-photo-preview'));
+    const previewContainer = document.getElementById(targetType === 'NEW' ? 'np-photo-preview-container' : (targetType === 'WISHLIST_NEW' ? 'nw-photo-preview-container' : 'insp-photo-preview-container'));
     
     if (errorEl) errorEl.classList.add('hidden');
     
@@ -4315,6 +4316,12 @@ function handlePedalPhotoUpload(arg1, arg2, arg3 = null) {
 
             if (targetType === 'NEW' && !pedalId) {
                 tempPhotoBase64 = resizedBase64;
+                if (previewEl && previewContainer) {
+                    previewEl.src = resizedBase64;
+                    previewContainer.classList.remove('hidden');
+                }
+            } else if (targetType === 'WISHLIST_NEW' && !pedalId) {
+                tempWishlistPhotoBase64 = resizedBase64;
                 if (previewEl && previewContainer) {
                     previewEl.src = resizedBase64;
                     previewContainer.classList.remove('hidden');
@@ -7080,11 +7087,26 @@ function addMasterPedalToWishlist(masterId) {
 }
 
 function openNewWishlistPedalModal() {
+    tempWishlistPhotoBase64 = null;
     document.getElementById('nw-name').value = '';
     document.getElementById('nw-brand').value = '';
     document.getElementById('nw-mabase').value = '20';
+    document.getElementById('nw-io-type').value = 'STEREO';
+    document.getElementById('nw-category-type').value = 'EFFECT';
+    
+    const catSelect = document.getElementById('nw-effect-category');
+    if (catSelect) catSelect.value = '';
+
     document.getElementById('nw-category').value = '';
-    document.getElementById('nw-desc').value = '';
+    document.getElementById('nw-manual-url').value = '';
+    
+    const photoFile = document.getElementById('nw-photo-file');
+    if (photoFile) photoFile.value = '';
+    const previewContainer = document.getElementById('nw-photo-preview-container');
+    if (previewContainer) previewContainer.classList.add('hidden');
+    const errorEl = document.getElementById('nw-photo-error');
+    if (errorEl) errorEl.classList.add('hidden');
+
     const modal = document.getElementById('new-wishlist-modal');
     if (modal) modal.classList.remove('hidden');
 }
@@ -7097,25 +7119,49 @@ function closeNewWishlistPedalModal() {
 function executeRegisterNewWishlistPedal() {
     const name = document.getElementById('nw-name').value.trim();
     const brand = document.getElementById('nw-brand').value.trim();
-    const maBaseInput = document.getElementById('nw-mabase').value;
-    const category = document.getElementById('nw-category').value.trim();
-    const desc = document.getElementById('nw-desc').value.trim();
+    const maBaseInput = document.getElementById('nw-mabase').value.trim();
+    const ioType = document.getElementById('nw-io-type').value;
+    const categoryType = document.getElementById('nw-category-type').value;
+    const categoryDesc = document.getElementById('nw-category').value.trim();
+    const selectedEffectCat = document.getElementById('nw-effect-category').value;
     
     if (!name || !brand) {
-        alert("Por favor completa el Nombre y la Marca del pedal.");
+        alert('Por favor completa el Nombre del Pedal y la Marca.');
         return;
     }
+    
+    // MANDATORY mA VALIDATION
+    const maBase = parseInt(maBaseInput);
+    if (!maBaseInput || isNaN(maBase) || maBase <= 0) {
+        alert('El consumo en mA es obligatorio. Por favor ingresa un número válido mayor a 0.');
+        return;
+    }
+
+    // MANDATORY CATEGORY VALIDATION
+    if (!selectedEffectCat || selectedEffectCat.trim() === '') {
+        alert('Debes seleccionar una Categoría de Efecto obligatoria.');
+        return;
+    }
+
+    const mainCategory = selectedEffectCat;
+    const finalCategoryString = categoryDesc ? `${mainCategory} / ${categoryDesc}` : mainCategory;
+    const manualUrlInput = document.getElementById('nw-manual-url').value.trim();
+    const manualUrl = manualUrlInput !== '' ? manualUrlInput : null;
     
     const newWishlistId = `wishlist-custom-${Date.now()}`;
     const newPedal = normalizePedalObject({
         id: newWishlistId,
         name,
         brand,
-        maBase: parseInt(maBaseInput) || 20,
-        maWithMargin: Math.round((parseInt(maBaseInput) || 20) * 1.3),
-        category: category || 'Efecto',
-        desc: desc || 'Pedal personalizado en Wishlist.',
-        isStereo: false
+        category: finalCategoryString,
+        effectCategory: mainCategory,
+        maBase: maBase,
+        maWithMargin: Math.round(maBase * 1.3),
+        isStereo: ioType === 'STEREO',
+        manualUrl: manualUrl,
+        imageUrl: tempWishlistPhotoBase64 || null,
+        desc: categoryDesc || mainCategory,
+        notes: ''
     });
     
     wishlistDatabase.push(newPedal);
@@ -7289,39 +7335,86 @@ document.addEventListener('keydown', (e) => {
 
 <!-- NEW CUSTOM WISHLIST PEDAL MODAL -->
 <div id="new-wishlist-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-plus text-[#8B5CF6]"></i> Agregar pedal a lista de deseos
+                <i class="fa-solid fa-gift text-[#8B5CF6]"></i>
+                <span id="nw-modal-title">Agregar pedal a lista de deseos</span>
             </h3>
             <button onclick="closeNewWishlistPedalModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <div class="space-y-3 text-xs">
-            <div>
-                <label class="text-[#9CA3AF] block font-mono mb-1">Nombre del pedal *</label>
-                <input type="text" id="nw-name" placeholder="Ej: Bonsai" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+        <div class="space-y-2 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
+            <label class="text-xs text-[#8B5CF6] font-bold block font-mono flex items-center gap-1.5">
+                <i class="fa-solid fa-camera"></i> Subir Foto del Pedal (Máx 1 MB)
+            </label>
+            <div class="flex items-center gap-3">
+                <input type="file" id="nw-photo-file" accept="image/*" onchange="handlePedalPhotoUpload(event, 'WISHLIST_NEW')" class="text-xs text-[#9CA3AF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#121316] file:text-[#8B5CF6] hover:file:bg-[#20232B] cursor-pointer">
             </div>
-            <div>
-                <label class="text-[#9CA3AF] block font-mono mb-1">Marca *</label>
-                <input type="text" id="nw-brand" placeholder="Ej: JHS Pedals" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+            <div id="nw-photo-preview-container" class="hidden pt-2 flex justify-center">
+                <img id="nw-photo-preview" src="" alt="Vista previa" class="h-28 object-contain rounded-lg border border-[#2A2D36]">
             </div>
-            <div class="grid grid-cols-2 gap-2">
-                <div>
-                    <label class="text-[#9CA3AF] block font-mono mb-1">Consumo (mA) *</label>
-                    <input type="number" id="nw-mabase" value="20" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-                </div>
-                <div>
-                    <label class="text-[#9CA3AF] block font-mono mb-1">Efecto / Categoría</label>
-                    <input type="text" id="nw-category" placeholder="Ej: Overdrive" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-                </div>
+            <p id="nw-photo-error" class="hidden text-[11px] text-[#F15A24] font-mono"></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Nombre del pedal *</label>
+                <input type="text" id="nw-name" placeholder="Ej: Bonsai" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
             </div>
-            <div>
-                <label class="text-[#9CA3AF] block font-mono mb-1">Efecto/s del pedal</label>
-                <input type="text" id="nw-desc" placeholder="Ej: 9 tipos de Tube Screamer analógicos" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Marca / Fabricante *</label>
+                <input type="text" id="nw-brand" placeholder="Ej: JHS Pedals" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
             </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Consumo (mA) *</label>
+                <input type="number" id="nw-mabase" value="20" placeholder="20" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+            </div>
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura E/S *</label>
+                <select id="nw-io-type" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6] font-mono text-xs">
+                    <option value="STEREO">Stereo I/O (Soporta Mono/Stereo)</option>
+                    <option value="MONO">Mono I/O Solamente (Bloqueado)</option>
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Tipo de Unidad *</label>
+                <select id="nw-category-type" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6] font-mono text-xs">
+                    <option value="EFFECT">Efecto</option>
+                    <option value="UTILITY">Utilidad</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="space-y-1">
+            <label class="text-xs text-[#9CA3AF] block font-mono">Categoría de efecto *</label>
+            <select id="nw-effect-category" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6] font-mono text-xs">
+                <option value="">-- Seleccionar Categoría Obligatoria --</option>
+                <option value="Saturación & ganancia">Saturación & ganancia (Overdrive / Distorsión / Fuzz)</option>
+                <option value="Delay & eco">Delay & eco (Digital / Analógico BBD / Tape)</option>
+                <option value="Reverberación & espacio">Reverberación & espacio (Hall / Ambient / Shimmer / Plate / Spring)</option>
+                <option value="Modulación">Modulación (Chorus / Phaser / Flanger / Tremolo / Vibrato / Filter)</option>
+                <option value="Lo-Fi, glitch & texturas">Lo-Fi, glitch & texturas (Tape Loss / Bitcrusher / Glitch / Granular)</option>
+                <option value="Pitch & sintetizador">Pitch & sintetizador (Octavador / Pitch Shifter / Synth / Ring Mod)</option>
+                <option value="Dinámica & modelado">Dinámica & modelado (Compresor / Preamp / Amp Sim / EQ / Boost)</option>
+                <option value="Loopers de frase">Loopers de frase (Phrase Looper / Multi-track)</option>
+                <option value="Utilidad & ruteo">Utilidad & ruteo (Afinador / Switcher / Noise Gate / Expression / Buffer)</option>
+            </select>
+        </div>
+
+        <div class="space-y-1">
+            <label class="text-xs text-[#9CA3AF] block font-mono">Detalle / Especificación del efecto</label>
+            <input type="text" id="nw-category" placeholder="Ej: 9 tipos de Tube Screamer analógicos" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+        </div>
+
+        <div class="space-y-1">
+            <label class="text-xs text-[#9CA3AF] block font-mono">URL Manual / Documentación (Opcional)</label>
+            <input type="text" id="nw-manual-url" placeholder="https://drive.google.com/file/d/..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
         </div>
 
         <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
@@ -7329,16 +7422,13 @@ document.addEventListener('keydown', (e) => {
                 Cancelar
             </button>
             <button onclick="executeRegisterNewWishlistPedal()" class="px-4 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#8B5CF6] hover:bg-[#7c3aed] transition-all shadow-lg">
-                Guardar en wishlist
+                Guardar en Wishlist
             </button>
         </div>
     </div>
 </div>
 
-    
-
-</body>
-</html><!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
+<!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
 <div id="master-catalog-modal" onclick="closeMasterCatalogModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
     <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
         <!-- MODAL HEADER -->
