@@ -4542,35 +4542,52 @@ function renderSignalChain() {
         }
     });
 
-    function isSingleTRSPedal(p) {
-        if (!p) return false;
+    function getPedalInputConfig(p) {
+        if (!p) return 'MONO_TS';
+        if (p.inputConfig) return p.inputConfig;
+        if (p.isStereo === false || p.io === 'Mono I/O') return 'MONO_TS';
         const b = (p.brand || '').toLowerCase();
-        return b.includes('chase bliss') || b.includes('kinotone') || (p.id && p.id.startsWith('cb-'));
+        const id = (p.id || '').toLowerCase();
+        if (b.includes('chase bliss') || b.includes('kinotone') || id.startsWith('cb-') || id.startsWith('obne-') || id === 'rp-radius' || id === 'strymon-cloudburst' || id === 'kino-ghosts') {
+            if (id === 'cb-cxm-1978' || id === 'cb-big-time') return 'DUAL_TS';
+            return 'STEREO_TRS';
+        }
+        return 'DUAL_TS';
+    }
+
+    function getPedalOutputConfig(p) {
+        if (!p) return 'MONO_TS';
+        if (p.outputConfig) return p.outputConfig;
+        if (p.isStereo === false || p.io === 'Mono I/O') return 'MONO_TS';
+        const b = (p.brand || '').toLowerCase();
+        const id = (p.id || '').toLowerCase();
+        if (b.includes('chase bliss') || b.includes('kinotone') || id.startsWith('cb-') || id.startsWith('obne-') || id === 'rp-radius' || id === 'strymon-cloudburst' || id === 'kino-ghosts') {
+            if (id === 'cb-cxm-1978' || id === 'cb-big-time') return 'DUAL_TS';
+            return 'STEREO_TRS';
+        }
+        return 'DUAL_TS';
     }
 
     for (let i = 0; i < activeChainSlots.length - 1; i++) {
         const slotA = activeChainSlots[i];
         const slotB = activeChainSlots[i + 1];
 
-        if (slotA.slotMode === 'MONO' && slotB.slotMode === 'MONO') {
-            monoCablesCount++;
-        } else if (slotA.slotMode === 'MONO' && slotB.slotMode === 'STEREO') {
-            monoCablesCount++;
-        } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'MONO') {
+        if (slotA.slotMode === 'MONO' || slotB.slotMode === 'MONO') {
             monoCablesCount++;
         } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'STEREO') {
-            const trsA = isSingleTRSPedal(slotA.pedal);
-            const trsB = isSingleTRSPedal(slotB.pedal);
-            if (trsA && !trsB) {
-                splitterCablesCount++;
-            } else if (!trsA && trsB) {
-                splitterCablesCount++;
-            } else if (trsA && trsB) {
+            const outA = getPedalOutputConfig(slotA.pedal);
+            const inB = getPedalInputConfig(slotB.pedal);
+            if (outA === 'STEREO_TRS' && inB === 'STEREO_TRS') {
                 stereoCablesCount++;
-            } else {
+            } else if ((outA === 'STEREO_TRS' && inB === 'DUAL_TS') || (outA === 'DUAL_TS' && inB === 'STEREO_TRS')) {
+                splitterCablesCount++;
+            } else if (outA === 'DUAL_TS' && inB === 'DUAL_TS') {
                 monoCablesCount += 2;
+            } else {
+                monoCablesCount++;
             }
         }
+    }
     }
 
     const cablesSummaryEl = document.getElementById('interpedal-cables-summary');
