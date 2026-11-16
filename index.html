@@ -101,130 +101,169 @@
 <!-- MAIN FLEX CONTAINER (VIEWS + SIDEBAR INSPECTOR) -->
 <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
     <!-- LEFT CONTAINER (SWITCHABLE VIEWS) -->
-    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-    <div class="flex-1 flex flex-col overflow-y-auto p-6 space-y-6">
-        <!-- VISTA 1: EXPLORAR (DASHBOARD & STATS) -->
-        <div id="view-explore" class="flex-1 overflow-y-auto p-6 space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-[#FFFFFF] flex items-center gap-2">
-                        <i class="fa-solid fa-compass text-white"></i> Dashboard y estadísticas de tu rig
-                    </h2>
-                    <p class="text-xs text-[#9CA3AF] mt-1">
-                        Resumen analítico en tiempo real de tu equipamiento, marcas y tipos de efecto.
-                    </p>
-                </div>
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <!-- VISTA 1: MI COLECCIÓN DE PEDALES (DEFAULT) -->
+        <!-- VISTA 1: EXPLORAR (DASHBOARD & ESTADÍSTICAS) -->
+<div id="view-explore" class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
+        <div>
+            <h2 class="text-xl font-bold text-[#FFFFFF] flex items-center gap-2">
+                <i class="fa-solid fa-compass text-white"></i> Dashboard y estadísticas de tu rig
+            </h2>
+            <p class="text-xs text-[#9CA3AF] mt-1">
+                Resumen analítico en tiempo real de tu equipamiento, marcas y tipos de efecto.
+            </p>
+        </div>
+    </div>
+
+    <!-- METRICS CARDS (KPIs) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En mi colección</p>
+                <h3 id="stat-collection-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
             </div>
-
-            <!-- METRICS CARDS (KPIs) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En mi colección</p>
-                        <h3 id="stat-collection-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-white">
-                        <i class="fa-solid fa-box text-sm text-white"></i>
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En Wishlist</p>
-                        <h3 id="stat-wishlist-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-white">
-                        <i class="fa-solid fa-heart text-sm text-white"></i>
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En venta</p>
-                        <h3 id="stat-forsale-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-white">
-                        <i class="fa-solid fa-tag text-sm text-white"></i>
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">Cadenas creadas</p>
-                        <h3 id="stat-chains-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-white">
-                        <i class="fa-solid fa-diagram-project text-sm text-white"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISUAL ANALYTICS: CHARTS SIDE BY SIDE -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
-                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-white"></i> ADN por tipo de efecto
-                        </h3>
-                        <span class="text-[10px] font-mono text-[#9CA3AF]">Distribución %</span>
-                    </div>
-                    <div id="chart-effects-container" class="space-y-3 pt-2">
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
-                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                            <i class="fa-solid fa-tags text-white"></i> Distribución por marcas
-                        </h3>
-                        <span class="text-[10px] font-mono text-[#9CA3AF]">Presencia en colección</span>
-                    </div>
-                    <div id="chart-brands-container" class="space-y-3 pt-2">
-                    </div>
-                </div>
+            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                <i class="fa-solid fa-box text-white text-sm"></i>
             </div>
         </div>
 
-        <!-- VISTA 2: MI COLECCIÓN --> class="space-y-6 hidden">
-            <!-- SEARCH & CUSTOM ADD BAR -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl shadow-md">
-                <div class="relative flex-1 w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs"></i>
-                    <input type="text" 
-                           id="collection-search-input" 
-                           oninput="handleCollectionSearch(this.value)"
-                           placeholder="Buscar pedales o fuentes por nombre, marca o categoría..." 
-                           class="w-full bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl pl-9 pr-4 py-2 text-xs font-mono focus:outline-none transition-all">
-                </div>
-
-                <button onclick="openCustomEquipmentModal()" 
-                        class="w-full sm:w-auto bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer">
-                    <i class="fa-solid fa-plus"></i> Cargar equipo personalizado
-                </button>
+        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En Wishlist</p>
+                <h3 id="stat-wishlist-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
             </div>
+            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                <i class="fa-solid fa-heart text-white text-sm"></i>
+            </div>
+        </div>
 
-            <!-- SUBTABS / FILTROS INTERNOS DE MI COLECCIÓN -->
-            <div class="flex flex-wrap items-center gap-2 bg-[#121316] p-1.5 rounded-2xl border border-[#2A2D36]">
-                <button id="subtab-btn-pedals" onclick="switchCollectionSubtab('pedals')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-sliders text-white"></i> Mis pedales
-                </button>
-                <button id="subtab-btn-power" onclick="switchCollectionSubtab('power')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-bolt text-white"></i> Fuentes
-                </button>
-                <button id="subtab-btn-wishlist" onclick="switchCollectionSubtab('wishlist')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
+        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En venta</p>
+                <h3 id="stat-forsale-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                <i class="fa-solid fa-tag text-white text-sm"></i>
+            </div>
+        </div>
+
+        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">Cadenas creadas</p>
+                <h3 id="stat-chains-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                <i class="fa-solid fa-diagram-project text-white text-sm"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISUAL ANALYTICS: CHARTS SIDE BY SIDE -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
+                <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-white"></i> ADN por tipo de efecto
+                </h3>
+                <span class="text-[10px] font-mono text-[#9CA3AF]">Distribución %</span>
+            </div>
+            <div id="chart-effects-container" class="space-y-3 pt-2">
+            </div>
+        </div>
+
+        <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
+                <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-chart-bar text-white"></i> Distribución por marcas
+                </h3>
+                <span class="text-[10px] font-mono text-[#9CA3AF]">Top Fabricantes</span>
+            </div>
+            <div id="chart-brands-container" class="space-y-3 pt-2">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VISTA 2: MI COLECCIÓN (INVENTARIO & CATÁLOGO) -->
+<div id="view-collection" class="flex-1 overflow-y-auto p-6 space-y-6 hidden">
+    <!-- TOP ACTION BUTTONS -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl shadow-md">
+        <button onclick="openMasterCatalogModal()" 
+                class="w-full sm:w-auto bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs font-mono border border-[#2A2D36] hover:border-[#F15A24] flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer">
+            <i class="fa-solid fa-magnifying-glass text-white"></i> Buscar pedal ó fuente
+        </button>
+
+        <button onclick="openCustomEquipmentModal()" 
+                class="w-full sm:w-auto bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer">
+            <i class="fa-solid fa-plus text-white"></i> Cargar equipo personalizado
+        </button>
+    </div>
+
+    <!-- FILTERS AREA (RESTORED FROM SOURCE 108) -->
+    <div class="space-y-3">
+        <!-- BRAND FILTERS -->
+        <div id="brand-filters" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[#2A2D36]">
+        </div>
+
+        <!-- CATEGORY FILTERS -->
+        <div id="category-filters" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[#2A2D36]">
+        </div>
+    </div>
+
+    <!-- 4 VERTICAL CONTENT SECTIONS -->
+    <div class="space-y-8">
+        <!-- SECTION 1: PEDALES DE EFECTO -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                <h3 class="text-sm font-bold text-[#FFFFFF] font-mono tracking-wide flex items-center gap-2 uppercase">
+                    <i class="fa-solid fa-sliders text-white"></i> Pedales de efecto
+                </h3>
+                <span id="collection-pedals-count" class="text-xs font-mono text-[#9CA3AF]">0 pedales</span>
+            </div>
+            <div id="collection-pedals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
+        </div>
+
+        <!-- SECTION 2: FUENTES DE ALIMENTACIÓN -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                <h3 class="text-sm font-bold text-[#FFFFFF] font-mono tracking-wide flex items-center gap-2 uppercase">
+                    <i class="fa-solid fa-bolt text-white"></i> Fuentes de alimentación
+                </h3>
+                <span id="collection-power-count" class="text-xs font-mono text-[#9CA3AF]">0 fuentes</span>
+            </div>
+            <div id="collection-power-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
+        </div>
+
+        <!-- SECTION 3: WISHLIST -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                <h3 class="text-sm font-bold text-[#FFFFFF] font-mono tracking-wide flex items-center gap-2 uppercase">
                     <i class="fa-solid fa-heart text-white"></i> Wishlist
-                </button>
-                <button id="subtab-btn-forsale" onclick="switchCollectionSubtab('forsale')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-tag text-white"></i> En venta
-                </button>
+                </h3>
+                <span id="collection-wishlist-count" class="text-xs font-mono text-[#9CA3AF]">0 ítems</span>
             </div>
-
-            <!-- GRID CONTENEDOR PRINCIPAL DE COLECCIÓN -->
-            <div id="collection-main-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div id="collection-wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             </div>
         </div>
 
-        <!-- VISTA 3: MIS CADENAS -->
+        <!-- SECTION 4: EN VENTA -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                <h3 class="text-sm font-bold text-[#FFFFFF] font-mono tracking-wide flex items-center gap-2 uppercase">
+                    <i class="fa-solid fa-tag text-white"></i> En venta
+                </h3>
+                <span id="collection-forsale-count" class="text-xs font-mono text-[#9CA3AF]">0 ítems</span>
+            </div>
+            <div id="collection-forsale-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VISTA 2: MIS CADENAS DE PEDALES -->
         <div id="view-chain" class="hidden space-y-6 !mt-0">
             <div class="bg-[#1C1E24] border-2 border-[#00A8CC] p-5 !mt-0 rounded-2xl shadow-xl space-y-4">
                 <!-- FILA 1: TÍTULO / DESCRIPCIÓN + TELEMETRÍA (CONSUMO Y PEDALES) -->
@@ -358,15 +397,7 @@
             </section>
         </div>
     
-        <!-- VISTA 3: LISTA DE DESEOS (WANT-LIST) -->
-    </div>
-
-    <!-- SIDE INSPECTOR PANEL -->
-    
-</main>
-
-    <!-- RIGHT SIDEBAR: DYNAMIC INSPECTOR PANEL -->
-    <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#F15A24] p-6 flex flex-col overflow-y-auto shrink-0">
+        <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#F15A24] p-6 flex flex-col overflow-y-auto shrink-0">
         <div id="inspector-content" class="space-y-[#121316]">
 <div class="text-center py-12 text-[#9CA3AF] space-y-3">
     <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/30 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
@@ -700,17 +731,15 @@
 
 <!-- JAVASCRIPT LOGIC -->
 <script>
-// GLOBAL SPA STATE
-let activeTab = 'explore'; // 'explore', 'collection', 'chain'
+// GLOBAL ACTIVE TAB & STATE
+let activeTab = 'explore';
 let currentBrandFilter = 'ALL';
 let currentCategoryFilter = 'ALL';
-let activeInspectorId = null;
 
-// FORM STATE FOR CUSTOM EQUIPMENT MODAL
-let cemEquipmentType = 'PEDAL'; // 'PEDAL' or 'POWER'
-let cemDestination = 'collection'; // 'collection', 'wishlist', 'forsale'
-let cemIo = 'MONO'; // 'MONO' or 'STEREO'
-let cemVolt = '9V'; // '9V', '12V', '18V'
+let cemType = 'PEDAL';
+let cemDest = 'COLLECTION';
+let cemIo = 'MONO';
+let cemVolt = '9V';
 let cemPhotoBase64 = null;
 
 function switchTab(tab) {
@@ -725,92 +754,79 @@ function switchTab(tab) {
 
     const inspector = document.getElementById('inspector-panel');
 
+    const activeClassExplore = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#8B5CF6] text-[#FFFFFF] border border-[#8B5CF6] shadow-md flex items-center gap-2 cursor-pointer';
+    const activeClassCol = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer';
+    const activeClassChain = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] shadow-md flex items-center gap-2 cursor-pointer';
     const inactiveClass = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer';
 
-    if (tab === 'explore') {
-        if (viewExplore) viewExplore.classList.remove('hidden');
-        if (viewCollection) viewCollection.classList.add('hidden');
-        if (viewChain) viewChain.classList.add('hidden');
+    if (viewExplore) viewExplore.classList.toggle('hidden', tab !== 'explore');
+    if (viewCollection) viewCollection.classList.toggle('hidden', tab !== 'collection');
+    if (viewChain) viewChain.classList.toggle('hidden', tab !== 'chain');
 
-        if (btnExplore) btnExplore.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#8B5CF6] text-[#FFFFFF] border border-[#8B5CF6] shadow-md flex items-center gap-2 cursor-pointer';
-        if (btnCollection) btnCollection.className = inactiveClass;
-        if (btnChain) btnChain.className = inactiveClass;
+    if (btnExplore) btnExplore.className = (tab === 'explore') ? activeClassExplore : inactiveClass;
+    if (btnCollection) btnCollection.className = (tab === 'collection') ? activeClassCol : inactiveClass;
+    if (btnChain) btnChain.className = (tab === 'chain') ? activeClassChain : inactiveClass;
 
-        if (inspector) inspector.style.borderColor = '#8B5CF6';
-        if (typeof renderDashboardStats === 'function') renderDashboardStats();
-    } else if (tab === 'collection' || tab === 'catalog') {
-        if (viewExplore) viewExplore.classList.add('hidden');
-        if (viewCollection) viewCollection.classList.remove('hidden');
-        if (viewChain) viewChain.classList.add('hidden');
-
-        if (btnExplore) btnExplore.className = inactiveClass;
-        if (btnCollection) btnCollection.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer';
-        if (btnChain) btnChain.className = inactiveClass;
-
-        if (inspector) inspector.style.borderColor = '#F15A24';
-        if (typeof renderMyGearView === 'function') renderMyGearView();
-    } else if (tab === 'chain') {
-        if (viewExplore) viewExplore.classList.add('hidden');
-        if (viewCollection) viewCollection.classList.add('hidden');
-        if (viewChain) viewChain.classList.remove('hidden');
-
-        if (btnExplore) btnExplore.className = inactiveClass;
-        if (btnCollection) btnCollection.className = inactiveClass;
-        if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] shadow-md flex items-center gap-2 cursor-pointer';
-
-        if (inspector) inspector.style.borderColor = '#00A8CC';
-        if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
-        if (typeof renderSignalChain === 'function') renderSignalChain();
+    if (inspector) {
+        if (tab === 'explore') inspector.style.borderColor = '#8B5CF6';
+        else if (tab === 'collection') inspector.style.borderColor = '#F15A24';
+        else if (tab === 'chain') inspector.style.borderColor = '#00A8CC';
     }
 
     if (!activeInspectorId) {
         renderTabEmptyInspector(tab);
-    } else {
-        renderInspector(activeInspectorId);
+    }
+
+    if (tab === 'explore') {
+        renderDashboardStats();
+    } else if (tab === 'collection') {
+        renderCollectionViews();
+    } else if (tab === 'chain') {
+        renderChainPowerSupplies();
+        renderSignalChain();
     }
 }
 
 function renderTabEmptyInspector(tab) {
-    const inspectorContent = document.getElementById('inspector-content');
-    if (!inspectorContent) return;
+    const content = document.getElementById('inspector-content');
+    if (!content) return;
 
     if (tab === 'explore') {
-        inspectorContent.innerHTML = `
-            <div class="text-center py-12 text-[#9CA3AF] space-y-3">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#8B5CF6]/30 flex items-center justify-center mx-auto text-white shadow-inner">
-                    <i class="fa-solid fa-compass text-2xl"></i>
+        content.innerHTML = `
+            <div class="text-center py-8 text-[#9CA3AF] space-y-3">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#8B5CF6]/30 flex items-center justify-center mx-auto text-[#FFFFFF] shadow-inner">
+                    <i class="fa-solid fa-compass text-2xl text-white"></i>
                 </div>
                 <h3 class="text-sm font-bold text-[#FFFFFF]">Dashboard y estadísticas de tu rig</h3>
-                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-                    Esta sección es el centro de mando analítico de tu sonido.<br><br>
-                    Acá vas a encontrar una radiografía instantánea de tu equipamiento: la cantidad de pedales en tu colección, los que tenés en tu Wishlist, los que pusiste en venta y las cadenas que tenés creadas.<br><br>
-                    Además, vas a poder visualizar gráficos interactivos con el ADN de tu colección para entender mejor cómo está constituido tu rig.
-                </p>
+                <div class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-left space-y-2 pt-2 border-t border-[#2A2D36]">
+                    <p>Esta sección es el centro de mando analítico de tu sonido.</p>
+                    <p>Acá vas a encontrar una radiografía instantánea de tu equipamiento: la cantidad de pedales en tu colección, los que tenés en tu Wishlist, los que pusiste en venta y las cadenas que tenés creadas.</p>
+                    <p>Además, vas a poder visualizar gráficos interactivos con el ADN de tu colección para entender mejor cómo está constituido tu rig.</p>
+                </div>
             </div>
         `;
-    } else if (tab === 'collection' || tab === 'catalog') {
-        inspectorContent.innerHTML = `
+    } else if (tab === 'collection') {
+        content.innerHTML = `
             <div class="text-center py-12 text-[#9CA3AF] space-y-3">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/30 flex items-center justify-center mx-auto text-white shadow-inner">
-                    <i class="fa-solid fa-layer-group text-2xl"></i>
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/30 flex items-center justify-center mx-auto text-[#FFFFFF] shadow-inner">
+                    <i class="fa-solid fa-layer-group text-2xl text-white"></i>
                 </div>
                 <h3 class="text-sm font-bold text-[#FFFFFF]">Colección e inventario</h3>
                 <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-                    Esta sección está dedicada para que armes tu colección personal de pedales y fuentes de alimentación.<br><br>
-                    Tenés dos formas de agregarlos a tu inventario: mediante el catálogo general (botón <strong class="text-[#F15A24]">Buscar pedal ó fuente</strong>) y, si no lo encontrás ahí, lo podés registrar manualmente (botón <strong class="text-[#F15A24]">Cargar equipo personalizado</strong>).
+                    Esta sección está dedicada para que armes tu colección personal de pedales.<br><br>
+                    Tenés dos formas de agregarlos a tu inventario: buscando en el catálogo general (botón <strong class="text-[#F15A24]">Buscar pedal ó fuente</strong>) o registrándolos manualmente (botón <strong class="text-[#F15A24]">Cargar equipo personalizado</strong>).
                 </p>
             </div>
         `;
     } else if (tab === 'chain') {
-        inspectorContent.innerHTML = `
+        content.innerHTML = `
             <div class="text-center py-12 text-[#9CA3AF] space-y-3">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#00A8CC]/30 flex items-center justify-center mx-auto text-white shadow-inner">
-                    <i class="fa-solid fa-diagram-project text-2xl"></i>
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#00A8CC]/30 flex items-center justify-center mx-auto text-[#FFFFFF] shadow-inner">
+                    <i class="fa-solid fa-diagram-project text-2xl text-white"></i>
                 </div>
                 <h3 class="text-sm font-bold text-[#FFFFFF]">Cadena de señal y ruteo</h3>
                 <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-                    Diseñá el ruteo de tu señal y calculá consumos eléctricos en tiempo real.<br><br>
-                    Arrastrá y soltá pedales desde tu colección a la cadena activa y asigná las salidas aisladas de tus fuentes de poder.
+                    Hacé clic en cualquier slot o pedal de tu cadena para inspeccionar sus especificaciones eléctricas, conectores I/O y asignación de fuentes de alimentación.
                 </p>
             </div>
         `;
@@ -818,109 +834,154 @@ function renderTabEmptyInspector(tab) {
 }
 
 function renderDashboardStats() {
-    const statCollection = document.getElementById('stat-collection-count');
-    const statWishlist = document.getElementById('stat-wishlist-count');
-    const statForsale = document.getElementById('stat-forsale-count');
-    const statChains = document.getElementById('stat-chains-count');
+    const elCol = document.getElementById('stat-collection-count');
+    const elWish = document.getElementById('stat-wishlist-count');
+    const elSale = document.getElementById('stat-forsale-count');
+    const elChains = document.getElementById('stat-chains-count');
 
-    const collectionCount = (pedalDatabase ? pedalDatabase.filter(p => !p.forSale).length : 0) + (powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => !ps.forSale).length : 0);
-    const wishlistCount = wishlistDatabase ? wishlistDatabase.length : 0;
-    const forSaleCount = (pedalDatabase ? pedalDatabase.filter(p => p.forSale).length : 0) + (powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => ps.forSale).length : 0);
-    const chainsCount = favoriteChains ? favoriteChains.length : 0;
+    const totalCollection = (pedalDatabase ? pedalDatabase.filter(p => !p.forSale).length : 0) + (powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => !ps.forSale).length : 0);
+    const totalWishlist = wishlistDatabase ? wishlistDatabase.length : 0;
+    const totalForSale = (pedalDatabase ? pedalDatabase.filter(p => p.forSale).length : 0) + (powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => ps.forSale).length : 0);
+    const totalChains = favoriteChains ? favoriteChains.length : 0;
 
-    if (statCollection) statCollection.textContent = collectionCount;
-    if (statWishlist) statWishlist.textContent = wishlistCount;
-    if (statForsale) statForsale.textContent = forSaleCount;
-    if (statChains) statChains.textContent = chainsCount;
+    if (elCol) elCol.textContent = totalCollection;
+    if (elWish) elWish.textContent = totalWishlist;
+    if (elSale) elSale.textContent = totalForSale;
+    if (elChains) elChains.textContent = totalChains;
 
-    // Render effect types breakdown chart
-    const effectsContainer = document.getElementById('chart-effects-container');
-    if (effectsContainer && pedalDatabase) {
-        const categories = {};
-        pedalDatabase.forEach(p => {
-            const cat = typeof getEffectCategory === 'function' ? getEffectCategory(p) : (p.category || 'Utilidad & ruteo');
-            categories[cat] = (categories[cat] || 0) + 1;
-        });
-        const total = pedalDatabase.length || 1;
-        let html = '';
-        Object.keys(categories).sort().forEach(cat => {
-            const count = categories[cat];
-            const pct = Math.round((count / total) * 100);
-            html += `
-                <div class="space-y-1">
-                    <div class="flex justify-between text-xs font-mono">
-                        <span class="text-[#FFFFFF]">${cat}</span>
-                        <span class="text-[#8B5CF6] font-bold">${pct}% (${count})</span>
+    // ADN por tipo de efecto
+    const chartEffects = document.getElementById('chart-effects-container');
+    if (chartEffects) {
+        chartEffects.innerHTML = '';
+        const cats = {};
+        let totalPedals = 0;
+        if (pedalDatabase) {
+            pedalDatabase.forEach(p => {
+                const cat = getEffectCategory(p) || 'Utilidad & ruteo';
+                cats[cat] = (cats[cat] || 0) + 1;
+                totalPedals++;
+            });
+        }
+        if (totalPedals === 0) {
+            chartEffects.innerHTML = '<p class="text-xs text-[#9CA3AF] italic text-center py-4">No hay pedales cargados en tu colección para analizar.</p>';
+        } else {
+            const colors = ['#F15A24', '#00A8CC', '#8B5CF6', '#EAB308', '#10B981', '#EC4899', '#3B82F6', '#6366F1'];
+            let colorIdx = 0;
+            Object.keys(cats).sort((a,b) => cats[b] - cats[a]).forEach(cat => {
+                const count = cats[cat];
+                const pct = Math.round((count / totalPedals) * 100);
+                const color = colors[colorIdx % colors.length];
+                colorIdx++;
+                chartEffects.innerHTML += `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-mono">
+                            <span class="text-[#FFFFFF]">${cat}</span>
+                            <span class="text-[#9CA3AF]">${count} (${pct}%)</span>
+                        </div>
+                        <div class="w-full h-2 bg-[#121316] rounded-full overflow-hidden border border-[#2A2D36]">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${color}"></div>
+                        </div>
                     </div>
-                    <div class="w-full h-2 bg-[#121316] rounded-full overflow-hidden border border-[#2A2D36]">
-                        <div class="h-full bg-[#8B5CF6]" style="width: ${pct}%"></div>
-                    </div>
-                </div>
-            `;
-        });
-        effectsContainer.innerHTML = html || '<p class="text-xs text-[#9CA3AF] italic">No hay pedales cargados aún</p>';
+                `;
+            });
+        }
     }
 
-    // Render brand distribution chart
-    const brandsContainer = document.getElementById('chart-brands-container');
-    if (brandsContainer) {
+    // Distribución por marcas
+    const chartBrands = document.getElementById('chart-brands-container');
+    if (chartBrands) {
+        chartBrands.innerHTML = '';
         const brands = {};
-        let totalEq = 0;
-        if (pedalDatabase) pedalDatabase.forEach(p => { if (p.brand) { brands[p.brand] = (brands[p.brand] || 0) + 1; totalEq++; } });
-        if (powerSuppliesDatabase) powerSuppliesDatabase.forEach(p => { if (p.brand) { brands[p.brand] = (brands[p.brand] || 0) + 1; totalEq++; } });
-        totalEq = totalEq || 1;
-        let html = '';
-        Object.keys(brands).sort((a,b) => brands[b] - brands[a]).slice(0, 5).forEach(b => {
-            const count = brands[b];
-            const pct = Math.round((count / totalEq) * 100);
-            html += `
-                <div class="space-y-1">
-                    <div class="flex justify-between text-xs font-mono">
-                        <span class="text-[#FFFFFF]">${b}</span>
-                        <span class="text-[#F15A24] font-bold">${pct}% (${count})</span>
+        let totalItems = 0;
+        if (pedalDatabase) {
+            pedalDatabase.forEach(p => {
+                const b = p.brand || 'Otros';
+                brands[b] = (brands[b] || 0) + 1;
+                totalItems++;
+            });
+        }
+        if (powerSuppliesDatabase) {
+            powerSuppliesDatabase.forEach(ps => {
+                const b = ps.brand || 'Otros';
+                brands[b] = (brands[b] || 0) + 1;
+                totalItems++;
+            });
+        }
+        if (totalItems === 0) {
+            chartBrands.innerHTML = '<p class="text-xs text-[#9CA3AF] italic text-center py-4">No hay equipos cargados en tu colección para analizar marcas.</p>';
+        } else {
+            const colors = ['#00A8CC', '#F15A24', '#8B5CF6', '#10B981', '#EAB308', '#3B82F6', '#EC4899'];
+            let colorIdx = 0;
+            Object.keys(brands).sort((a,b) => brands[b] - brands[a]).slice(0, 6).forEach(brand => {
+                const count = brands[brand];
+                const pct = Math.round((count / totalItems) * 100);
+                const color = colors[colorIdx % colors.length];
+                colorIdx++;
+                chartBrands.innerHTML += `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-mono">
+                            <span class="text-[#FFFFFF]">${brand}</span>
+                            <span class="text-[#9CA3AF]">${count} (${pct}%)</span>
+                        </div>
+                        <div class="w-full h-2 bg-[#121316] rounded-full overflow-hidden border border-[#2A2D36]">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${color}"></div>
+                        </div>
                     </div>
-                    <div class="w-full h-2 bg-[#121316] rounded-full overflow-hidden border border-[#2A2D36]">
-                        <div class="h-full bg-[#F15A24]" style="width: ${pct}%"></div>
-                    </div>
-                </div>
-            `;
-        });
-        brandsContainer.innerHTML = html || '<p class="text-xs text-[#9CA3AF] italic">No hay marcas registradas aún</p>';
+                `;
+            });
+        }
     }
 }
 
-function renderBrandFilters() {
+function setBrandFilter(brand) {
+    currentBrandFilter = brand;
+    renderCollectionViews();
+}
+
+function setCategoryFilter(cat) {
+    currentCategoryFilter = cat;
+    renderCollectionViews();
+}
+
+function renderCollectionViews() {
+    renderCollectionBrandFilters();
+    renderCollectionCategoryFilters();
+    renderCollectionPedals();
+    renderCollectionPower();
+    renderCollectionWishlist();
+    renderCollectionForSale();
+}
+
+function renderCollectionBrandFilters() {
     const container = document.getElementById('brand-filters');
     if (!container) return;
-    
-    const allBrands = new Set(['Boss', 'Strymon', 'EarthQuaker Devices', 'Chase Bliss', 'Ibanez', 'ProCo', 'MXR', 'Voodoo Lab', 'CIOKS']);
-    if (pedalDatabase) pedalDatabase.forEach(p => p.brand && allBrands.add(p.brand));
-    if (powerSuppliesDatabase) powerSuppliesDatabase.forEach(p => p.brand && allBrands.add(p.brand));
-    if (wishlistDatabase) wishlistDatabase.forEach(w => w.brand && allBrands.add(w.brand));
+    const setOfBrands = new Set();
+    if (pedalDatabase) pedalDatabase.forEach(p => { if (p.brand) setOfBrands.add(p.brand); });
+    if (powerSuppliesDatabase) powerSuppliesDatabase.forEach(ps => { if (ps.brand) setOfBrands.add(ps.brand); });
+    if (wishlistDatabase) wishlistDatabase.forEach(w => { if (w.brand) setOfBrands.add(w.brand); });
 
-    const sorted = Array.from(allBrands).sort();
-    
-    let html = `<button onclick="filterCatalogByBrand('ALL')" class="px-3 py-1 rounded-xl text-xs font-mono transition-all ${currentBrandFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24] font-bold' : 'bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white'} cursor-pointer">ALL</button>`;
-
-    sorted.forEach(b => {
-        const isActive = currentBrandFilter === b;
-        html += `<button onclick="filterCatalogByBrand('${b}')" class="px-3 py-1 rounded-xl text-xs font-mono transition-all ${isActive ? 'bg-[#F15A24] text-white border border-[#F15A24] font-bold' : 'bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white'} cursor-pointer">${b}</button>`;
+    const sortedBrands = Array.from(setOfBrands).sort();
+    let html = `
+        <button onclick="setBrandFilter('ALL')" class="px-3 py-1 rounded-xl text-xs font-mono font-bold transition-all shrink-0 cursor-pointer ${currentBrandFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">
+            TODAS (${sortedBrands.length})
+        </button>
+    `;
+    sortedBrands.forEach(b => {
+        const active = (currentBrandFilter === b);
+        html += `
+            <button onclick="setBrandFilter('${b}')" class="px-3 py-1 rounded-xl text-xs font-mono font-bold transition-all shrink-0 cursor-pointer ${active ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">
+                ${b}
+            </button>
+        `;
     });
-
     container.innerHTML = html;
 }
 
-function filterCatalogByBrand(brand) {
-    currentBrandFilter = brand;
-    renderMyGearView();
-}
-
-function renderCategoryFilters() {
+function renderCollectionCategoryFilters() {
     const container = document.getElementById('category-filters');
     if (!container) return;
-
-    const categories = [
-        'Todos los efectos',
+    const cats = [
+        'ALL',
         'Saturación & ganancia',
         'Modulación',
         'Delay & eco',
@@ -931,220 +992,291 @@ function renderCategoryFilters() {
         'Loopers de frase',
         'Utilidad & ruteo'
     ];
-
     let html = '';
-    categories.forEach(c => {
-        const val = c === 'Todos los efectos' ? 'ALL' : c;
-        const isActive = currentCategoryFilter === val;
-        html += `<button onclick="filterCatalogByCategory('${val}')" class="px-3 py-1 rounded-xl text-xs font-mono transition-all ${isActive ? 'bg-[#F15A24] text-white border border-[#F15A24] font-bold' : 'bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white'} cursor-pointer">${c}</button>`;
+    cats.forEach(c => {
+        const label = (c === 'ALL') ? 'TODOS LOS EFECTOS' : c;
+        const active = (currentCategoryFilter === c);
+        html += `
+            <button onclick="setCategoryFilter('${c}')" class="px-3 py-1 rounded-xl text-xs font-mono font-bold transition-all shrink-0 cursor-pointer ${active ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">
+                ${label}
+            </button>
+        `;
     });
-
     container.innerHTML = html;
 }
 
-function filterCatalogByCategory(cat) {
-    currentCategoryFilter = cat;
-    renderMyGearView();
-}
+function renderCollectionPedals() {
+    const grid = document.getElementById('collection-pedals-grid');
+    const countEl = document.getElementById('collection-pedals-count');
+    if (!grid) return;
 
-function renderMyGearView() {
-    renderBrandFilters();
-    renderCategoryFilters();
+    let pedals = pedalDatabase ? pedalDatabase.filter(p => !p.forSale) : [];
+    if (currentBrandFilter !== 'ALL') pedals = pedals.filter(p => p.brand === currentBrandFilter);
+    if (currentCategoryFilter !== 'ALL') pedals = pedals.filter(p => getEffectCategory(p) === currentCategoryFilter);
 
-    const gridPedals = document.getElementById('section-pedals-grid');
-    const gridPower = document.getElementById('section-power-grid');
-    const gridWishlist = document.getElementById('section-wishlist-grid');
-    const gridForsale = document.getElementById('section-forsale-grid');
+    pedals.sort((a,b) => (a.brand || '').localeCompare(b.brand || '') || (a.name || '').localeCompare(b.name || ''));
 
-    const counterPedals = document.getElementById('counter-pedals');
-    const counterPower = document.getElementById('counter-power');
-    const counterWishlist = document.getElementById('counter-wishlist');
-    const counterForsale = document.getElementById('counter-forsale');
+    if (countEl) countEl.textContent = `${pedals.length} pedales`;
 
-    // Filter collection items
-    const filteredPedals = (pedalDatabase || []).filter(p => {
-        if (p.forSale) return false;
-        const matchesBrand = currentBrandFilter === 'ALL' || p.brand === currentBrandFilter;
-        const cat = typeof getEffectCategory === 'function' ? getEffectCategory(p) : p.category;
-        const matchesCat = currentCategoryFilter === 'ALL' || cat === currentCategoryFilter;
-        return matchesBrand && matchesCat;
-    });
-
-    const filteredPower = (powerSuppliesDatabase || []).filter(p => {
-        if (p.forSale) return false;
-        const matchesBrand = currentBrandFilter === 'ALL' || p.brand === currentBrandFilter;
-        const matchesCat = currentCategoryFilter === 'ALL' || currentCategoryFilter === 'Utilidad & ruteo';
-        return matchesBrand && matchesCat;
-    });
-
-    const filteredWishlist = (wishlistDatabase || []).filter(w => {
-        const matchesBrand = currentBrandFilter === 'ALL' || w.brand === currentBrandFilter;
-        const cat = typeof getEffectCategory === 'function' ? getEffectCategory(w) : w.category;
-        const matchesCat = currentCategoryFilter === 'ALL' || cat === currentCategoryFilter;
-        return matchesBrand && matchesCat;
-    });
-
-    const filteredForsalePedals = (pedalDatabase || []).filter(p => {
-        if (!p.forSale) return false;
-        const matchesBrand = currentBrandFilter === 'ALL' || p.brand === currentBrandFilter;
-        const cat = typeof getEffectCategory === 'function' ? getEffectCategory(p) : p.category;
-        const matchesCat = currentCategoryFilter === 'ALL' || cat === currentCategoryFilter;
-        return matchesBrand && matchesCat;
-    });
-
-    const filteredForsalePower = (powerSuppliesDatabase || []).filter(p => {
-        if (!p.forSale) return false;
-        const matchesBrand = currentBrandFilter === 'ALL' || p.brand === currentBrandFilter;
-        const matchesCat = currentCategoryFilter === 'ALL' || currentCategoryFilter === 'Utilidad & ruteo';
-        return matchesBrand && matchesCat;
-    });
-    const filteredForsale = [...filteredForsalePedals, ...filteredForsalePower];
-
-    if (counterPedals) counterPedals.textContent = `${filteredPedals.length} pedal${filteredPedals.length !== 1 ? 'es' : ''}`;
-    if (counterPower) counterPower.textContent = `${filteredPower.length} fuente${filteredPower.length !== 1 ? 's' : ''}`;
-    if (counterWishlist) counterWishlist.textContent = `${filteredWishlist.length} ítem${filteredWishlist.length !== 1 ? 's' : ''}`;
-    if (counterForsale) counterForsale.textContent = `${filteredForsale.length} ítem${filteredForsale.length !== 1 ? 's' : ''}`;
-
-    // Render Grid 1: Pedals
-    if (gridPedals) {
-        gridPedals.innerHTML = filteredPedals.length === 0 ? '<div class="col-span-full py-6 text-center text-xs text-[#9CA3AF] italic">No hay pedales en esta selección</div>' : '';
-        filteredPedals.forEach(p => {
-            gridPedals.appendChild(createEquipmentCard(p, 'PEDAL_COLLECTION'));
-        });
+    if (pedals.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-[#9CA3AF] bg-[#121316] border border-[#2A2D36] rounded-xl">No tenés pedales de efecto que coincidan con los filtros.</div>';
+        return;
     }
 
-    // Render Grid 2: Power Supplies
-    if (gridPower) {
-        gridPower.innerHTML = filteredPower.length === 0 ? '<div class="col-span-full py-6 text-center text-xs text-[#9CA3AF] italic">No hay fuentes en esta selección</div>' : '';
-        filteredPower.forEach(p => {
-            gridPower.appendChild(createEquipmentCard(p, 'POWER_COLLECTION'));
-        });
-    }
+    grid.innerHTML = pedals.map(p => {
+        const photoTag = getPedalIconHTML(p, 'w-10 h-10');
+        const descText = p.description || p.desc || '';
+        const cat = getEffectCategory(p);
+        const ioText = (p.isStereo || p.ioType === 'STEREO') ? 'Stereo I/O' : 'Mono I/O';
+        const maBase = p.maBase || p.ma || 20;
 
-    // Render Grid 3: Wishlist
-    if (gridWishlist) {
-        gridWishlist.innerHTML = filteredWishlist.length === 0 ? '<div class="col-span-full py-6 text-center text-xs text-[#9CA3AF] italic">No hay ítems en la Wishlist</div>' : '';
-        filteredWishlist.forEach(w => {
-            gridWishlist.appendChild(createEquipmentCard(w, 'WISHLIST'));
-        });
-    }
+        return `
+            <div onclick="inspectPedal('${p.id}')" class="bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/60 rounded-xl p-3.5 transition-all hover:shadow-lg flex flex-col justify-between group relative cursor-pointer">
+                <div>
+                    <div class="flex justify-between items-start gap-2 mb-1.5">
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#121316] text-[#9CA3AF] border border-[#2A2D36]">
+                            ${p.brand || 'Boss'}
+                        </span>
+                        <button onclick="promptDeletePedal('${p.id}', event)" class="text-[#9CA3AF] hover:text-[#EF4444] transition-colors p-1" title="Eliminar equipo">
+                            <i class="fa-solid fa-trash text-white text-xs"></i>
+                        </button>
+                    </div>
 
-    // Render Grid 4: ForSale
-    if (gridForsale) {
-        gridForsale.innerHTML = filteredForsale.length === 0 ? '<div class="col-span-full py-6 text-center text-xs text-[#9CA3AF] italic">No hay ítems en venta</div>' : '';
-        filteredForsale.forEach(f => {
-            gridForsale.appendChild(createEquipmentCard(f, f.outlets ? 'POWER_FORSALE' : 'PEDAL_FORSALE'));
-        });
-    }
-}
+                    <div class="flex items-center gap-2.5 my-1.5">
+                        ${photoTag}
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-sm text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors truncate">${p.name}</h4>
+                            <span class="text-[10px] text-[#9CA3AF] block font-mono truncate">${cat}</span>
+                        </div>
+                    </div>
 
-function createEquipmentCard(item, cardType) {
-    const card = document.createElement('div');
-    card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-3.5 flex flex-col justify-between relative group transition-all shadow-sm';
-    
-    const isPower = cardType.startsWith('POWER') || (item.outlets && item.outlets.length > 0);
-    const photoTag = typeof getPedalIconHTML === 'function' ? getPedalIconHTML(item, 'w-10 h-10') : `<div class="w-10 h-10 bg-[#121316] rounded-lg border border-[#2A2D36] flex items-center justify-center text-xs">${item.name ? item.name.substring(0,2) : 'EQ'}</div>`;
-    
-    const categoryName = isPower ? 'Fuente Aislada' : (typeof getEffectCategory === 'function' ? getEffectCategory(item) : (item.category || 'Efecto'));
-    const descText = item.description || item.desc || '';
-    const descHtml = descText ? `<p class="text-[11px] text-[#9CA3AF] line-clamp-2 italic mt-1">${descText}</p>` : '';
+                    ${descText ? `<p class="text-xs text-[#9CA3AF] line-clamp-2 italic my-1">${descText}</p>` : ''}
 
-    let specText = '';
-    if (isPower) {
-        const totalMa = item.totalCapacity || (item.outlets ? item.outlets.reduce((acc, o) => acc + (o.ma || 500), 0) : 2000);
-        specText = `${totalMa} mA total | ${item.outlets ? item.outlets.length : 5} salidas`;
-    } else {
-        const maVal = item.maBase || item.baseMa || item.ma || 20;
-        const ioVal = item.isStereo ? 'Stereo I/O' : 'Mono I/O';
-        specText = `${maVal} mA base | ${ioVal}`;
-    }
+                    <div class="bg-[#121316] p-1.5 rounded-lg border border-[#2A2D36] text-center my-2 text-[10px] font-mono text-[#00A8CC] font-bold">
+                        ${maBase} mA base | ${ioText}
+                    </div>
+                </div>
 
-    let actionBtnHtml = '';
-    if (cardType === 'PEDAL_COLLECTION' || cardType === 'POWER_COLLECTION') {
-        actionBtnHtml = `<button onclick="moveToForSale('${item.id}', '${isPower ? 'POWER' : 'PEDAL'}')" class="bg-[#EAB308]/10 hover:bg-[#EAB308] text-[#EAB308] hover:text-[#FFFFFF] border border-[#EAB308]/30 px-3 py-1.5 rounded-lg text-[11px] font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-tag text-white"></i> Vender</button>`;
-    } else if (cardType === 'WISHLIST') {
-        actionBtnHtml = `<button onclick="moveWishlistToCollection('${item.id}')" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] px-3 py-1.5 rounded-lg text-[11px] font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-plus text-white"></i> A mi colección</button>`;
-    } else if (cardType === 'PEDAL_FORSALE' || cardType === 'POWER_FORSALE') {
-        actionBtnHtml = `<button onclick="executeSoldAndRemove('${item.id}', '${isPower ? 'POWER' : 'PEDAL'}')" class="bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-[#FFFFFF] border border-[#EF4444]/30 px-3 py-1.5 rounded-lg text-[11px] font-bold font-mono transition-all flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-check text-white"></i> Vendido</button>`;
-    }
-
-    const deleteFn = isPower ? `promptDeletePowerSupply('${item.id}', event)` : (cardType === 'WISHLIST' ? `removeFromWishlist('${item.id}')` : `promptDeletePedal('${item.id}', event)`);
-
-    card.innerHTML = `
-        <div>
-            <div class="flex justify-between items-start gap-2 mb-2">
-                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] truncate">
-                    ${item.brand || 'Custom'}
-                </span>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${isPower ? 'bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/30' : 'bg-[#F15A24]/10 text-[#F15A24] border border-[#F15A24]/30'} truncate">
-                        ${categoryName}
-                    </span>
-                    <button onclick="${deleteFn}" title="Eliminar definitivamente" class="text-[#9CA3AF] hover:text-[#EF4444] transition-colors p-1 text-xs cursor-pointer">
-                        <i class="fa-solid fa-trash text-white hover:text-[#EF4444]"></i>
+                <div class="mt-2 pt-2 border-t border-[#2A2D36] flex items-center justify-between gap-2">
+                    <button onclick="toggleForSale('${p.id}', 'PEDAL', event)" class="w-full bg-[#121316] hover:bg-[#EAB308] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#EAB308] py-1.5 rounded-lg text-xs font-semibold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-tag text-white"></i> Vender
                     </button>
                 </div>
             </div>
+        `;
+    }).join('');
+}
 
-            <div class="flex items-center gap-2.5 my-1.5">
-                ${photoTag}
-                <div class="min-w-0 flex-1">
-                    <h4 class="font-bold text-sm text-[#FFFFFF] truncate">${item.name || item.model || 'Equipo'}</h4>
-                    ${descHtml}
+function renderCollectionPower() {
+    const grid = document.getElementById('collection-power-grid');
+    const countEl = document.getElementById('collection-power-count');
+    if (!grid) return;
+
+    let psList = powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => !ps.forSale) : [];
+    if (currentBrandFilter !== 'ALL') psList = psList.filter(ps => ps.brand === currentBrandFilter);
+
+    psList.sort((a,b) => (a.brand || '').localeCompare(b.brand || '') || (a.name || '').localeCompare(b.name || ''));
+
+    if (countEl) countEl.textContent = `${psList.length} fuentes`;
+
+    if (psList.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-[#9CA3AF] bg-[#121316] border border-[#2A2D36] rounded-xl">No tenés fuentes de alimentación en tu colección.</div>';
+        return;
+    }
+
+    grid.innerHTML = psList.map(ps => {
+        const photoTag = getPowerSupplyIconHTML(ps, 'w-10 h-10');
+        const outletsCount = ps.outlets ? ps.outlets.length : 5;
+
+        return `
+            <div onclick="inspectPowerSupply('${ps.id}')" class="bg-[#1C1E24] border border-[#2A2D36] hover:border-[#00A8CC]/60 rounded-xl p-3.5 transition-all hover:shadow-lg flex flex-col justify-between group relative cursor-pointer">
+                <div>
+                    <div class="flex justify-between items-start gap-2 mb-1.5">
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#121316] text-[#9CA3AF] border border-[#2A2D36]">
+                            ${ps.brand || 'Voodoo Lab'}
+                        </span>
+                        <button onclick="promptDeletePowerSupply('${ps.id}', event)" class="text-[#9CA3AF] hover:text-[#EF4444] transition-colors p-1" title="Eliminar fuente">
+                            <i class="fa-solid fa-trash text-white text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2.5 my-1.5">
+                        ${photoTag}
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-sm text-[#FFFFFF] group-hover:text-[#00A8CC] transition-colors truncate">${ps.name}</h4>
+                            <span class="text-[10px] text-[#00A8CC] block font-mono font-bold truncate">${outletsCount} Salidas Aisladas</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#121316] p-1.5 rounded-lg border border-[#2A2D36] text-center my-2 text-[10px] font-mono text-[#00A8CC] font-bold">
+                        Fuente de Alimentación
+                    </div>
+                </div>
+
+                <div class="mt-2 pt-2 border-t border-[#2A2D36] flex items-center justify-between gap-2">
+                    <button onclick="toggleForSale('${ps.id}', 'POWER', event)" class="w-full bg-[#121316] hover:bg-[#EAB308] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#EAB308] py-1.5 rounded-lg text-xs font-semibold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-tag text-white"></i> Vender
+                    </button>
                 </div>
             </div>
+        `;
+    }).join('');
+}
 
-            <div class="my-2 bg-[#121316] p-1.5 rounded-lg border border-[#2A2D36] text-center font-mono text-[10px] text-[#00A8CC] font-bold">
-                ${specText}
+function renderCollectionWishlist() {
+    const grid = document.getElementById('collection-wishlist-grid');
+    const countEl = document.getElementById('collection-wishlist-count');
+    if (!grid) return;
+
+    let wish = wishlistDatabase || [];
+    if (currentBrandFilter !== 'ALL') wish = wish.filter(w => w.brand === currentBrandFilter);
+    if (currentCategoryFilter !== 'ALL') wish = wish.filter(w => getEffectCategory(w) === currentCategoryFilter);
+
+    if (countEl) countEl.textContent = `${wish.length} ítems`;
+
+    if (wish.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-[#9CA3AF] bg-[#121316] border border-[#2A2D36] rounded-xl">Tu Wishlist está vacía.</div>';
+        return;
+    }
+
+    grid.innerHTML = wish.map(item => {
+        const photoTag = getPedalIconHTML(item, 'w-10 h-10');
+        const cat = getEffectCategory(item);
+
+        return `
+            <div onclick="inspectWishlistPedal('${item.id}')" class="bg-[#1C1E24] border border-[#2A2D36] hover:border-[#8B5CF6]/60 rounded-xl p-3.5 transition-all hover:shadow-lg flex flex-col justify-between group relative cursor-pointer">
+                <div>
+                    <div class="flex justify-between items-start gap-2 mb-1.5">
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#121316] text-[#9CA3AF] border border-[#2A2D36]">
+                            ${item.brand || 'Wishlist'}
+                        </span>
+                        <button onclick="removeFromWishlist('${item.id}', event)" class="text-[#9CA3AF] hover:text-[#EF4444] transition-colors p-1" title="Quitar de wishlist">
+                            <i class="fa-solid fa-trash text-white text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2.5 my-1.5">
+                        ${photoTag}
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-sm text-[#FFFFFF] group-hover:text-[#8B5CF6] transition-colors truncate">${item.name}</h4>
+                            <span class="text-[10px] text-[#9CA3AF] block font-mono truncate">${cat}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 pt-2 border-t border-[#2A2D36] flex items-center justify-between gap-2">
+                    <button onclick="moveWishlistToCollection('${item.id}', event)" class="w-full bg-[#121316] hover:bg-[#F15A24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24] py-1.5 rounded-lg text-xs font-semibold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-plus text-white"></i> A mi colección
+                    </button>
+                </div>
             </div>
-        </div>
-
-        <div class="mt-2 pt-2 border-t border-[#2A2D36] flex items-center justify-between">
-            <span class="text-[10px] font-mono text-[#9CA3AF]">Acción:</span>
-            ${actionBtnHtml}
-        </div>
-    `;
-
-    card.onclick = (e) => {
-        if (e.target.closest('button')) return;
-        activeInspectorId = item.id;
-        if (isPower && typeof inspectPowerSupply === 'function') inspectPowerSupply(item.id);
-        else if (cardType === 'WISHLIST' && typeof inspectWishlistPedal === 'function') inspectWishlistPedal(item.id);
-        else if (typeof inspectPedal === 'function') inspectPedal(item.id);
-    };
-
-    return card;
+        `;
+    }).join('');
 }
 
-function moveToForSale(id, type) {
-    if (type === 'POWER') {
-        const ps = powerSuppliesDatabase.find(p => p.id === id);
-        if (ps) { ps.forSale = true; saveStateToLocalStorage(); renderMyGearView(); }
-    } else {
+function renderCollectionForSale() {
+    const grid = document.getElementById('collection-forsale-grid');
+    const countEl = document.getElementById('collection-forsale-count');
+    if (!grid) return;
+
+    let salePedals = pedalDatabase ? pedalDatabase.filter(p => p.forSale) : [];
+    let salePower = powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => ps.forSale) : [];
+
+    let forSaleItems = [...salePedals, ...salePower];
+    if (currentBrandFilter !== 'ALL') forSaleItems = forSaleItems.filter(i => i.brand === currentBrandFilter);
+
+    if (countEl) countEl.textContent = `${forSaleItems.length} ítems`;
+
+    if (forSaleItems.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-[#9CA3AF] bg-[#121316] border border-[#2A2D36] rounded-xl">No tenés ítems publicados en venta.</div>';
+        return;
+    }
+
+    grid.innerHTML = forSaleItems.map(item => {
+        const isPower = item.outlets !== undefined;
+        const photoTag = isPower ? getPowerSupplyIconHTML(item, 'w-10 h-10') : getPedalIconHTML(item, 'w-10 h-10');
+
+        return `
+            <div class="bg-[#1C1E24] border-2 border-[#EAB308]/60 rounded-xl p-3.5 transition-all shadow-md flex flex-col justify-between group relative">
+                <div>
+                    <div class="flex justify-between items-start gap-2 mb-1.5">
+                        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#EAB308]/20 text-[#EAB308] border border-[#EAB308]/40">
+                            🏷️ EN VENTA
+                        </span>
+                        <button onclick="promptDeletePedal('${item.id}', event)" class="text-[#9CA3AF] hover:text-[#EF4444] transition-colors p-1" title="Eliminar equipo">
+                            <i class="fa-solid fa-trash text-white text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2.5 my-1.5">
+                        ${photoTag}
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-sm text-[#FFFFFF] truncate">${item.name}</h4>
+                            <span class="text-[10px] text-[#9CA3AF] block font-mono truncate">${item.brand || ''}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 pt-2 border-t border-[#2A2D36] flex items-center justify-between gap-2">
+                    <button onclick="executeSoldAndRemove('${item.id}', '${isPower ? 'POWER' : 'PEDAL'}', event)" class="w-full bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-[#FFFFFF] border border-[#EF4444]/30 py-1.5 rounded-lg text-xs font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-check text-white"></i> Vendido
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function toggleForSale(id, type, event) {
+    if (event) event.stopPropagation();
+    if (type === 'PEDAL') {
         const pedal = pedalDatabase.find(p => p.id === id);
-        if (pedal) { pedal.forSale = true; saveStateToLocalStorage(); renderMyGearView(); }
+        if (pedal) pedal.forSale = !pedal.forSale;
+    } else if (type === 'POWER') {
+        const ps = powerSuppliesDatabase.find(p => p.id === id);
+        if (ps) ps.forSale = !ps.forSale;
     }
+    saveStateToLocalStorage();
+    renderCollectionViews();
 }
 
-function executeSoldAndRemove(id, type) {
-    if (type === 'POWER') {
-        const idx = powerSuppliesDatabase.findIndex(p => p.id === id);
-        if (idx !== -1) { powerSuppliesDatabase.splice(idx, 1); saveStateToLocalStorage(); renderMyGearView(); }
-    } else {
+function executeSoldAndRemove(id, type, event) {
+    if (event) event.stopPropagation();
+    if (type === 'PEDAL') {
         const idx = pedalDatabase.findIndex(p => p.id === id);
-        if (idx !== -1) { pedalDatabase.splice(idx, 1); saveStateToLocalStorage(); renderMyGearView(); }
+        if (idx !== -1) pedalDatabase.splice(idx, 1);
+    } else if (type === 'POWER') {
+        const idx = powerSuppliesDatabase.findIndex(ps => ps.id === id);
+        if (idx !== -1) powerSuppliesDatabase.splice(idx, 1);
     }
+    saveStateToLocalStorage();
+    renderCollectionViews();
 }
 
-// CUSTOM EQUIPMENT MODAL HANDLERS
+// MODAL CUSTOM EQUIPMENT HANDLERS
 function openCustomEquipmentModal() {
+    cemType = 'PEDAL';
+    cemDest = 'COLLECTION';
+    cemIo = 'MONO';
+    cemVolt = '9V';
+    cemPhotoBase64 = null;
+
+    document.getElementById('cem-brand').value = '';
+    document.getElementById('cem-model').value = '';
+    document.getElementById('cem-mabase').value = '100';
+    document.getElementById('cem-manual-url').value = '';
+    document.getElementById('cem-notes').value = '';
+    document.getElementById('cem-photo-file').value = '';
+    
+    const previewContainer = document.getElementById('cem-photo-preview-container');
+    if (previewContainer) previewContainer.classList.add('hidden');
+
+    setCemEquipmentType('PEDAL');
+    setCemDestination('COLLECTION');
+    generatePowerOutletRows(5);
+
     const modal = document.getElementById('custom-equipment-modal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        setCemEquipmentType('PEDAL');
-        setCemDestination('collection');
-        generatePowerOutletRows(5);
-    }
+    if (modal) modal.classList.remove('hidden');
 }
 
 function closeCustomEquipmentModal() {
@@ -1153,79 +1285,88 @@ function closeCustomEquipmentModal() {
 }
 
 function setCemEquipmentType(type) {
-    cemEquipmentType = type;
-    const btnPedal = document.getElementById('cem-type-pedal');
-    const btnPower = document.getElementById('cem-type-power');
+    cemType = type;
+    const btnPedal = document.getElementById('cem-btn-pedal');
+    const btnPower = document.getElementById('cem-btn-power');
+
     const pedalFields = document.getElementById('cem-pedal-fields');
     const powerFields = document.getElementById('cem-power-fields');
 
-    const activeClass = 'py-2.5 px-3 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] flex items-center justify-center gap-2 cursor-pointer';
-    const inactiveClass = 'py-2.5 px-3 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-2 cursor-pointer';
+    const activePedalClass = 'bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer';
+    const activePowerClass = 'bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer';
+    const inactiveClass = 'bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-2 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer';
 
     if (type === 'PEDAL') {
-        if (btnPedal) btnPedal.className = activeClass;
+        if (btnPedal) btnPedal.className = activePedalClass;
         if (btnPower) btnPower.className = inactiveClass;
         if (pedalFields) pedalFields.classList.remove('hidden');
         if (powerFields) powerFields.classList.add('hidden');
     } else {
         if (btnPedal) btnPedal.className = inactiveClass;
-        if (btnPower) btnPower.className = activeClass;
+        if (btnPower) btnPower.className = activePowerClass;
         if (pedalFields) pedalFields.classList.add('hidden');
         if (powerFields) powerFields.classList.remove('hidden');
     }
 }
 
 function setCemDestination(dest) {
-    cemDestination = dest;
-    ['collection', 'wishlist', 'forsale'].forEach(d => {
-        const btn = document.getElementById(`cem-dest-${d}`);
-        if (btn) {
-            btn.className = d === dest 
-                ? 'py-2 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] cursor-pointer'
-                : 'py-2 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer';
-        }
-    });
+    cemDest = dest;
+    const btnCol = document.getElementById('cem-dest-col');
+    const btnWish = document.getElementById('cem-dest-wish');
+    const btnSale = document.getElementById('cem-dest-sale');
+
+    const activeColClass = 'bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer';
+    const activeWishClass = 'bg-[#8B5CF6] text-[#FFFFFF] border border-[#8B5CF6] py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer';
+    const activeSaleClass = 'bg-[#EAB308] text-[#FFFFFF] border border-[#EAB308] py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer';
+    const inactiveClass = 'bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer';
+
+    if (btnCol) btnCol.className = (dest === 'COLLECTION') ? activeColClass : inactiveClass;
+    if (btnWish) btnWish.className = (dest === 'WISHLIST') ? activeWishClass : inactiveClass;
+    if (btnSale) btnSale.className = (dest === 'FORSALE') ? activeSaleClass : inactiveClass;
 }
 
 function setCemIo(io) {
     cemIo = io;
-    ['mono', 'stereo'].forEach(i => {
-        const btn = document.getElementById(`cem-io-${i}`);
-        if (btn) {
-            btn.className = i.toUpperCase() === io
-                ? 'py-2 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] cursor-pointer'
-                : 'py-2 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer';
-        }
-    });
+    const btnMono = document.getElementById('cem-io-mono');
+    const btnStereo = document.getElementById('cem-io-stereo');
+
+    const activeClass = 'bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer';
+    const inactiveClass = 'bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer';
+
+    if (btnMono) btnMono.className = (io === 'MONO') ? activeClass : inactiveClass;
+    if (btnStereo) btnStereo.className = (io === 'STEREO') ? activeClass : inactiveClass;
 }
 
 function setCemVolt(volt) {
     cemVolt = volt;
-    ['9', '12', '18'].forEach(v => {
-        const btn = document.getElementById(`cem-volt-${v}`);
-        if (btn) {
-            btn.className = `${v}V` === volt
-                ? 'py-2 px-1 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] cursor-pointer'
-                : 'py-2 px-1 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer';
-        }
-    });
+    const btn9v = document.getElementById('cem-volt-9v');
+    const btn12v = document.getElementById('cem-volt-12v');
+    const btn18v = document.getElementById('cem-volt-18v');
+
+    const activeClass = 'bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-1.5 px-1 rounded-xl text-xs font-bold transition-all cursor-pointer';
+    const inactiveClass = 'bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-1 rounded-xl text-xs font-semibold transition-all cursor-pointer';
+
+    if (btn9v) btn9v.className = (volt === '9V') ? activeClass : inactiveClass;
+    if (btn12v) btn12v.className = (volt === '12V') ? activeClass : inactiveClass;
+    if (btn18v) btn18v.className = (volt === '18V') ? activeClass : inactiveClass;
 }
 
 function generatePowerOutletRows(count) {
-    const container = document.getElementById('cem-outlets-list');
+    const container = document.getElementById('cem-power-outlets-container');
     if (!container) return;
+    const num = intVal(count) || 5;
     let html = '';
-    for (let i = 1; i <= count; i++) {
+    for (let i = 1; i <= num; i++) {
         html += `
-            <div class="flex items-center gap-2 bg-[#121316] p-2 rounded-xl border border-[#2A2D36] font-mono text-xs">
-                <span class="text-[#9CA3AF] w-16">Salida ${i}:</span>
-                <select id="cem-out-volt-${i}" class="bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-white">
+            <div class="flex items-center justify-between gap-2 bg-[#121316] p-2 rounded-lg border border-[#2A2D36] text-xs font-mono">
+                <span class="text-[#9CA3AF] w-20">Salida ${i}</span>
+                <select id="cem-outlet-volt-${i}" class="bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-xs text-[#FFFFFF]">
                     <option value="9V">9V</option>
                     <option value="12V">12V</option>
                     <option value="18V">18V</option>
                 </select>
                 <div class="flex items-center gap-1">
-                    <input type="number" id="cem-out-ma-${i}" value="500" min="50" step="50" class="w-20 bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-white text-center">
+                    <input type="number" id="cem-outlet-ma-${i}" value="500" min="50" max="2000" step="50" class="w-20 bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-xs text-[#FFFFFF] text-center">
                     <span class="text-[#9CA3AF] text-[10px]">mA</span>
                 </div>
             </div>
@@ -1235,109 +1376,448 @@ function generatePowerOutletRows(count) {
 }
 
 function copyFirstOutputToAll() {
-    const firstVolt = document.getElementById('cem-out-volt-1')?.value || '9V';
-    const firstMa = document.getElementById('cem-out-ma-1')?.value || '500';
-    const count = parseInt(document.getElementById('cem-outlets-count')?.value || '5');
+    const volt1 = document.getElementById('cem-outlet-volt-1')?.value || '9V';
+    const ma1 = document.getElementById('cem-outlet-ma-1')?.value || '500';
+
+    const count = intVal(document.getElementById('cem-outlets-count')?.value) || 5;
     for (let i = 2; i <= count; i++) {
-        const voltEl = document.getElementById(`cem-out-volt-${i}`);
-        const maEl = document.getElementById(`cem-out-ma-${i}`);
-        if (voltEl) voltEl.value = firstVolt;
-        if (maEl) maEl.value = firstMa;
+        const vEl = document.getElementById(`cem-outlet-volt-${i}`);
+        const maEl = document.getElementById(`cem-outlet-ma-${i}`);
+        if (vEl) vEl.value = volt1;
+        if (maEl) maEl.value = ma1;
     }
 }
 
-function handleCemPhotoUpload(event) {
-    const file = event.target.files[0];
+function handleCemPhotoUpload(e) {
+    const file = e.target.files[0];
     if (!file) return;
+    if (file.size > 1024 * 1024) {
+        alert('La imagen no debe superar 1 MB.');
+        return;
+    }
     const reader = new FileReader();
-    reader.onload = function(e) {
-        cemPhotoBase64 = e.target.result;
-        const img = document.getElementById('cem-photo-preview');
+    reader.onload = function(evt) {
+        cemPhotoBase64 = evt.target.result;
+        const preview = document.getElementById('cem-photo-preview');
         const container = document.getElementById('cem-photo-preview-container');
-        if (img) img.src = cemPhotoBase64;
+        if (preview) preview.src = cemPhotoBase64;
         if (container) container.classList.remove('hidden');
     };
     reader.readAsDataURL(file);
 }
 
-function executeSaveCustomEquipment() {
-    const brand = document.getElementById('cem-brand')?.value.trim();
-    const model = document.getElementById('cem-model')?.value.trim();
+function commitCustomEquipment() {
+    const brand = document.getElementById('cem-brand').value.trim();
+    const model = document.getElementById('cem-model').value.trim();
+
     if (!brand || !model) {
-        alert('Por favor completa la Marca y Modelo del equipo.');
+        alert('Por favor ingresá la Marca y el Modelo del equipo.');
         return;
     }
 
-    const manualUrl = document.getElementById('cem-manual-url')?.value.trim() || null;
-    const notes = document.getElementById('cem-notes')?.value.trim() || '';
+    const manualUrl = document.getElementById('cem-manual-url').value.trim() || null;
+    const notes = document.getElementById('cem-notes').value.trim() || '';
 
-    if (cemEquipmentType === 'PEDAL') {
-        const maBase = parseInt(document.getElementById('cem-ma')?.value || '30');
-        const category = document.getElementById('cem-category')?.value || 'Saturación & ganancia';
-        const isStereo = cemIo === 'STEREO';
-        const id = 'custom-' + Date.now();
+    const newId = 'custom-' + Date.now();
+
+    if (cemType === 'PEDAL') {
+        const cat = document.getElementById('cem-category').value;
+        const maBase = intVal(document.getElementById('cem-mabase').value) || 100;
+        const maWithMargin = Math.round(maBase * 1.3);
 
         const newPedal = {
-            id,
-            brand,
-            name: model,
-            category,
-            maBase,
-            maWithMargin: Math.round(maBase * 1.3),
-            isStereo,
+            id: newId,
+            name: `${brand} ${model}`,
+            brand: brand,
+            model: model,
+            category: cat,
+            maBase: maBase,
+            maWithMargin: maWithMargin,
+            isStereo: (cemIo === 'STEREO'),
+            ioType: cemIo,
             voltage: cemVolt,
-            manualUrl,
-            notes,
-            customPhoto: cemPhotoBase64,
-            forSale: cemDestination === 'forsale'
+            manualUrl: manualUrl,
+            notes: notes,
+            photoBase64: cemPhotoBase64,
+            forSale: (cemDest === 'FORSALE')
         };
 
-        if (cemDestination === 'wishlist') {
+        if (cemDest === 'WISHLIST') {
             wishlistDatabase.push(newPedal);
         } else {
             pedalDatabase.push(newPedal);
         }
     } else {
-        const count = parseInt(document.getElementById('cem-outlets-count')?.value || '5');
+        const count = intVal(document.getElementById('cem-outlets-count').value) || 5;
         const outlets = [];
-        let totalCapacity = 0;
         for (let i = 1; i <= count; i++) {
-            const v = document.getElementById(`cem-out-volt-${i}`)?.value || '9V';
-            const ma = parseInt(document.getElementById(`cem-out-ma-${i}`)?.value || '500');
-            outlets.push({ id: `out-${i}`, name: `Salida ${i}`, voltage: v, ma: ma });
-            totalCapacity += ma;
+            const v = document.getElementById(`cem-outlet-volt-${i}`)?.value || '9V';
+            const ma = intVal(document.getElementById(`cem-outlet-ma-${i}`)?.value) || 500;
+            outlets.push({ id: `out-${i}`, label: `Salida ${i}`, voltage: v, maxMa: ma });
         }
 
-        const id = 'custom-power-' + Date.now();
-        const newPower = {
-            id,
-            brand,
-            name: model,
-            outlets,
-            totalCapacity,
-            manualUrl,
-            notes,
-            customPhoto: cemPhotoBase64,
-            forSale: cemDestination === 'forsale'
+        const newPs = {
+            id: newId,
+            name: `${brand} ${model}`,
+            brand: brand,
+            model: model,
+            outlets: outlets,
+            manualUrl: manualUrl,
+            notes: notes,
+            photoBase64: cemPhotoBase64,
+            forSale: (cemDest === 'FORSALE')
         };
 
-        if (cemDestination === 'wishlist') {
-            wishlistDatabase.push(newPower);
+        if (cemDest === 'WISHLIST') {
+            wishlistDatabase.push(newPs);
         } else {
-            powerSuppliesDatabase.push(newPower);
+            powerSuppliesDatabase.push(newPs);
         }
     }
 
     saveStateToLocalStorage();
     closeCustomEquipmentModal();
-    if (typeof renderMyGearView === 'function') renderMyGearView();
-    if (typeof renderDashboardStats === 'function') renderDashboardStats();
+    renderCollectionViews();
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    switchTab('explore');
-});
+function intVal(val) {
+    const p = parseInt(val, 10);
+    return isNaN(p) ? 0 : p;
+}
 
+
+const pedalDatabase = [];
+const powerSuppliesDatabase = [];
+
+// APP STATE VARIABLES
+let currentChainIds = [];
+let chainSlotModes = {};
+let currentPowerAssignments = {};
+let currentChainPowerSupplyIds = [];
+let chainHistory = [];
+let redoStack = [];
+let selectedPedalIds = new Set();
+// let currentBrandFilter = 'ALL';
+
+// let currentCategoryFilter = 'ALL';
+let catalogSearchQuery = '';
+
+function getEffectCategory(p) {
+    if (!p) return 'Varios & multi-FX';
+    
+    // Explicit taxonomy lookup dictionary
+    const explicitMap = {
+        // Dinámica & modelado
+        "cb-clean": "Dinámica & modelado",
+        "cb-preamp-mkii": "Dinámica & modelado",
+        "cb-condor": "Dinámica & modelado",
+        "strymon-iridium": "Dinámica & modelado",
+        "strymon-compadre": "Dinámica & modelado",
+        "wa-acs1-mkii": "Dinámica & modelado",
+        "wa-deep-six-v4": "Dinámica & modelado",
+        "boss-ge7": "Dinámica & modelado",
+        "boss-cp1x": "Dinámica & modelado",
+        "boss-ir2": "Dinámica & modelado",
+        "jhs-pulp-n-peel-v4": "Dinámica & modelado",
+        "mxr-ten-band-eq": "Dinámica & modelado",
+        "mxr-dyna-comp": "Dinámica & modelado",
+        "ye-defiant-jazz": "Dinámica & modelado",
+        "tc-plethora-x5": "Dinámica & modelado",
+
+        
+        // Nuevos pedales Boss V6
+        "boss-bp1w": "Saturación & ganancia",
+        "boss-ds1x": "Saturación & ganancia",
+        "boss-eq200": "Utilidad & ruteo",
+        "boss-md500": "Modulación",
+        "boss-od1x": "Saturación & ganancia",
+        "boss-pn2": "Modulación",
+        "boss-ps6": "Pitch & sintetizador",
+        "boss-rv200": "Reverberación & espacio",
+        "boss-sde3": "Delay & eco",
+        // Saturación & ganancia
+        "ibanez-ts9": "Saturación & ganancia",
+        "klon-centaur": "Saturación & ganancia",
+        "proco-rat-2": "Saturación & ganancia",
+        "boss-bd2w": "Saturación & ganancia",
+        "boss-ds1": "Saturación & ganancia",
+        "boss-ds2": "Saturación & ganancia",
+        "boss-fz1w": "Saturación & ganancia",
+        "boss-hm2w": "Saturación & ganancia",
+        "boss-mt2": "Saturación & ganancia",
+        "boss-od3": "Saturación & ganancia",
+        "boss-sd1": "Saturación & ganancia",
+        "cb-brothers-am": "Saturación & ganancia",
+        "dba-fuzz-war": "Saturación & ganancia",
+        "eqd-hizumitas": "Saturación & ganancia",
+        "eqd-hoof": "Saturación & ganancia",
+        "eqd-life-pedal-v3": "Saturación & ganancia",
+        "eqd-plumes": "Saturación & ganancia",
+        "ehx-big-muff": "Saturación & ganancia",
+        "ehx-soul-food": "Saturación & ganancia",
+        "jhs-angry-charlie-v3": "Saturación & ganancia",
+        "jhs-bonsai": "Saturación & ganancia",
+        "jhs-morning-glory-v4": "Saturación & ganancia",
+        "jhs-muffuletta": "Saturación & ganancia",
+        "jhs-packrat": "Saturación & ganancia",
+        "obne-alpha-haunt-v2": "Saturación & ganancia",
+        "obne-beamsplitter-v2": "Saturación & ganancia",
+        "strymon-riverside": "Saturación & ganancia",
+        "strymon-sunset": "Saturación & ganancia",
+        "wa-eras": "Saturación & ganancia",
+
+        // Pitch & sintetizador
+        "boss-sy1": "Pitch & sintetizador",
+        "boss-oc5": "Pitch & sintetizador",
+        "digitech-whammy-5": "Pitch & sintetizador",
+        "ehx-pitch-fork": "Pitch & sintetizador",
+        "ehx-nano-pog": "Pitch & sintetizador",
+        "rp-radius": "Pitch & sintetizador",
+        "eqd-rainbow-machine-v2": "Pitch & sintetizador",
+
+        // Modulación
+        "ehx-small-clone": "Modulación",
+        "dunlop-cry-baby": "Modulación",
+        "strymon-deco-v2": "Modulación",
+        "strymon-mobius": "Modulación",
+        "strymon-zelzah": "Modulación",
+        "wa-julianna": "Modulación",
+        "boss-ce2w": "Modulación",
+        "boss-dc2w": "Modulación",
+        "boss-ch1": "Modulación",
+        "boss-ce5": "Modulación",
+        "boss-tr2": "Modulación",
+        "boss-bf3": "Modulación",
+        "boss-ph3": "Modulación",
+        "mxr-phase-90": "Modulación",
+        "obne-visitor": "Modulación",
+        "obne-float": "Modulación",
+        "obne-excess-v2": "Modulación",
+        "obne-dweller": "Modulación",
+        "cb-warped-vinyl": "Modulación",
+        "eqd-spatial-delivery-v3": "Modulación",
+        "cb-lost-found": "Modulación",
+
+        // Delay & eco
+        "cb-reverse-mode-c": "Delay & eco",
+        "dba-echo-dream-2": "Delay & eco",
+        "line6-dl4": "Delay & eco",
+        "boss-re202": "Delay & eco",
+        "strymon-el-capistan-v2": "Delay & eco",
+        "strymon-volante": "Delay & eco",
+        "strymon-timeline": "Delay & eco",
+        "wa-arp87": "Delay & eco",
+        "wa-mako-d1-v2": "Delay & eco",
+        "cb-habit": "Delay & eco",
+        "cb-thermae": "Delay & eco",
+        "cb-tonal-recall-rkm": "Delay & eco",
+        "rp-raster-v2": "Delay & eco",
+        "obne-black-fountain-v3": "Delay & eco",
+        "obne-minim": "Delay & eco",
+        "eqd-dispatch-master-v3": "Delay & eco",
+        "boss-te2": "Delay & eco",
+        "boss-dd8": "Delay & eco",
+        "boss-dd200": "Delay & eco",
+        "boss-dd3t": "Delay & eco",
+        "boss-dd7": "Delay & eco",
+        "boss-dm2w": "Delay & eco",
+        "tc-flashback-2": "Delay & eco",
+        "mxr-carbon-copy": "Delay & eco",
+        "mxr-carbon-copy-deluxe": "Delay & eco",
+        "dba-space-bender": "Delay & eco",
+
+        // Reverberación & espacio
+        "cb-dark-world": "Reverberación & espacio",
+        "strymon-cloudburst": "Reverberación & espacio",
+        "strymon-nightsky": "Reverberación & espacio",
+        "strymon-bigsky": "Reverberación & espacio",
+        "strymon-flint-v2": "Reverberación & espacio",
+        "obne-sunlight-v1": "Reverberación & espacio",
+        "obne-sunlight-v2": "Reverberación & espacio",
+        "obne-procession": "Reverberación & espacio",
+        "obne-dark-star-v3": "Reverberación & espacio",
+        "wa-slo": "Reverberación & espacio",
+        "wa-sloeer": "Reverberación & espacio",
+        "wa-mako-r1": "Reverberación & espacio",
+        "eqd-astral-destiny": "Reverberación & espacio",
+        "eqd-afterneath-v3": "Reverberación & espacio",
+        "eqd-avalanche-run-v2": "Reverberación & espacio",
+        "boss-rv6": "Reverberación & espacio",
+        "boss-rv500": "Reverberación & espacio",
+        "ehx-oceans-11": "Reverberación & espacio",
+        "ehx-oceans-12": "Reverberación & espacio",
+        "tc-hall-of-fame-2": "Reverberación & espacio",
+        "mxr-m300-reverb": "Reverberación & espacio",
+        "dba-rooms": "Reverberación & espacio",
+        "rp-context-v2": "Reverberación & espacio",
+
+        // Lo-Fi, glitch & texturas
+        "cb-onward": "Lo-Fi, glitch & texturas",
+        "rp-particle-v2": "Lo-Fi, glitch & texturas",
+        "rp-tensor": "Lo-Fi, glitch & texturas",
+        "cb-gen-loss-mkii": "Lo-Fi, glitch & texturas",
+        "cb-lossy": "Lo-Fi, glitch & texturas",
+        "rp-bitmap-v2": "Lo-Fi, glitch & texturas",
+        "cb-bad-mood": "Lo-Fi, glitch & texturas",
+        "cb-mood-mkii": "Lo-Fi, glitch & texturas",
+        "wa-lore": "Lo-Fi, glitch & texturas",
+        "boss-sl2": "Lo-Fi, glitch & texturas",
+        "kino-ghosts": "Lo-Fi, glitch & texturas",
+
+        // Loopers de frase
+        "boss-rc5": "Loopers de frase",
+        "boss-rc1": "Loopers de frase",
+        "tc-ditto-stereo": "Loopers de frase",
+        "wa-xero": "Loopers de frase",
+        "cb-blooper": "Loopers de frase",
+
+        // Utilidad & ruteo
+        "wa-canvas-rehearsal": "Utilidad & ruteo",
+        "cb-faves": "Utilidad & ruteo",
+        "obne-exp-ramper": "Utilidad & ruteo",
+        "obne-signal-blender": "Utilidad & ruteo",
+        "boss-ls2-util": "Utilidad & ruteo",
+        "boss-tu3": "Utilidad & ruteo",
+        "boss-ns2": "Utilidad & ruteo",
+        "boss-ms3": "Utilidad & ruteo",
+        "tc-polytune-3": "Utilidad & ruteo"
+    };
+
+    if (p.id && explicitMap[p.id]) {
+        return explicitMap[p.id];
+    }
+    if (p.effectCategory && p.effectCategory.trim() !== '') {
+        return p.effectCategory.trim();
+    }
+
+    const cat = (p.category || '').toLowerCase();
+    const name = (p.name || '').toLowerCase();
+    const pType = (p.type || '').toLowerCase();
+
+    if (pType === 'utilidad' || ['utilidad', 'utility', 'tuner', 'line switcher', 'noise reduction', 'preset switcher', 'expression lfo', 'loop switcher', 'rehearsal'].some(k => cat.includes(k))) {
+        return 'Utilidad & ruteo';
+    }
+
+    if (['preamp', 'pre-amp', 'amp & cab', 'ir cab', 'compressor', 'compresor', 'equalizer', 'eq', 'graphic eq'].some(k => cat.includes(k))) {
+        return 'Dinámica & modelado';
+    }
+
+    if (['gen loss', 'lossy', 'vhs', 'bitcrusher', 'rate reducer', 'digital artifacts', 'tape degenerator', 'glitch'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Lo-Fi, glitch & texturas';
+    }
+
+    if (['overdrive', 'distortion', 'fuzz', 'boost', 'saturator', 'screamer', 'muff', 'rat', 'gain', 'drive', 'distorsión', 'sustainer'].some(k => cat.includes(k))) {
+        return 'Saturación & ganancia';
+    }
+
+    if (['delay', 'eco', 'echo', 'space echo', 'tape echo'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Delay & eco';
+    }
+
+    if (['reverb', 'reverberator', 'reverberation', 'ambience', 'ambiente', 'cloudburst', 'nightsky', 'bigsky'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Reverberación & espacio';
+    }
+
+    if (['chorus', 'phaser', 'flanger', 'tremolo', 'vibrato', 'slicer', 'ring mod', 'modulation', 'dimension', 'filter', 'wah', 'auto-wah'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Modulación';
+    }
+
+    if (['octave', 'octavador', 'synth', 'synthesizer', 'pitch', 'whammy', 'pog'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Pitch & sintetizador';
+    }
+
+    if (['looper', 'phrase looper', 'loop station', 'ditto'].some(k => cat.includes(k) || name.includes(k))) {
+        return 'Loopers de frase';
+    }
+
+    return 'Saturación & ganancia';
+}
+
+function renderCategoryFilters() {
+    const container = document.getElementById('category-filters');
+    if (!container) return;
+
+    const masterOrder = [
+        'Dinámica & modelado',
+        'Saturación & ganancia',
+        'Pitch & sintetizador',
+        'Modulación',
+        'Delay & eco',
+        'Reverberación & espacio',
+        'Lo-Fi, glitch & texturas',
+        'Loopers de frase',
+        'Utilidad & ruteo',
+        'Varios & multi-FX'
+    ];
+
+    const activeCategories = new Set();
+    pedalDatabase.forEach(p => {
+        const cat = getEffectCategory(p);
+        if (cat) activeCategories.add(cat);
+    });
+
+    if (currentCategoryFilter !== 'ALL' && !activeCategories.has(currentCategoryFilter)) {
+        currentCategoryFilter = 'ALL';
+    }
+
+    const availableCategories = ['ALL', ...masterOrder.filter(c => activeCategories.has(c))];
+    activeCategories.forEach(c => {
+        if (!availableCategories.includes(c)) {
+            availableCategories.push(c);
+        }
+    });
+
+    container.innerHTML = availableCategories.map(c => `
+        <button onclick="filterCatalogByCategory('${c}')" class="px-3 py-1 rounded-lg border text-xs font-medium transition-all ${
+            c === currentCategoryFilter 
+            ? 'bg-[#F15A24]/10 border-[#F15A24]/40 text-[#F15A24] font-bold' 
+            : 'bg-[#121316] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF]'
+        }" data-category="${c}">
+            ${c === 'ALL' ? 'Todos los efectos' : c}
+        </button>
+    `).join('');
+}
+
+function filterCatalogByCategory(category) {
+    currentCategoryFilter = category;
+    document.querySelectorAll('#category-filters button').forEach(btn => {
+        if (btn.dataset.category === category) {
+            btn.className = "px-3 py-1 rounded-lg border text-xs font-medium bg-[#F15A24]/10 border-[#F15A24]/40 text-[#F15A24] font-bold";
+        } else {
+            btn.className = "bg-[#121316] border-[#2A2D36] text-[#9CA3AF] hover:bg-[#20232B] hover:text-[#FFFFFF] px-3 py-1 rounded-lg border text-xs font-medium";
+        }
+    });
+    renderCatalog(currentBrandFilter);
+}
+
+
+const ALL_GENRE_TAGS = [
+    "Ambient", "Shoegaze", "Dream Pop", "Post-Rock", "Prog Rock", "Alt. Rock", 
+    "Grunge", "Punk", "Stoner", "Garage Rock", "Post-Punk", "Psych Rock", 
+    "Post-Hardcore", "Surf Rock", "Math Rock", "Indie Rock", "Hard Rock", 
+    "Metal", "Thrash Metal", "Power Metal", "Prog Metal", "Nu Metal", 
+    "Blues", "Funk", "Pop", "Soul / R&B", "Jazz", "Folk", "Reggae", 
+    "Instrumental", "Noise", "No Wave", "Clásica", "Otros"
+];
+let selectedSaveFavTags = [];
+let currentTagFilter = 'ALL';
+let favoriteChains = JSON.parse(localStorage.getItem('rig_favorites')) || [];
+let currentSaveMode = 'NEW';
+let pedalToDeleteId = null;
+let powerToDeleteId = null;
+let draggedIndex = null;
+let activeInspectorId = null;
+let activeSplitOutletId = null;
+let tempPhotoBase64 = null;
+let tempWishlistPhotoBase64 = null;
+let tempPowerPhotoBase64 = null;
+let powerAssignmentError = null;
+let currentManualEditTarget = null;
+let editingPedalId = null;
+
+const BASE_MANUALS_DRIVE = "https://drive.google.com/drive/folders/1kxwlPFH2J0b7NkGsHH7oYsV6sO9ux6OM";
+
+// DEFAULT FALLBACK CATALOG WITH 135 PEDALS
 const DEFAULT_PEDALS_FALLBACK = [
     {
         "id": "boss-bd2w",
@@ -7939,212 +8419,122 @@ document.addEventListener('keydown', (e) => {
                 <img id="image-zoom-img" src="" alt="Pedal Ampliado" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-md">
             </div>
         </div>
-    </div>
-<!-- CUSTOM EQUIPMENT MODAL -->
-<div id="custom-equipment-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    </div><div id="custom-equipment-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-plus text-[#F15A24]"></i> Cargar equipo personalizado
+                <i class="fa-solid fa-plus text-white"></i> Cargar equipo personalizado
             </h3>
-            <button onclick="closeCustomEquipmentModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm">
-                <i class="fa-solid fa-xmark"></i>
+            <button onclick="closeCustomEquipmentModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm cursor-pointer">
+                <i class="fa-solid fa-xmark text-white"></i>
             </button>
         </div>
-
-        <!-- PASO 1: SELECCIÓN DE TIPO DE EQUIPO (BOTONES) -->
         <div class="space-y-1.5">
-            <label class="text-xs text-[#9CA3AF] font-mono block">Tipo de equipo</label>
-            <div class="flex gap-2">
-                <button id="cem-btn-pedal" onclick="setCemEquipmentType('PEDAL')" class="flex-1 py-2.5 rounded-xl border text-xs font-mono transition-all flex items-center justify-center gap-2 bg-[#F15A24] text-white border-[#F15A24] font-bold shadow-md">
-                    <i class="fa-solid fa-sliders"></i> Pedal de efecto o utilidad
+            <label class="text-xs text-[#9CA3AF] block font-mono">Tipo de equipo *</label>
+            <div class="grid grid-cols-2 gap-2">
+                <button id="cem-btn-pedal" type="button" onclick="setCemEquipmentType('PEDAL')" class="bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-sliders text-white"></i> Pedal de efecto o utilidad
                 </button>
-                <button id="cem-btn-power" onclick="setCemEquipmentType('POWER')" class="flex-1 py-2.5 rounded-xl border text-xs font-mono transition-all flex items-center justify-center gap-2 bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white">
-                    <i class="fa-solid fa-bolt"></i> Fuente de alimentación
+                <button id="cem-btn-power" type="button" onclick="setCemEquipmentType('POWER')" class="bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-2 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-bolt text-white"></i> Fuente de alimentación
                 </button>
             </div>
         </div>
-
-        <!-- DESTINO DE INVENTARIO (BOTONES) -->
         <div class="space-y-1.5">
-            <label class="text-xs text-[#9CA3AF] font-mono block">Destino en inventario</label>
-            <div class="flex gap-2">
-                <button id="cem-dest-collection" onclick="setCemDestination('COLLECTION')" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-[#F15A24] text-white border border-[#F15A24] shadow-md">Colección</button>
-                <button id="cem-dest-wishlist" onclick="setCemDestination('WISHLIST')" class="px-3 py-1.5 rounded-xl text-xs font-mono bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white">Wishlist</button>
-                <button id="cem-dest-sale" onclick="setCemDestination('SALE')" class="px-3 py-1.5 rounded-xl text-xs font-mono bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white">Venta</button>
+            <label class="text-xs text-[#9CA3AF] block font-mono">Destino en inventario *</label>
+            <div class="grid grid-cols-3 gap-2">
+                <button id="cem-dest-col" type="button" onclick="setCemDestination('COLLECTION')" class="bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer">Colección</button>
+                <button id="cem-dest-wish" type="button" onclick="setCemDestination('WISHLIST')" class="bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer">Wishlist</button>
+                <button id="cem-dest-sale" type="button" onclick="setCemDestination('FORSALE')" class="bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer">Venta</button>
             </div>
         </div>
-
-        <!-- DATOS BÁSICOS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="space-y-1">
                 <label class="text-xs text-[#9CA3AF] block font-mono">Marca / Fabricante *</label>
-                <input type="text" id="cem-brand" placeholder="Ej: Boss, Strymon, Custom" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
+                <input type="text" id="cem-brand" placeholder="Ej: Boss, Strymon, Custom" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
             </div>
             <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Modelo / Nombre *</label>
-                <input type="text" id="cem-name" placeholder="Ej: DS-1, Zuma" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Modelo *</label>
+                <input type="text" id="cem-model" placeholder="Ej: DS-1, Zuma, DC7" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
             </div>
         </div>
-
-        <!-- CAMPOS ESPECÍFICOS DE PEDAL -->
         <div id="cem-pedal-fields" class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1.5">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura I/O *</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="cem-io-mono" type="button" onclick="setCemIo('MONO')" class="bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-1.5 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer">Mono</button>
+                        <button id="cem-io-stereo" type="button" onclick="setCemIo('STEREO')" class="bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer">Stereo</button>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Voltaje requerido *</label>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <button id="cem-volt-9v" type="button" onclick="setCemVolt('9V')" class="bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] py-1.5 px-1 rounded-xl text-xs font-bold transition-all cursor-pointer">9V</button>
+                        <button id="cem-volt-12v" type="button" onclick="setCemVolt('12V')" class="bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-1 rounded-xl text-xs font-semibold transition-all cursor-pointer">12V</button>
+                        <button id="cem-volt-18v" type="button" onclick="setCemVolt('18V')" class="bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] py-1.5 px-1 rounded-xl text-xs font-semibold transition-all cursor-pointer">18V</button>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Categoría de efecto</label>
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Categoría de efecto *</label>
                     <select id="cem-category" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] font-mono">
                         <option value="Saturación & ganancia">Saturación & ganancia</option>
-                        <option value="Reverb & tiempo">Reverb & tiempo</option>
                         <option value="Modulación">Modulación</option>
+                        <option value="Delay & eco">Delay & eco</option>
+                        <option value="Reverberación & espacio">Reverberación & espacio</option>
+                        <option value="Dinámica & modelado">Dinámica & modelado</option>
+                        <option value="Pitch & sintetizador">Pitch & sintetizador</option>
+                        <option value="Lo-Fi, glitch & texturas">Lo-Fi, glitch & texturas</option>
+                        <option value="Loopers de frase">Loopers de frase</option>
                         <option value="Utilidad & ruteo">Utilidad & ruteo</option>
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Consumo base (mA)</label>
-                    <input type="number" id="cem-mabase" value="100" min="1" max="3000" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-1.5">
-                    <label class="text-xs text-[#9CA3AF] font-mono block">Arquitectura I/O</label>
-                    <div class="flex gap-2">
-                        <button id="cem-io-mono" onclick="setCemIo('MONO')" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-[#F15A24] text-white border border-[#F15A24] shadow-md">Mono</button>
-                        <button id="cem-io-stereo" onclick="setCemIo('STEREO')" class="px-3 py-1.5 rounded-xl text-xs font-mono bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white">Stereo</button>
-                    </div>
-                </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs text-[#9CA3AF] font-mono block">Voltaje requerido</label>
-                    <div class="flex gap-2">
-                        <button id="cem-volt-9v" onclick="setCemVolt('9V')" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-[#F15A24] text-white border border-[#F15A24] shadow-md">9V</button>
-                        <button id="cem-volt-12v" onclick="setCemVolt('12V')" class="px-3 py-1.5 rounded-xl text-xs font-mono bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white">12V</button>
-                        <button id="cem-volt-18v" onclick="setCemVolt('18V')" class="px-3 py-1.5 rounded-xl text-xs font-mono bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] hover:text-white">18V</button>
-                    </div>
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Consumo base (mA) *</label>
+                    <input type="number" id="cem-mabase" value="100" min="1" max="3000" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
                 </div>
             </div>
         </div>
-
-        <!-- CAMPOS ESPECÍFICOS DE FUENTE -->
         <div id="cem-power-fields" class="space-y-4 hidden">
+            <div class="flex items-center justify-between gap-3 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
+                <label class="text-xs text-[#9CA3AF] font-mono">Cantidad de salidas aisladas:</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" id="cem-outlets-count" value="5" min="1" max="24" onchange="generatePowerOutletRows(this.value)" class="w-16 bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-xs text-[#FFFFFF] text-center font-mono">
+                </div>
+            </div>
             <div class="space-y-2">
                 <div class="flex items-center justify-between">
-                    <label class="text-xs text-[#9CA3AF] font-mono">Cantidad de salidas aisladas</label>
-                    <input type="number" id="cem-power-outlets-count" value="5" min="1" max="20" onchange="generatePowerOutletRows()" class="w-16 bg-[#121316] border border-[#2A2D36] rounded-lg px-2 py-1 text-xs text-center text-white focus:outline-none">
+                    <span class="text-xs font-mono text-[#9CA3AF] uppercase font-bold">Salidas de la fuente</span>
+                    <button type="button" onclick="copyFirstOutputToAll()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold transition-all flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-copy text-white"></i> Copiar Salida 1 a todas
+                    </button>
                 </div>
-                <button onclick="copyFirstOutputToAll()" class="w-full bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#00A8CC]/40 rounded-xl py-1.5 text-xs font-mono transition-all flex items-center justify-center gap-1">
-                    <i class="fa-solid fa-copy"></i> Copiar Salida 1 a todas
-                </button>
-            </div>
-
-            <div id="cem-power-outlets-rows" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                <div id="cem-power-outlets-container" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
             </div>
         </div>
-
-        <!-- MANUAL, NOTAS Y FOTO -->
         <div class="space-y-3 pt-2 border-t border-[#2A2D36]">
             <div class="space-y-1">
                 <label class="text-xs text-[#9CA3AF] block font-mono">Link del manual (opcional)</label>
-                <input type="url" id="cem-manual" placeholder="https://..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
+                <input type="text" id="cem-manual-url" placeholder="Link al manual PDF" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
             </div>
             <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Notas personalizadas (opcional)</label>
-                <textarea id="cem-notes" rows="2" placeholder="Apuntes de mod, cableado, etc." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]"></textarea>
+                <label class="text-xs text-[#9CA3AF] block font-mono">Notas personalizadas</label>
+                <textarea id="cem-notes" rows="2" placeholder="Apuntes personales" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] resize-none"></textarea>
             </div>
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Foto del equipo (opcional)</label>
-                <input type="file" accept="image/*" onchange="handleCemPhotoUpload(event)" class="text-xs text-[#9CA3AF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#121316] file:text-[#F15A24]">
+            <div class="space-y-2 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
+                <label class="text-xs text-[#F15A24] font-bold block font-mono flex items-center gap-1.5">Foto del equipo</label>
+                <input type="file" id="cem-photo-file" accept="image/*" onchange="handleCemPhotoUpload(event)" class="text-xs text-[#9CA3AF]">
                 <div id="cem-photo-preview-container" class="hidden pt-2 flex justify-center">
-                    <img id="cem-photo-preview" src="" class="h-24 object-contain rounded-lg border border-[#2A2D36]">
+                    <img id="cem-photo-preview" src="" alt="Vista previa" class="h-24 object-contain rounded-lg border border-[#2A2D36]">
                 </div>
             </div>
         </div>
-
-        <div class="pt-3 border-t border-[#2A2D36] flex justify-end gap-3">
-            <button onclick="closeCustomEquipmentModal()" class="px-4 py-2 rounded-xl text-xs font-mono bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]">Cancelar</button>
-            <button onclick="executeSaveCustomEquipment()" class="px-5 py-2 rounded-xl text-xs font-mono font-bold bg-[#F15A24] text-white border border-[#F15A24] shadow-md hover:bg-[#d94d1b]">Guardar equipo</button>
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-[#2A2D36]">
+            <button type="button" onclick="closeCustomEquipmentModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#9CA3AF] hover:text-[#FFFFFF] bg-[#121316] border border-[#2A2D36] cursor-pointer">Cancelar</button>
+            <button type="button" onclick="commitCustomEquipment()" class="px-5 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#F15A24] hover:bg-[#d94d1b] shadow-md active:scale-95 cursor-pointer">Guardar equipo</button>
         </div>
     </div>
 </div>
 
-id="view-collection" class="flex-1 overflow-y-auto p-6 space-y-6 hidden">
-            <!-- TOP ACTION BAR -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl shadow-md">
-                <div class="flex flex-wrap items-center gap-3">
-                    <button onclick="openMasterCatalogModal()" 
-                            class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer">
-                        <i class="fa-solid fa-magnifying-glass text-white"></i> Buscar pedal ó fuente
-                    </button>
-                    <button onclick="openCustomEquipmentModal()" 
-                            class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] font-bold px-4 py-2.5 rounded-xl text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer">
-                        <i class="fa-solid fa-plus text-white"></i> Cargar equipo personalizado
-                    </button>
-                </div>
-            </div>
-
-            <!-- AREA DE FILTROS RESTAURADA (FUENTE 108) -->
-            <div class="space-y-3 bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl">
-                <div>
-                    <span class="text-[10px] font-mono text-[#9CA3AF] uppercase font-bold block mb-2">Filtrar por marca:</span>
-                    <div id="brand-filters" class="flex flex-wrap items-center gap-1.5">
-                    </div>
-                </div>
-                <div class="pt-2 border-t border-[#2A2D36]">
-                    <span class="text-[10px] font-mono text-[#9CA3AF] uppercase font-bold block mb-2">Filtrar por tipo de efecto:</span>
-                    <div id="category-filters" class="flex flex-wrap items-center gap-1.5">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4 SECCIONES VERTICALES DE CONTENIDO -->
-            <div class="space-y-8">
-                <!-- SECCIÓN 1: PEDALES DE EFECTO -->
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2 uppercase font-mono tracking-wider">
-                            <i class="fa-solid fa-sliders text-white"></i> Pedales de efecto
-                        </h3>
-                        <span id="counter-pedals" class="text-[11px] font-mono text-[#9CA3AF]">0 pedales</span>
-                    </div>
-                    <div id="section-pedals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    </div>
-                </div>
-
-                <!-- SECCIÓN 2: FUENTES DE ALIMENTACIÓN -->
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2 uppercase font-mono tracking-wider">
-                            <i class="fa-solid fa-bolt text-white"></i> Fuentes de alimentación
-                        </h3>
-                        <span id="counter-power" class="text-[11px] font-mono text-[#9CA3AF]">0 fuentes</span>
-                    </div>
-                    <div id="section-power-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    </div>
-                </div>
-
-                <!-- SECCIÓN 3: WISHLIST -->
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2 uppercase font-mono tracking-wider">
-                            <i class="fa-solid fa-heart text-white"></i> Wishlist
-                        </h3>
-                        <span id="counter-wishlist" class="text-[11px] font-mono text-[#9CA3AF]">0 ítems</span>
-                    </div>
-                    <div id="section-wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    </div>
-                </div>
-
-                <!-- SECCIÓN 4: EN VENTA -->
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2 uppercase font-mono tracking-wider">
-                            <i class="fa-solid fa-tag text-white"></i> En venta
-                        </h3>
-                        <span id="counter-forsale" class="text-[11px] font-mono text-[#9CA3AF]">0 ítems</span>
-                    </div>
-                    <div id="section-forsale-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div 
