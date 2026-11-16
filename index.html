@@ -4174,36 +4174,16 @@ function renderCatalog(brandFilter = 'ALL') {
 function createPedalCatalogCard(pedal) {
     const card = document.createElement('div');
     const photoTag = getPedalIconHTML(pedal, 'w-10 h-10');
-    const isSelected = selectedPedalIds.has(pedal.id);
     const descText = pedal.description || pedal.desc || '';
     const descHtml = descText ? `<p title="${descText.replace(/"/g, '&quot;')}" class="text-xs text-[#9CA3AF] line-clamp-2 hover:line-clamp-none italic transition-all cursor-help mt-1.5">${descText}</p>` : '';
     
-    card.className = `bg-[#1C1E24] border rounded-xl p-3.5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative ${
-        isSelected 
-        ? 'border-2 border-[#F15A24] bg-[#F15A24]/10 ring-2 ring-[#F15A24]/30' 
-        : 'border-[#2A2D36] hover:border-[#F15A24]/50'
-    }`;
-    card.onclick = (e) => {
-        if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            togglePedalSelection(pedal.id);
-        } else {
-            inspectPedal(pedal.id);
-        }
+    card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-3.5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
+    card.onclick = () => {
+        inspectPedal(pedal.id);
     };
-    const selectionBadge = isSelected ? `
-        <div onclick="event.stopPropagation(); togglePedalSelection('${pedal.id}')" title="Deseleccionar pedal" class="absolute top-2.5 left-2.5 w-5.5 h-5.5 rounded-md bg-[#F15A24] text-[#FFFFFF] flex items-center justify-center text-[11px] font-bold z-20 shadow-md cursor-pointer hover:scale-110 active:scale-95 transition-all">
-            <i class="fa-solid fa-check"></i>
-        </div>
-    ` : `
-        <div onclick="event.stopPropagation(); togglePedalSelection('${pedal.id}')" title="Seleccionar pedal" class="absolute top-2.5 left-2.5 w-5.5 h-5.5 rounded-md bg-[#121316] border border-[#2A2D36] hover:border-[#F15A24] text-[#9CA3AF] hover:text-[#F15A24] flex items-center justify-center text-[11px] z-20 shadow-md cursor-pointer hover:scale-110 active:scale-95 transition-all">
-            <i class="fa-solid fa-check opacity-20 group-hover:opacity-100 transition-opacity"></i>
-        </div>
-    `;
     card.innerHTML = `
-        ${selectionBadge}
         <div>
-            <div class="flex justify-between items-start gap-2 mb-2 pl-6 pr-6">
+            <div class="flex justify-between items-start gap-2 mb-2 pr-6">
                 <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] truncate max-w-[120px]">
                     ${pedal.brand}
                 </span>
@@ -4214,14 +4194,14 @@ function createPedalCatalogCard(pedal) {
             <div class="flex items-center gap-2.5 my-1.5">
                 ${photoTag}
                 <div class="min-w-0 flex-1">
-                    <h4 class="font-bold text-sm ${isSelected ? 'text-[#F15A24]' : 'text-[#FFFFFF]'} group-hover:text-[#F15A24] transition-colors truncate">${pedal.name}</h4>
+                    <h4 class="font-bold text-sm text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors truncate">${pedal.name}</h4>
                     <p class="text-[10px] text-[#9CA3AF] truncate">${pedal.category}</p>
                 </div>
             </div>
             ${descHtml}
         </div>
         <div class="mt-3 pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[10px] font-mono text-[#9CA3AF]">
-            <span>${isSelected ? 'Seleccionado' : 'En mi colección'}</span>
+            <span>En mi colección</span>
             <i class="fa-solid fa-chevron-right text-[#9CA3AF] group-hover:text-[#F15A24] transition-colors"></i>
         </div>
         <button onclick="promptDeletePedal('${pedal.id}', event)" title="Eliminar pedal definitivamente" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-20">
