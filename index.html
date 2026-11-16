@@ -103,168 +103,127 @@
     <!-- LEFT CONTAINER (SWITCHABLE VIEWS) -->
     <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
         <!-- VISTA 1: MI COLECCIÓN DE PEDALES (DEFAULT) -->
-        <!-- SECTION 1: EXPLORAR (DASHBOARD STATS ONLY) -->
-<div id="view-explore" class="flex-1 overflow-y-auto p-6 space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
-        <div>
-            <h2 class="text-xl font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-compass text-white"></i> Dashboard & Estadísticas de tu rig
-            </h2>
-            <p class="text-xs text-[#9CA3AF] mt-1">
-                Resumen analítico en tiempo real de tu equipamiento, marcas y tipos de efecto.
-            </p>
-        </div>
-    </div>
-
-    <!-- METRICS CARDS (KPIs) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-            <div>
-                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En colección</p>
-                <h3 id="stat-collection-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+        <!-- VISTA 1: EXPLORAR (DASHBOARD & ESTADÍSTICAS) -->
+        <div id="view-explore" class="flex-1 overflow-y-auto p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-[#FFFFFF] flex items-center gap-2">
+                        <i class="fa-solid fa-compass text-white"></i> Dashboard & Estadísticas de tu rig
+                    </h2>
+                    <p class="text-xs text-[#9CA3AF] mt-1">
+                        Resumen analítico en tiempo real de tu equipamiento, marcas y tipos de efecto.
+                    </p>
+                </div>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                <i class="fa-solid fa-box text-sm"></i>
+
+            <!-- METRICS CARDS (KPIs) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En colección</p>
+                        <h3 id="stat-collection-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                        <i class="fa-solid fa-box text-sm"></i>
+                    </div>
+                </div>
+
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En Wishlist</p>
+                        <h3 id="stat-wishlist-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                        <i class="fa-solid fa-heart text-sm"></i>
+                    </div>
+                </div>
+
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En venta</p>
+                        <h3 id="stat-forsale-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                        <i class="fa-solid fa-tag text-sm text-[#EAB308]"></i>
+                    </div>
+                </div>
+
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">Cadenas creadas</p>
+                        <h3 id="stat-chains-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
+                        <i class="fa-solid fa-diagram-project text-sm"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISUAL ANALYTICS: CHARTS SIDE BY SIDE -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
+                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-white"></i> ADN por Tipo de Efecto
+                        </h3>
+                        <span class="text-[10px] font-mono text-[#9CA3AF]">Distribución %</span>
+                    </div>
+                    <div id="chart-effects-container" class="space-y-3 pt-2">
+                    </div>
+                </div>
+
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
+                        <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                            <i class="fa-solid fa-tags text-white"></i> Distribución por Marcas
+                        </h3>
+                        <span class="text-[10px] font-mono text-[#9CA3AF]">Top Fabricantes</span>
+                    </div>
+                    <div id="chart-brands-container" class="space-y-3 pt-2">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-            <div>
-                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En Wishlist</p>
-                <h3 id="stat-wishlist-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                <i class="fa-solid fa-heart text-sm"></i>
-            </div>
-        </div>
+        <!-- VISTA 2: MI COLECCIÓN (INVENTARIO & SUBTABS) -->
+        <div id="view-collection" class="flex-1 overflow-y-auto p-6 space-y-6 hidden">
+            <!-- SEARCH & CUSTOM ADD BAR -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl shadow-md">
+                <div class="relative flex-1 w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs"></i>
+                    <input type="text" 
+                           id="collection-search-input" 
+                           oninput="handleCollectionSearch(this.value)"
+                           placeholder="Buscar pedales o fuentes por nombre, marca o categoría..." 
+                           class="w-full bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl pl-9 pr-4 py-2 text-xs font-mono focus:outline-none transition-all">
+                </div>
 
-        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-            <div>
-                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En venta</p>
-                <h3 id="stat-forsale-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                <button onclick="openCustomEquipmentModal()" 
+                        class="w-full sm:w-auto bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer">
+                    <i class="fa-solid fa-plus"></i> Cargar equipo personalizado
+                </button>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                <i class="fa-solid fa-tag text-sm text-[#EAB308]"></i>
-            </div>
-        </div>
 
-        <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-            <div>
-                <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">Cadenas creadas</p>
-                <h3 id="stat-chains-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+            <!-- SUBTABS / FILTROS INTERNOS -->
+            <div class="flex flex-wrap items-center gap-2 bg-[#121316] p-1.5 rounded-2xl border border-[#2A2D36]">
+                <button id="subtab-btn-pedals" onclick="switchCollectionSubtab('pedals')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-sliders text-white"></i> Mis pedales
+                </button>
+                <button id="subtab-btn-power" onclick="switchCollectionSubtab('power')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-bolt text-white"></i> Fuentes
+                </button>
+                <button id="subtab-btn-wishlist" onclick="switchCollectionSubtab('wishlist')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-heart text-white"></i> Wishlist
+                </button>
+                <button id="subtab-btn-forsale" onclick="switchCollectionSubtab('forsale')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-tag text-white"></i> En venta
+                </button>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                <i class="fa-solid fa-diagram-project text-sm"></i>
-            </div>
-        </div>
-    </div>
 
-    <!-- VISUAL ANALYTICS: CHARTS SIDE BY SIDE -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
-                <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie text-white"></i> ADN por Tipo de Efecto
-                </h3>
-                <span class="text-[10px] font-mono text-[#9CA3AF]">Distribución %</span>
-            </div>
-            <div id="chart-effects-container" class="space-y-3 pt-2">
+            <!-- GRID CONTENEDOR PRINCIPAL DE COLECCIÓN -->
+            <div id="collection-main-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             </div>
         </div>
-
-        <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
-                <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                    <i class="fa-solid fa-chart-bar text-white"></i> Distribución por Marcas
-                </h3>
-                <span class="text-[10px] font-mono text-[#9CA3AF]">Fabricantes</span>
-            </div>
-            <div id="chart-brands-container" class="space-y-3 pt-2">
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- SECTION 2: MI COLECCIÓN (INVENTARIO & CATALOGO) -->
-<div id="view-collection" class="flex-1 overflow-y-auto p-6 space-y-6 hidden">
-    <!-- SEARCH & CUSTOM ADD BAR -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl shadow-md">
-        <div class="relative flex-1 w-full">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs"></i>
-            <input type="text" 
-                   id="collection-search-input" 
-                   oninput="handleCollectionSearch(this.value)"
-                   placeholder="Buscar pedales o fuentes por nombre, marca o categoría..." 
-                   class="w-full bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl pl-9 pr-4 py-2 text-xs font-mono focus:outline-none transition-all">
-        </div>
-
-        <button onclick="openCustomEquipmentModal()" 
-                class="w-full sm:w-auto bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2 rounded-xl text-xs font-mono flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0 cursor-pointer">
-            <i class="fa-solid fa-plus"></i> Cargar equipo personalizado
-        </button>
-    </div>
-
-    <!-- SUBTABS / FILTROS INTERNOS -->
-    <div class="flex flex-wrap items-center gap-2 bg-[#121316] p-1.5 rounded-2xl border border-[#2A2D36]">
-        <button id="subtab-btn-pedals" onclick="switchCollectionSubtab('pedals')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-sliders text-white"></i> Mis pedales
-        </button>
-        <button id="subtab-btn-power" onclick="switchCollectionSubtab('power')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-bolt text-white"></i> Fuentes
-        </button>
-        <button id="subtab-btn-wishlist" onclick="switchCollectionSubtab('wishlist')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-heart text-white"></i> Wishlist
-        </button>
-        <button id="subtab-btn-forsale" onclick="switchCollectionSubtab('forsale')" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-tag text-white"></i> En venta
-        </button>
-    </div>
-
-    <!-- SUBTAB GRIDS -->
-    <div id="collection-subtab-pedals" class="space-y-6">
-        <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-            <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-white"></i> Pedales en mi colección
-            </h3>
-            <span id="pedals-count-badge" class="text-xs font-mono text-[#9CA3AF]">0 pedales</span>
-        </div>
-        <div id="effects-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        </div>
-    </div>
-
-    <div id="collection-subtab-power" class="space-y-6 hidden">
-        <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-            <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-bolt text-white"></i> Fuentes de alimentación en mi colección
-            </h3>
-            <span id="power-count-badge" class="text-xs font-mono text-[#9CA3AF]">0 fuentes</span>
-        </div>
-        <div id="power-supplies-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        </div>
-    </div>
-
-    <div id="collection-subtab-wishlist" class="space-y-6 hidden">
-        <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-            <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-heart text-white"></i> Mi Wishlist (Lista de deseos)
-            </h3>
-            <span id="wishlist-count-badge" class="text-xs font-mono text-[#9CA3AF]">0 ítems</span>
-        </div>
-        <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        </div>
-    </div>
-
-    <div id="collection-subtab-forsale" class="space-y-6 hidden">
-        <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
-            <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-tag text-white"></i> Equipamiento publicado en venta
-            </h3>
-            <span id="forsale-count-badge" class="text-xs font-mono text-[#9CA3AF]">0 ítems</span>
-        </div>
-        <div id="forsale-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        </div>
-    </div>
-</div>
 <div id="view-chain" class="hidden space-y-6 !mt-0">
             <div class="bg-[#1C1E24] border-2 border-[#00A8CC] p-5 !mt-0 rounded-2xl shadow-xl space-y-4">
                 <!-- FILA 1: TÍTULO / DESCRIPCIÓN + TELEMETRÍA (CONSUMO Y PEDALES) -->
@@ -772,53 +731,50 @@ let activeTab = 'catalog'; // default view 1
 
 function switchTab(tab) {
     activeTab = tab;
-    const viewExplore = document.getElementById('view-explore');
-    const viewCollection = document.getElementById('view-collection') || document.getElementById('view-catalog');
+    const viewCatalog = document.getElementById('view-catalog');
     const viewChain = document.getElementById('view-chain');
-    
-    const btnExplore = document.getElementById('tab-btn-explore');
-    const btnCollection = document.getElementById('tab-btn-collection') || document.getElementById('tab-btn-catalog');
+    const viewWishlist = document.getElementById('view-wishlist');
+    const btnCatalog = document.getElementById('tab-btn-catalog');
     const btnChain = document.getElementById('tab-btn-chain');
-    
+    const btnWishlist = document.getElementById('tab-btn-wishlist');
     const inspector = document.getElementById('inspector-panel');
-
-    const activeClass = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer';
-    const inactiveClass = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer';
-
-    if (tab === 'explore') {
-        if (viewExplore) viewExplore.classList.remove('hidden');
-        if (viewCollection) viewCollection.classList.add('hidden');
+    
+    if (tab === 'catalog') {
+        if (viewCatalog) viewCatalog.classList.remove('hidden');
         if (viewChain) viewChain.classList.add('hidden');
-
-        if (btnExplore) btnExplore.className = activeClass;
-        if (btnCollection) btnCollection.className = inactiveClass;
-        if (btnChain) btnChain.className = inactiveClass;
-
+        if (viewWishlist) viewWishlist.classList.add('hidden');
+        if (btnCatalog) btnCatalog.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2';
+        if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
+        if (btnWishlist) btnWishlist.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
+        renderPowerSupplies();
+        renderCatalog(currentBrandFilter);
         if (inspector) inspector.style.borderColor = '#F15A24';
-        if (typeof renderDashboardStats === 'function') renderDashboardStats();
-    } else if (tab === 'collection' || tab === 'catalog') {
-        if (viewExplore) viewExplore.classList.add('hidden');
-        if (viewCollection) viewCollection.classList.remove('hidden');
-        if (viewChain) viewChain.classList.add('hidden');
-
-        if (btnExplore) btnExplore.className = inactiveClass;
-        if (btnCollection) btnCollection.className = activeClass;
-        if (btnChain) btnChain.className = inactiveClass;
-
-        if (inspector) inspector.style.borderColor = '#F15A24';
-        if (typeof renderMyGearView === 'function') renderMyGearView();
     } else if (tab === 'chain') {
-        if (viewExplore) viewExplore.classList.add('hidden');
-        if (viewCollection) viewCollection.classList.add('hidden');
-        if (viewChain) viewChain.classList.remove('hidden');
-
-        if (btnExplore) btnExplore.className = inactiveClass;
-        if (btnCollection) btnCollection.className = inactiveClass;
-        if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] shadow-md flex items-center gap-2 cursor-pointer';
-
         if (inspector) inspector.style.borderColor = '#00A8CC';
-        if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
-        if (typeof renderSignalChain === 'function') renderSignalChain();
+        if (viewCatalog) viewCatalog.classList.add('hidden');
+        if (viewChain) viewChain.classList.remove('hidden');
+        if (viewWishlist) viewWishlist.classList.add('hidden');
+        if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] shadow-md flex items-center gap-2';
+        if (btnCatalog) btnCatalog.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
+        if (btnWishlist) btnWishlist.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
+        renderChainPowerSupplies();
+        renderSignalChain();
+    } else if (tab === 'wishlist') {
+        if (inspector) inspector.style.borderColor = '#8B5CF6';
+        if (viewCatalog) viewCatalog.classList.add('hidden');
+        if (viewChain) viewChain.classList.add('hidden');
+        if (viewWishlist) viewWishlist.classList.remove('hidden');
+        if (btnWishlist) btnWishlist.className = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#8B5CF6] text-[#FFFFFF] border border-[#8B5CF6] shadow-md flex items-center gap-2';
+        if (btnCatalog) btnCatalog.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
+        if (btnChain) btnChain.className = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2';
+        renderWishlist(true);
+    }
+    if (tab !== 'wishlist') {
+        if (activeInspectorId && (pedalDatabase.some(p => p.id === activeInspectorId) || powerSuppliesDatabase.some(ps => ps.id === activeInspectorId))) {
+            renderInspector(activeInspectorId);
+        } else {
+            renderInspector(null);
+        }
     }
 }
 
@@ -5039,7 +4995,7 @@ function renderSignalChain() {
         let slotMode = isPedalMonoOnly ? 'MONO' : (chainSlotModes[index] || 'MONO');
         chainSlotModes[index] = slotMode;
         if (pedal && pedalId !== 'EMPTY') {
-            activeCount+ ;
+            activeCount++;
             if (!isDuplicated) {
                 totalMaSum += pedal.maWithMargin;
                 baseMaSum += pedal.maBase;
@@ -5244,23 +5200,23 @@ function renderSignalChain() {
         return 'DUAL_TS';
     }
 
-    for (let i = 0; i < activeChainSlots.length - 1; i+ ) {
+    for (let i = 0; i < activeChainSlots.length - 1; i++) {
         const slotA = activeChainSlots[i];
         const slotB = activeChainSlots[i + 1];
 
         if (slotA.slotMode === 'MONO' || slotB.slotMode === 'MONO') {
-            monoCablesCount+ ;
+            monoCablesCount++;
         } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'STEREO') {
             const outA = getPedalOutputConfig(slotA.pedal);
             const inB = getPedalInputConfig(slotB.pedal);
             if (outA === 'STEREO_TRS' && inB === 'STEREO_TRS') {
-                stereoCablesCount+ ;
+                stereoCablesCount++;
             } else if ((outA === 'STEREO_TRS' && inB === 'DUAL_TS') || (outA === 'DUAL_TS' && inB === 'STEREO_TRS')) {
-                splitterCablesCount+ ;
+                splitterCablesCount++;
             } else if (outA === 'DUAL_TS' && inB === 'DUAL_TS') {
                 monoCablesCount += 2;
             } else {
-                monoCablesCount+ ;
+                monoCablesCount++;
             }
         }
     }
@@ -6562,7 +6518,7 @@ function generateCustomOutletEditors() {
     const count = parseInt(document.getElementById('nps-outlets-count').value) || 5;
     const container = document.getElementById('nps-outlets-editor-list');
     container.innerHTML = '';
-    for (let i = 1; i <= count; i+ ) {
+    for (let i = 1; i <= count; i++) {
         container.innerHTML += `
             <div class="flex items-center gap-2 text-xs font-mono">
                 <span class="w-16 text-[#9CA3AF]">Salida ${i}:</span>
@@ -6590,7 +6546,7 @@ function executeRegisterNewPowerSupply() {
     pushHistory();
     const psId = `ps-custom-${Date.now()}`;
     const outlets = [];
-    for (let i = 1; i <= count; i+ ) {
+    for (let i = 1; i <= count; i++) {
         const v = document.getElementById(`nps-out-v-${i}`)?.value || '9V';
         const ma = parseInt(document.getElementById(`nps-out-ma-${i}`)?.value) || 500;
         outlets.push({
