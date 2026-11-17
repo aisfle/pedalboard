@@ -1742,6 +1742,7 @@ function handleDropSection(e, targetSection) {
 
     saveStateToLocalStorage();
     refreshAllCollectionViews();
+    if (typeof renderDashboardStats === 'function') renderDashboardStats();
 }
 
 // --- CUSTOM EQUIPMENT MODAL JS ---
@@ -6111,6 +6112,9 @@ function undoChainState() {
         renderCatalog(currentBrandFilter);
         renderPowerSupplies();
         refreshAllCollectionViews();
+        if (typeof renderDashboardStats === 'function') renderDashboardStats();
+        if (typeof renderBrandFilters === 'function') renderBrandFilters();
+        if (typeof renderCategoryFilters === 'function') renderCategoryFilters();
         if (activeInspectorId) {
             const isWish = wishlistDatabase && wishlistDatabase.some(w => w.id === activeInspectorId);
             if (isWish) renderWishlistInspector(activeInspectorId);
@@ -6155,6 +6159,9 @@ function redoChainState() {
         renderCatalog(currentBrandFilter);
         renderPowerSupplies();
         refreshAllCollectionViews();
+        if (typeof renderDashboardStats === 'function') renderDashboardStats();
+        if (typeof renderBrandFilters === 'function') renderBrandFilters();
+        if (typeof renderCategoryFilters === 'function') renderCategoryFilters();
         if (activeInspectorId) {
             const isWish = wishlistDatabase && wishlistDatabase.some(w => w.id === activeInspectorId);
             if (isWish) renderWishlistInspector(activeInspectorId);
@@ -7516,7 +7523,7 @@ function renderInspector(itemId, currentSlotMode = null) {
                 </div>
             </div>
             ${manualButtonHtml}
-            <div class="space-y-2 pt-2 border-t border-[#2A2D36]">
+            <div class="space-y-2 border-t border-[#2A2D36] pt-4">
                 <label class="text-xs font-mono font-bold text-[#F15A24] block uppercase tracking-wider">Descripción / Detalle</label>
                 <p class="text-xs text-[#FFFFFF] leading-relaxed bg-[#121316] p-3 rounded-xl border border-[#2A2D36] font-sans">
                     ${pedal.desc || pedal.description || 'Sin descripción.'}
@@ -8113,8 +8120,8 @@ function executeDeletePedal() {
     renderCategoryFilters();
     renderCatalog(currentBrandFilter);
     refreshAllCollectionViews();
-    renderSignalChain();
     if (typeof renderDashboardStats === 'function') renderDashboardStats();
+    renderSignalChain();
     closeDeletePedalModal();
 }
 
@@ -8138,9 +8145,6 @@ function executeDeletePowerSupply() {
     const delId = powerToDeleteId;
     const idx = powerSuppliesDatabase.findIndex(p => p.id === delId);
     if (idx !== -1) powerSuppliesDatabase.splice(idx, 1);
-    if (typeof currentChainPowerSupplyIds !== 'undefined') {
-        currentChainPowerSupplyIds = currentChainPowerSupplyIds.filter(id => id !== delId);
-    }
     Object.keys(currentPowerAssignments).forEach(pedalId => {
         if (currentPowerAssignments[pedalId]?.psId === delId) {
             delete currentPowerAssignments[pedalId];
@@ -8154,8 +8158,6 @@ function executeDeletePowerSupply() {
     renderPowerSupplies();
     renderCatalog('ALL');
     refreshAllCollectionViews();
-    if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
-    if (typeof renderSignalChain === 'function') renderSignalChain();
     if (typeof renderDashboardStats === 'function') renderDashboardStats();
     closeDeletePowerSupplyModal();
 }
@@ -8881,9 +8883,6 @@ document.addEventListener('keydown', (e) => {
         closeMasterCatalogModal();
         closeNewPedalModal();
         closeNewPowerSupplyModal();
-        closeMasterWishlistModal();
-        closeNewWishlistPedalModal();
-        closeCustomEquipmentModal();
     }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
         const activeEl = document.activeElement;
