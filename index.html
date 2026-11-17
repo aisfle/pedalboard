@@ -1280,9 +1280,11 @@ function renderDashboardStats() {
         const total = activeCollectionPedals.length || 1;
         const sortedCats = Object.entries(categories).sort((a, b) => b[1] - a[1]);
 
-        effectsContainer.innerHTML = sortedCats.length === 0 ? '<span class="text-xs text-[#9CA3AF] italic">No hay pedales en la colección.</span>' : sortedCats.map(([cat, count]) => {
+        const barColors = ['#F15A24', '#00A8CC', '#8B5CF6', '#EAB308', '#10B981', '#EC4899', '#3B82F6', '#F43F5E', '#A855F7'];
+        effectsContainer.innerHTML = sortedCats.length === 0 ? '<span class="text-xs text-[#9CA3AF] italic">No hay pedales en la colección.</span>' : sortedCats.map(([cat, count], idx) => {
             const pct = Math.round((count / total) * 100);
-            return '<div class="space-y-1"><div class="flex justify-between text-xs font-mono"><span class="text-white">' + cat + '</span><span class="text-[#9CA3AF]">' + count + ' (' + pct + '%)</span></div><div class="w-full bg-[#121316] h-2 rounded-full overflow-hidden border border-[#2A2D36]"><div class="bg-[#8B5CF6] h-full rounded-full transition-all duration-500" style="width: ' + pct + '%"></div></div></div>';
+            const color = barColors[idx % barColors.length];
+            return '<div class="space-y-1"><div class="flex justify-between text-xs font-mono"><span class="text-white">' + cat + '</span><span class="text-[#9CA3AF]">' + count + ' (' + pct + '%)</span></div><div class="w-full bg-[#121316] h-2 rounded-full overflow-hidden border border-[#2A2D36]"><div class="h-full rounded-full transition-all duration-500" style="width: ' + pct + '%; background-color: ' + color + '"></div></div></div>';
         }).join('');
     }
 
@@ -1386,9 +1388,9 @@ function renderCollectionPower() {
                     </div>
                 </div>
             </div>
-            <div class="mt-3 pt-2 border-t border-[#2A2D36]">
-                <button onclick="event.stopPropagation(); movePowerSupplyToForSale('${ps.id}')" class="w-full bg-[#121316] hover:bg-[#20232B] text-[#EAB308] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer">
-                    <i class="fa-solid fa-tag text-[9px]"></i> Vender
+            <div class="mt-3 pt-2 border-t border-[#2A2D36] flex items-center justify-start">
+                <button onclick="event.stopPropagation(); movePowerSupplyToForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#EAB308] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start">
+                    <i class="fa-solid fa-tag text-xs"></i> Vender
                 </button>
             </div>
             <button onclick="promptDeletePowerSupply('${ps.id}', event)" title="Eliminar fuente definitivamente" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-10 cursor-pointer">
@@ -1454,14 +1456,10 @@ function renderCollectionForSale() {
                     </div>
                 </div>
             </div>
-            <div class="mt-3 pt-2 border-t border-[#2A2D36]">
-                <div class="grid grid-cols-2 gap-1 w-full">
-                    <button onclick="event.stopPropagation(); restorePowerSupplyFromForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-1.5 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer">
-                        <i class="fa-solid fa-rotate-left text-[9px]"></i> Vuelta a colección
-                    </button>
-                    <button onclick="event.stopPropagation(); promptDeletePowerSupply('${ps.id}', event)" class="bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-1.5 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer">
-                        <i class="fa-solid fa-trash-can text-[9px]"></i> ¡Vendido!
-                    </button>
+            <div class="mt-3 pt-2 border-t border-[#2A2D36] flex items-center justify-start">
+                <div class="flex items-center gap-2 self-start flex-wrap">
+                    <button onclick="event.stopPropagation(); restorePowerSupplyFromForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-rotate-left text-xs"></i> Vuelta a colección</button>
+                    <button onclick="event.stopPropagation(); executeDeleteForSaleItem('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-check text-xs"></i> ¡Vendido!</button>
                 </div>
             </div>
         `;
@@ -1551,8 +1549,19 @@ function restorePedalFromForSale(id) {
 function executeDeleteForSaleItem(id) {
     pedalDatabase = pedalDatabase.filter(x => x.id !== id);
     powerSuppliesDatabase = powerSuppliesDatabase.filter(x => x.id !== id);
+    if (typeof currentChainIds !== 'undefined') {
+        currentChainIds = currentChainIds.filter(x => x !== id);
+    }
+    if (typeof currentChainPowerSupplyIds !== 'undefined') {
+        currentChainPowerSupplyIds = currentChainPowerSupplyIds.filter(x => x !== id);
+    }
+    if (typeof activeInspectorId !== 'undefined' && activeInspectorId === id) {
+        activeInspectorId = null;
+    }
     saveStateToLocalStorage();
     refreshAllCollectionViews();
+    if (typeof renderSignalChain === 'function') renderSignalChain();
+    if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
 }
 
 function movePowerSupplyToForSale(id) {
