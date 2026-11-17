@@ -1563,6 +1563,7 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
 
 // --- ITEM TRANSFER & ACTION HANDLERS ---
 function movePedalToForSale(id) {
+    pushHistory();
     const p = pedalDatabase.find(x => x.id === id);
     if (p) {
         p.forSale = true;
@@ -1572,6 +1573,7 @@ function movePedalToForSale(id) {
 }
 
 function restorePedalFromForSale(id) {
+    pushHistory();
     const p = pedalDatabase.find(x => x.id === id);
     if (p) {
         p.forSale = false;
@@ -1581,6 +1583,7 @@ function restorePedalFromForSale(id) {
 }
 
 function executeDeleteForSaleItem(id) {
+    pushHistory();
     const pIdx = pedalDatabase.findIndex(x => x.id === id);
     if (pIdx !== -1) pedalDatabase.splice(pIdx, 1);
     
@@ -1603,6 +1606,7 @@ function executeDeleteForSaleItem(id) {
 }
 
 function movePowerSupplyToForSale(id) {
+    pushHistory();
     const ps = powerSuppliesDatabase.find(x => x.id === id);
     if (ps) {
         ps.forSale = true;
@@ -1612,6 +1616,7 @@ function movePowerSupplyToForSale(id) {
 }
 
 function restorePowerSupplyFromForSale(id) {
+    pushHistory();
     const ps = powerSuppliesDatabase.find(x => x.id === id);
     if (ps) {
         ps.forSale = false;
@@ -1621,6 +1626,7 @@ function restorePowerSupplyFromForSale(id) {
 }
 
 function moveWishlistToCollection(id) {
+    pushHistory();
     const idx = wishlistDatabase.findIndex(w => w.id === id);
     if (idx !== -1) {
         const item = wishlistDatabase[idx];
@@ -6061,7 +6067,8 @@ function pushHistory() {
         powerAssignments: JSON.stringify(currentPowerAssignments),
         chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
         pedals: JSON.stringify(pedalDatabase),
-        power: JSON.stringify(powerSuppliesDatabase)
+        power: JSON.stringify(powerSuppliesDatabase),
+        wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]'
     });
     if (chainHistory.length > 30) chainHistory.shift();
     redoStack = []; // Reset redo stack on new action
@@ -6075,7 +6082,8 @@ function undoChainState() {
             powerAssignments: JSON.stringify(currentPowerAssignments),
             chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
             pedals: JSON.stringify(pedalDatabase),
-            power: JSON.stringify(powerSuppliesDatabase)
+            power: JSON.stringify(powerSuppliesDatabase),
+            wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]'
         });
 
         const prev = chainHistory.pop();
@@ -6090,10 +6098,22 @@ function undoChainState() {
         const parsedPower = JSON.parse(prev.power);
         powerSuppliesDatabase.length = 0;
         parsedPower.forEach(ps => powerSuppliesDatabase.push(ps));
+
+        if (prev.wishlist && typeof wishlistDatabase !== 'undefined') {
+            const parsedWish = JSON.parse(prev.wishlist);
+            wishlistDatabase.length = 0;
+            parsedWish.forEach(w => wishlistDatabase.push(w));
+        }
+
         renderSignalChain();
         renderCatalog(currentBrandFilter);
         renderPowerSupplies();
-        renderInspector(activeInspectorId);
+        refreshAllCollectionViews();
+        if (activeInspectorId) {
+            const isWish = wishlistDatabase && wishlistDatabase.some(w => w.id === activeInspectorId);
+            if (isWish) renderWishlistInspector(activeInspectorId);
+            else renderInspector(activeInspectorId);
+        }
         saveStateToLocalStorage();
     }
 }
@@ -6106,7 +6126,8 @@ function redoChainState() {
             powerAssignments: JSON.stringify(currentPowerAssignments),
             chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
             pedals: JSON.stringify(pedalDatabase),
-            power: JSON.stringify(powerSuppliesDatabase)
+            power: JSON.stringify(powerSuppliesDatabase),
+            wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]'
         });
 
         const next = redoStack.pop();
@@ -6121,10 +6142,22 @@ function redoChainState() {
         const parsedPower = JSON.parse(next.power);
         powerSuppliesDatabase.length = 0;
         parsedPower.forEach(ps => powerSuppliesDatabase.push(ps));
+
+        if (next.wishlist && typeof wishlistDatabase !== 'undefined') {
+            const parsedWish = JSON.parse(next.wishlist);
+            wishlistDatabase.length = 0;
+            parsedWish.forEach(w => wishlistDatabase.push(w));
+        }
+
         renderSignalChain();
         renderCatalog(currentBrandFilter);
         renderPowerSupplies();
-        renderInspector(activeInspectorId);
+        refreshAllCollectionViews();
+        if (activeInspectorId) {
+            const isWish = wishlistDatabase && wishlistDatabase.some(w => w.id === activeInspectorId);
+            if (isWish) renderWishlistInspector(activeInspectorId);
+            else renderInspector(activeInspectorId);
+        }
         saveStateToLocalStorage();
     }
 }
@@ -8490,15 +8523,17 @@ function renderWishlistInspector(id) {
     `;
 }
 
-function inspectWishlistPedal(id) {
+function inspectWishlistPedal(idOrObj) {
+    const id = (typeof idOrObj === 'object' && idOrObj !== null) ? idOrObj.id : idOrObj;
     selectedWishlistPedalId = id;
-    renderWishlist(false);
+    activeInspectorId = id;
     renderWishlistInspector(id);
 }
 
 
 
 function removeFromWishlist(id) {
+    pushHistory();
     wishlistDatabase = wishlistDatabase.filter(p => p.id !== id);
     saveStateToLocalStorage();
     renderWishlist(true);
@@ -8819,6 +8854,20 @@ document.addEventListener('keydown', (e) => {
         closeMasterCatalogModal();
         closeNewPedalModal();
         closeNewPowerSupplyModal();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        if (typeof activeTab !== 'undefined' && (activeTab === 'collection' || activeTab === 'catalog' || activeTab === 'chain')) {
+            const activeEl = document.activeElement;
+            if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
+                return;
+            }
+            e.preventDefault();
+            if (e.shiftKey) {
+                redoChainState();
+            } else {
+                undoChainState();
+            }
+        }
     }
 });
 
