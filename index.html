@@ -93,9 +93,9 @@
     </div>
 </header>
 
-<div class="flex-1 flex flex-col lg:flex-row overflow-hidden w-full">
+<div id="main-layout-wrapper" class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden w-full">
     <!-- LEFT MAIN CONTAINER FOR SWITCHABLE VIEWS -->
-    <main class="flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 space-y-6">
+    <main class="w-full shrink-0 lg:shrink lg:flex-1 lg:min-w-0 lg:overflow-y-auto p-4 sm:p-6 space-y-6">
 
         <!-- VISTA 1: EXPLORAR (DASHBOARD ANALÍTICO) -->
         <div id="view-explore" class="space-y-6">
@@ -413,7 +413,7 @@
     </main>
 
     <!-- RIGHT SIDEBAR: PERMANENT DYNAMIC INSPECTOR PANEL -->
-    <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#8B5CF6] p-6 flex flex-col overflow-y-auto shrink-0">
+    <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#8B5CF6] p-6 flex flex-col shrink-0 lg:overflow-y-auto">
         <div id="inspector-content" class="space-y-4"></div>
     </aside>
 </div>
@@ -1246,6 +1246,9 @@ function switchTab(tab) {
 
     activeInspectorId = null;
     renderTabEmptyInspector(tab);
+
+    const wrapper = document.getElementById('main-layout-wrapper');
+    if (wrapper) wrapper.scrollTop = 0;
 }
 
 // --- DYNAMIC SIDEBAR INSPECTOR (TEXTOS POR PESTAÑA) ---
@@ -7645,6 +7648,10 @@ function closeInspector() {
 function renderInspector(itemId, currentSlotMode = null) {
     const container = document.getElementById('inspector-content');
     if (!container) return;
+    if (itemId && window.innerWidth < 1024) {
+        const inspEl = document.getElementById('inspector-panel');
+        if (inspEl) inspEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 
     let pedal = pedalDatabase.find(p => p.id === itemId);
     if (!pedal && typeof wishlistDatabase !== 'undefined') {
