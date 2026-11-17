@@ -44,6 +44,12 @@
         .cursor-grab { cursor: grab !important; }
         .cursor-grab:active, .cursor-grabbing { cursor: grabbing !important; }
 
+    
+        [draggable="true"] { cursor: grab !important; }
+        [draggable="true"]:active { cursor: grabbing !important; }
+        .cursor-grab { cursor: grab !important; }
+        .cursor-grabbing { cursor: grabbing !important; }
+
     </style>
 </head>
 <body class="bg-[#121316] text-[#FFFFFF] font-sans antialiased h-screen flex flex-col overflow-hidden">
@@ -358,9 +364,7 @@
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-5 shadow-xl space-y-4">
                 <div class="flex flex-wrap justify-between items-center gap-2 border-b border-[#2A2D36] pb-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-[#FFFFFF] flex items-center gap-2">
-                            <i class="fa-solid fa-diagram-project text-[#F15A24]"></i> CADENA DE SEÑAL ACTIVA
-                        </h2>
+                        <h3 class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2 shrink-0"><i class="fa-solid fa-diagram-project text-[#F15A24]"></i> CADENA DE SEÑAL ACTIVA</h3>
                         <p class="text-xs text-[#9CA3AF]">Selecciona, cambia o arrastra (Drag & Drop) cualquier pedal para reordenar tu rig.</p>
                     </div>
                 </div>
@@ -1089,43 +1093,43 @@ function renderTabEmptyInspector(tabName) {
     if (tabName === 'explore') {
         container.innerHTML = `
             <div class="text-center py-8 space-y-4 max-w-xs mx-auto">
-                <div class="w-14 h-14 rounded-2xl bg-[#121316] border border-[#8B5CF6]/30 flex items-center justify-center mx-auto text-[#8B5CF6] shadow-inner">
-                    <i class="fa-solid fa-compass text-xl text-white"></i>
+                <div class="w-14 h-14 rounded-2xl bg-[#121316] border border-[#8B5CF6]/40 flex items-center justify-center mx-auto shadow-inner">
+                    <i class="fa-solid fa-compass text-2xl text-[#8B5CF6]"></i>
                 </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF] text-center">Dashboard y estadísticas de tu rig</h3>
+                <h3 class="text-sm font-bold text-[#8B5CF6] text-center">Dashboard y estadísticas de tu rig</h3>
                 <p class="text-xs text-[#9CA3AF] leading-relaxed text-center">
-                    Esta sección es el <strong class="text-white">centro de mando analítico</strong> de tu sonido. Acá vas a encontrar una <strong class="text-white">radiografía instantánea</strong> de tu equipamiento: la <strong class="text-white">cantidad de pedales en tu colección</strong>, los que tenés en tu <strong class="text-white">Wishlist</strong>, los que pusiste <strong class="text-white">en venta</strong> y las <strong class="text-white">cadenas que tenés creadas</strong>.<br><br>
-                    Además, vas a poder visualizar <strong class="text-white">gráficos interactivos</strong> con el <strong class="text-white">ADN de tu colección</strong> para entender mejor cómo está constituido tu rig.
+                    Esta sección te ofrece una <strong class="text-[#8B5CF6] font-bold">radiografía instantánea de tu equipamiento</strong>: un pantallazo claro de cuántos pedales tenés en tu colección, qué piezas están en tu <strong class="text-[#8B5CF6] font-bold">Wishlist</strong>, cuáles pusiste <strong class="text-[#8B5CF6] font-bold">en venta</strong> y cuántas cadenas armaste.<br><br>
+                    Además, incluye gráficos interactivos con el <strong class="text-[#8B5CF6] font-bold">ADN de tu rig</strong> para entender mejor cómo está constituido tu sonido.
                 </p>
             </div>`;
     } else if (tabName === 'collection' || tabName === 'catalog') {
         container.innerHTML = `
             <div class="text-center py-8 space-y-4 max-w-xs mx-auto">
-                <div class="w-14 h-14 rounded-2xl bg-[#121316] border border-[#F15A24]/30 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
-                    <i class="fa-solid fa-layer-group text-xl text-white"></i>
+                <div class="w-14 h-14 rounded-2xl bg-[#121316] border border-[#F15A24]/40 flex items-center justify-center mx-auto shadow-inner">
+                    <i class="fa-solid fa-layer-group text-2xl text-[#F15A24]"></i>
                 </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF] text-center">Inventario y gestión</h3>
+                <h3 class="text-sm font-bold text-[#F15A24] text-center">Inventario y gestión</h3>
                 <p class="text-xs text-[#9CA3AF] leading-relaxed text-center">
-                    El espacio dedicado para administrar tu <strong class="text-white">colección personal</strong> de pedales y fuentes de alimentación. Tenés dos formas de incorporar equipamiento:<br><br>
-                    • <strong class="text-[#F15A24]">Catálogo general:</strong> Buscá de forma rápida mediante el <strong class="text-white">botón de búsqueda</strong>.<br><br>
-                    • <strong class="text-[#F15A24]">Registro manual:</strong> Si una pieza es muy específica o custom, podés <strong class="text-white">darla de alta a mano</strong> (tanto pedales como fuentes).<br><br>
-                    Desde acá también podés <strong class="text-white">gestionar tus prioridades</strong>: pasá ítems a tu <strong class="text-white">Wishlist</strong>, marcalos como <strong class="text-white">comprados</strong> para sumarlos a tu <strong class="text-white">inventario activo</strong>, o enviálos a la categoría <strong class="text-white">En venta</strong> aquellos equipos que ya no uses.
+                    El espacio dedicado para administrar tu <strong class="text-[#F15A24] font-bold">colección personal</strong> de pedales y fuentes de alimentación. Tenés dos formas de incorporar equipamiento:<br><br>
+                    • <strong class="text-[#F15A24] font-bold">Catálogo general:</strong> Buscá de forma rápida mediante el botón de búsqueda.<br><br>
+                    • <strong class="text-[#F15A24] font-bold">Registro manual:</strong> Si una pieza es muy específica o custom, podés darla de alta a mano.<br><br>
+                    Desde acá también podés gestionar tus prioridades: pasá ítems a tu <strong class="text-[#F15A24] font-bold">Wishlist</strong>, marcalos como comprados para sumarlos a tu inventario activo, o enviálos a la categoría <strong class="text-[#F15A24] font-bold">En venta</strong> aquellos equipos que ya no uses.
                 </p>
             </div>`;
     } else if (tabName === 'chain') {
         container.innerHTML = `
             <div class="text-center py-8 space-y-4 max-w-xs mx-auto">
-                <div class="w-14 h-14 rounded-2xl bg-[#121316] border border-[#00A8CC]/30 flex items-center justify-center mx-auto text-[#00A8CC] shadow-inner">
-                    <i class="fa-solid fa-diagram-project text-xl text-white"></i>
+                <div class="w-14 h-14 rounded-2xl bg-[#121316] border border-[#00A8CC]/40 flex items-center justify-center mx-auto shadow-inner">
+                    <i class="fa-solid fa-diagram-project text-2xl text-[#00A8CC]"></i>
                 </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF] text-center">Señal, ruteo y energía</h3>
+                <h3 class="text-sm font-bold text-[#00A8CC] text-center">Señal, ruteo y energía</h3>
                 <p class="text-xs text-[#9CA3AF] leading-relaxed text-center">
-                    El espacio donde cobra vida la <strong class="text-white">secuencia de tu señal</strong>. Acá podés:<br><br>
-                    • Diseñar el <strong class="text-white">orden exacto</strong> de tus pedales mediante <strong class="text-white">drag-and-drop</strong>.<br>
-                    • Monitorear el <strong class="text-white">consumo eléctrico acumulado (en mA)</strong> en tiempo real.<br>
-                    • Asignar las <strong class="text-white">salidas físicas</strong> de tus fuentes de alimentación y <strong class="text-white">verificar cargas</strong>.<br>
-                    • Guardar tus configuraciones favoritas como <strong class="text-white">presets</strong> para cargarlas, editarlas o duplicarlas cuando quieras.<br><br>
-                    Para arrancar un diseño desde cero, usá el botón <strong class="text-[#00A8CC]">Nueva cadena</strong>. Recordá que el requisito mínimo para constituir una cadena activa es de <strong class="text-white">2 pedales</strong> y <strong class="text-white">1 fuente</strong>.
+                    El espacio donde cobra vida la secuencia de tu señal. Acá podés:<br><br>
+                    • Diseñar el orden exacto de tus pedales mediante <strong class="text-[#00A8CC] font-bold">drag-and-drop</strong>.<br>
+                    • Monitorear el consumo eléctrico acumulado <strong class="text-[#00A8CC] font-bold">(en mA)</strong> en tiempo real.<br>
+                    • Asignar las salidas físicas de tus fuentes de alimentación y verificar cargas.<br>
+                    • Guardar tus configuraciones favoritas como <strong class="text-[#00A8CC] font-bold">presets</strong>.<br><br>
+                    Para arrancar un diseño desde cero, usá el botón <strong class="text-[#00A8CC] font-bold">Nueva cadena</strong>. Recordá que el requisito mínimo es de <strong class="text-[#00A8CC] font-bold">2 pedales y 1 fuente</strong>.
                 </p>
             </div>`;
     }
