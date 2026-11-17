@@ -7517,11 +7517,9 @@ function renderInspector(itemId, currentSlotMode = null) {
             </div>
             ${manualButtonHtml}
             <div class="space-y-2 pt-2 border-t border-[#2A2D36]">
-                <label class="text-xs font-mono font-bold text-[#00A8CC] block uppercase tracking-wider">
-                    <i class="fa-solid fa-circle-info text-[#00A8CC] mr-1"></i> Descripción / Detalle
-                </label>
+                <label class="text-xs font-mono font-bold text-[#F15A24] block uppercase tracking-wider">Descripción / Detalle</label>
                 <p class="text-xs text-[#FFFFFF] leading-relaxed bg-[#121316] p-3 rounded-xl border border-[#2A2D36] font-sans">
-                    ${pedal.desc || pedal.description || 'Sin descripción disponible.'}
+                    ${pedal.desc || pedal.description || 'Sin descripción.'}
                 </p>
             </div>
             <div class="space-y-2 border-t border-[#2A2D36] pt-4">
@@ -8100,17 +8098,23 @@ function closeDeletePedalModal() {
 function executeDeletePedal() {
     if (!pedalToDeleteId) return;
     pushHistory();
-    const idx = pedalDatabase.findIndex(p => p.id === pedalToDeleteId);
+    const delId = pedalToDeleteId;
+    const idx = pedalDatabase.findIndex(p => p.id === delId);
     if (idx !== -1) pedalDatabase.splice(idx, 1);
-    currentChainIds = currentChainIds.map(id => id === pedalToDeleteId ? 'EMPTY' : id);
-    delete currentPowerAssignments[pedalToDeleteId];
-    selectedPedalIds.delete(pedalToDeleteId);
+    currentChainIds = currentChainIds.map(id => id === delId ? 'EMPTY' : id);
+    delete currentPowerAssignments[delId];
+    selectedPedalIds.delete(delId);
+    if (typeof activeInspectorId !== 'undefined' && activeInspectorId === delId) {
+        activeInspectorId = null;
+        renderTabEmptyInspector(activeTab);
+    }
     saveStateToLocalStorage();
     renderBrandFilters();
     renderCategoryFilters();
     renderCatalog(currentBrandFilter);
     refreshAllCollectionViews();
     renderSignalChain();
+    if (typeof renderDashboardStats === 'function') renderDashboardStats();
     closeDeletePedalModal();
 }
 
@@ -8131,17 +8135,28 @@ function closeDeletePowerSupplyModal() {
 function executeDeletePowerSupply() {
     if (!powerToDeleteId) return;
     pushHistory();
-    const idx = powerSuppliesDatabase.findIndex(p => p.id === powerToDeleteId);
+    const delId = powerToDeleteId;
+    const idx = powerSuppliesDatabase.findIndex(p => p.id === delId);
     if (idx !== -1) powerSuppliesDatabase.splice(idx, 1);
+    if (typeof currentChainPowerSupplyIds !== 'undefined') {
+        currentChainPowerSupplyIds = currentChainPowerSupplyIds.filter(id => id !== delId);
+    }
     Object.keys(currentPowerAssignments).forEach(pedalId => {
-        if (currentPowerAssignments[pedalId]?.psId === powerToDeleteId) {
+        if (currentPowerAssignments[pedalId]?.psId === delId) {
             delete currentPowerAssignments[pedalId];
         }
     });
+    if (typeof activeInspectorId !== 'undefined' && activeInspectorId === delId) {
+        activeInspectorId = null;
+        renderTabEmptyInspector(activeTab);
+    }
     saveStateToLocalStorage();
     renderPowerSupplies();
     renderCatalog('ALL');
     refreshAllCollectionViews();
+    if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
+    if (typeof renderSignalChain === 'function') renderSignalChain();
+    if (typeof renderDashboardStats === 'function') renderDashboardStats();
     closeDeletePowerSupplyModal();
 }
 
@@ -8866,19 +8881,20 @@ document.addEventListener('keydown', (e) => {
         closeMasterCatalogModal();
         closeNewPedalModal();
         closeNewPowerSupplyModal();
+        closeMasterWishlistModal();
+        closeNewWishlistPedalModal();
+        closeCustomEquipmentModal();
     }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-        if (typeof activeTab !== 'undefined' && (activeTab === 'collection' || activeTab === 'catalog' || activeTab === 'chain')) {
-            const activeEl = document.activeElement;
-            if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
-                return;
-            }
-            e.preventDefault();
-            if (e.shiftKey) {
-                redoChainState();
-            } else {
-                undoChainState();
-            }
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
+            return;
+        }
+        e.preventDefault();
+        if (e.shiftKey) {
+            redoChainState();
+        } else {
+            undoChainState();
         }
     }
 });
