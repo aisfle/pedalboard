@@ -92,8 +92,8 @@
             <!-- SINGLE UNIFIED PURPLE BOX FOR DASHBOARD HEADER + KPI METRICS -->
             <div class="bg-[#1C1E24] border-2 border-[#8B5CF6] p-5 rounded-2xl shadow-xl space-y-4">
                 <div class="border-b border-[#2A2D36] pb-3">
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-compass text-white"></i> Dashboard y estadísticas de tu rig
+                    <h2 class="text-lg font-bold text-white tracking-tight">
+                        Dashboard y estadísticas de tu rig
                     </h2>
                     <p class="text-xs text-[#9CA3AF] mt-1">
                         Resumen analítico en tiempo real de tu equipamiento, marcas y tipos de efecto.
@@ -213,7 +213,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2A2D36] pb-2">
                     <div class="flex items-center gap-3">
                         <h3 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wide">
-                            <i class="fa-solid fa-compact-disc text-[#F15A24]"></i> PEDALES DE EFECTO
+                            <i class="fa-solid fa-sliders text-[#F15A24]"></i> PEDALES DE EFECTO
                         </h3>
                         <!-- SEARCH BAR (Fuente 209) -->
                         <div class="relative w-48 sm:w-64">
@@ -230,7 +230,7 @@
             <section class="space-y-3">
                 <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fa-solid fa-sliders text-[#F15A24]"></i> PEDALES DE UTILIDAD
+                        <i class="fa-solid fa-screwdriver-wrench text-[#F15A24]"></i> PEDALES DE UTILIDAD
                     </h3>
                     <span id="utility-counter" class="text-xs font-mono text-[#9CA3AF]">0 pedales</span>
                 </div>
@@ -328,7 +328,7 @@
 
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-4 shadow-md space-y-3">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#2A2D36] pb-2">
-                    <span class="text-xs font-mono font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-star text-[#F15A24]"></i> Cadenas favoritas / Presets guardados
                     </span>
                 </div>
@@ -426,7 +426,7 @@
         <!-- TYPE TOGGLE -->
         <div class="grid grid-cols-2 gap-2 bg-[#121316] p-1 rounded-xl border border-[#2A2D36]">
             <button id="cem-type-pedal" onclick="setCemType('pedal')" class="py-2 text-xs font-bold rounded-lg transition-all bg-[#F15A24] text-white cursor-pointer">
-                <i class="fa-solid fa-compact-disc"></i> Pedal de efecto o utilidad
+                <i class="fa-solid fa-sliders"></i> Pedal de efecto o utilidad
             </button>
             <button id="cem-type-power" onclick="setCemType('power')" class="py-2 text-xs font-semibold rounded-lg transition-all text-[#9CA3AF] hover:text-white cursor-pointer">
                 <i class="fa-solid fa-bolt"></i> Fuente de alimentación
@@ -552,23 +552,24 @@
 
 <!-- MASTER CATALOG MODAL -->
 <div id="master-catalog-modal" onclick="closeMasterCatalogModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
-    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border-2 border-[#F15A24] rounded-2xl max-w-5xl w-full p-6 relative space-y-4 shadow-2xl overflow-y-auto max-h-[90vh] cursor-default flex flex-col">
-        <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3 shrink-0">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
+        <!-- MODAL HEADER -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
             <div>
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-magnifying-glass text-[#F15A24]"></i> Catálogo Maestro de Fabricantes
+                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo de pedales de fábrica
                 </h3>
-                <p class="text-xs text-[#9CA3AF] mt-0.5">
-                    Explorá la base de datos oficial auditada e incorporá pedales a tu colección o wishlist con un clic.
+                <p class="text-xs text-[#9CA3AF]">
+                    Explorá los pedales del catálogo ordenados de A-Z y agregá los que tengas a tu colección personal.
                 </p>
             </div>
-            <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-white p-2 rounded-xl hover:bg-[#121316] transition-all cursor-pointer">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <!-- SEARCH BAR & FILTERS -->
-        <div class="space-y-3 shrink-0">
+        <!-- SEARCH AND FILTERS TOOLBAR -->
+        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
             <div class="relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs"></i>
                 <input type="text" id="master-catalog-search-input" oninput="handleMasterCatalogSearch(this.value)" placeholder="Buscar por nombre, marca o modelo..." class="w-full bg-[#121316] text-white placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl pl-9 pr-4 py-2.5 text-xs font-mono focus:outline-none transition-all">
@@ -590,7 +591,7 @@
         </div>
 
         <!-- MASTER CATALOG GRID -->
-        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-1 pt-2 flex-1"></div>
+        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-2"></div>
     </div>
 </div>
 
@@ -1216,11 +1217,15 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
 
     let actionBtnHtml = '';
     if (sectionType === 'effects' || sectionType === 'utility') {
-        actionBtnHtml = `<button onclick="event.stopPropagation(); movePedalToForSale('${pedal.id}')" class="w-full bg-[#121316] hover:bg-[#20232B] text-[#EAB308] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"><i class="fa-solid fa-tag text-[9px]"></i> Vender</button>`;
+        actionBtnHtml = `<button onclick="event.stopPropagation(); movePedalToForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#EAB308] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-tag text-xs"></i> Vender</button>`;
     } else if (sectionType === 'wishlist') {
-        actionBtnHtml = `<button onclick="event.stopPropagation(); moveWishlistToCollection('${pedal.id}')" class="w-full bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"><i class="fa-solid fa-check text-[9px]"></i> ¡Lo compré!</button>`;
+        actionBtnHtml = `<button onclick="event.stopPropagation(); moveWishlistToCollection('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#8B5CF6] border border-[#2A2D36] hover:border-[#8B5CF6]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-cart-shopping text-xs"></i> ¡Lo compré!</button>`;
     } else if (sectionType === 'forsale') {
-        actionBtnHtml = `<div class="grid grid-cols-2 gap-1 w-full"><button onclick="event.stopPropagation(); restorePedalFromForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-1.5 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer"><i class="fa-solid fa-rotate-left text-[9px]"></i> Vuelta a colección</button><button onclick="event.stopPropagation(); executeDeleteForSaleItem('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-1.5 py-1 rounded-lg text-[9px] font-mono font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer"><i class="fa-solid fa-trash-can text-[9px]"></i> ¡Vendido!</button></div>`;
+        actionBtnHtml = `
+            <div class="flex items-center gap-2 self-start flex-wrap">
+                <button onclick="event.stopPropagation(); restorePedalFromForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-rotate-left text-xs"></i> Vuelta a colección</button>
+                <button onclick="event.stopPropagation(); executeDeleteForSaleItem('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-check text-xs"></i> ¡Vendido!</button>
+            </div>`;
     }
 
     card.innerHTML = `
@@ -1242,7 +1247,7 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
             </div>
             ${descHtml}
         </div>
-        <div class="mt-3 pt-2 border-t border-[#2A2D36]">
+        <div class="mt-3 pt-2 border-t border-[#2A2D36] flex items-center justify-start">
             ${actionBtnHtml}
         </div>
         <button onclick="promptDeletePedal('${pedal.id}', event)" title="Eliminar pedal definitivamente" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-10 cursor-pointer">
