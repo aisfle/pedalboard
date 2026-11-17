@@ -584,7 +584,7 @@
             </span>
             <div class="flex items-center gap-2">
                 <button id="mc-toggle-pedal" onclick="switchMasterCatalogEquipmentType('PEDAL')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] flex items-center gap-2 cursor-pointer shadow-sm">
-                    <i class="fa-solid fa-compact-disc"></i> Pedal de efecto o utilidad
+                    <i class="fa-solid fa-sliders"></i> Pedal de efecto o utilidad
                 </button>
                 <button id="mc-toggle-power" onclick="switchMasterCatalogEquipmentType('POWER')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-white border border-[#2A2D36] flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-bolt"></i> Fuente de alimentación
@@ -5971,7 +5971,7 @@ function getPedalIconHTML(item, imgClasses = 'w-10 h-10') {
             </div>
         </div>`;
     }
-    return `<div class="${imgClasses} rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#9CA3AF] shrink-0"><i class="fa-solid fa-compact-disc text-sm"></i></div>`;
+    return `<div class="${imgClasses} rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#9CA3AF] shrink-0"><i class="fa-solid fa-sliders text-sm text-[#F15A24]"></i></div>`;
 }
 
 
