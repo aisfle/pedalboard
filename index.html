@@ -6478,6 +6478,9 @@ function handlePedalPhotoUpload(arg1, arg2, arg3 = null) {
                 const targetPedalId = pedalId || editingPedalId;
                 if (targetPedalId) {
                     let pedal = pedalDatabase.find(p => p.id === targetPedalId);
+                    if (!pedal && typeof wishlistDatabase !== 'undefined') {
+                        pedal = wishlistDatabase.find(p => p.id === targetPedalId);
+                    }
                     if (!pedal) {
                         const fallback = DEFAULT_PEDALS_FALLBACK.find(p => p.id === targetPedalId);
                         if (fallback) {
@@ -6496,6 +6499,7 @@ function handlePedalPhotoUpload(arg1, arg2, arg3 = null) {
                                 desc: fallback.description || fallback.desc || '',
                                 manualUrl: fallback.manualUrl || null,
                                 imageUrl: resizedBase64,
+                                customPhotoUrl: resizedBase64,
                                 notes: ''
                             };
                             pedalDatabase.push(pedal);
@@ -6504,8 +6508,13 @@ function handlePedalPhotoUpload(arg1, arg2, arg3 = null) {
                     if (pedal) {
                         pushHistory();
                         pedal.imageUrl = resizedBase64;
+                        pedal.customPhotoUrl = resizedBase64;
                         tempPhotoBase64 = resizedBase64;
                         saveStateToLocalStorage();
+                        refreshAllCollectionViews();
+                        if (typeof renderWishlist === 'function') {
+                            renderWishlist(false);
+                        }
                         renderCatalog(currentBrandFilter);
                         renderSignalChain();
                         renderInspector(targetPedalId);
@@ -6601,10 +6610,28 @@ function handlePowerSupplyPhotoUpload(arg1, arg2, arg3 = null) {
                 }
             } else {
                 let ps = powerSuppliesDatabase.find(p => p.id === psId);
+                if (!ps && typeof wishlistDatabase !== 'undefined') {
+                    ps = wishlistDatabase.find(p => p.id === psId);
+                }
+                if (!ps) {
+                    const fallback = DEFAULT_POWER_SUPPLIES_FALLBACK.find(p => p.id === psId);
+                    if (fallback) {
+                        const copy = JSON.parse(JSON.stringify(fallback));
+                        copy.imageUrl = resizedBase64;
+                        copy.customPhotoUrl = resizedBase64;
+                        powerSuppliesDatabase.push(copy);
+                        ps = copy;
+                    }
+                }
                 if (ps) {
                     pushHistory();
                     ps.imageUrl = resizedBase64;
+                    ps.customPhotoUrl = resizedBase64;
                     saveStateToLocalStorage();
+                    refreshAllCollectionViews();
+                    if (typeof renderWishlist === 'function') {
+                        renderWishlist(false);
+                    }
                     renderPowerSupplies();
                     renderInspector(psId);
                 }
