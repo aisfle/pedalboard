@@ -179,7 +179,7 @@
         </div>
 
         <!-- VISTA 2: MI COLECCIÓN E INVENTARIO -->
-        <div id="view-collection" class="space-y-6 hidden">
+        <div id="view-collection" class="hidden space-y-6 !mt-0">
             <!-- TOP ACTION BAR -->
             <div class="bg-[#1C1E24] border-2 border-[#F15A24] rounded-2xl p-5 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                 <div class="space-y-1 min-w-[280px] flex-1">
@@ -323,8 +323,8 @@
                         <button onclick="createNewBlankChain()" title="Limpiar los slots para armar una nueva cadena" class="flex-1 sm:flex-none justify-center bg-[#00A8CC] hover:bg-[#0092b3] text-[#FFFFFF] px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-md whitespace-nowrap">
                             + Nueva cadena
                         </button>
-                        <button onclick="openSaveFavoriteModal()" title="Guardar preset de la cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#F15A24] border border-[#F15A24] px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
-                            <i class="fa-solid fa-bookmark text-[#F15A24]"></i> Guardar preset
+                        <button onclick="openSaveFavoriteModal()" title="Guardar preset de la cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
+                            <i class="fa-solid fa-bookmark text-[#00A8CC]"></i> Guardar preset
                         </button>
                         <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-sm">
                             <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
@@ -338,8 +338,8 @@
 
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-4 shadow-md space-y-3">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#2A2D36] pb-2">
-                    <span class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-star text-[#F15A24]"></i> Cadenas favoritas / Presets guardados
+                    <span class="text-xs font-bold text-[#00A8CC] uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-star text-[#00A8CC]"></i> Cadenas favoritas / Presets guardados
                     </span>
                 </div>
 
@@ -364,7 +364,7 @@
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-5 shadow-xl space-y-4">
                 <div class="flex flex-wrap justify-between items-center gap-2 border-b border-[#2A2D36] pb-3">
                     <div>
-                        <h3 class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2 shrink-0"><i class="fa-solid fa-diagram-project text-[#F15A24]"></i> CADENA DE SEÑAL ACTIVA</h3>
+                        <h3 class="text-xs font-bold text-[#00A8CC] uppercase tracking-wider flex items-center gap-2 shrink-0"><i class="fa-solid fa-diagram-project text-[#00A8CC]"></i> CADENA DE SEÑAL ACTIVA</h3>
                         <p class="text-xs text-[#9CA3AF]">Selecciona, cambia o arrastra (Drag & Drop) cualquier pedal para reordenar tu rig.</p>
                     </div>
                 </div>
@@ -376,8 +376,8 @@
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-5 shadow-xl space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#2A2D36] pb-3">
                     <div>
-                        <h2 class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-bolt text-[#F15A24]"></i> Fuentes de energía de mi cadena
+                        <h2 class="text-xs font-bold text-[#00A8CC] uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-[#00A8CC]"></i> Fuentes de energía de mi cadena
                         </h2>
                         <p class="text-xs text-[#9CA3AF]">Monitoreo de miliamperios (mA) y asignación de salidas físicas para las fuentes agregadas a esta cadena de pedales.</p>
                     </div>
@@ -388,8 +388,8 @@
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-5 shadow-xl space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#2A2D36] pb-3">
                     <div>
-                        <h2 class="text-xs font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-clipboard-list text-[#F15A24]"></i> RESUMEN DE POTENCIA
+                        <h2 class="text-xs font-bold text-[#00A8CC] uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-list text-[#00A8CC]"></i> RESUMEN DE POTENCIA
                         </h2>
                         <p class="text-xs text-[#9CA3AF]">Diagnóstico detallado de consumo y estado eléctrico exclusivamente para los pedales de la cadena activa.</p>
                     </div>
@@ -1423,8 +1423,8 @@ function renderCollectionPower() {
                 </div>
             </div>
             <div class="mt-3 pt-2 border-t border-[#2A2D36] flex items-center justify-start">
-                <button onclick="event.stopPropagation(); movePowerSupplyToForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#EAB308] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start">
-                    <i class="fa-solid fa-tag text-xs"></i> Vender
+                <button onclick="event.stopPropagation(); movePowerSupplyToForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start">
+                    <i class="fa-solid fa-tag text-xs text-[#EAB308]"></i> Vender
                 </button>
             </div>
             <button onclick="promptDeletePowerSupply('${ps.id}', event)" title="Eliminar fuente definitivamente" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-10 cursor-pointer">
@@ -1521,7 +1521,7 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
 
     let actionBtnHtml = '';
     if (sectionType === 'effects' || sectionType === 'utility') {
-        actionBtnHtml = `<button onclick="event.stopPropagation(); movePedalToForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#EAB308] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-tag text-xs"></i> Vender</button>`;
+        actionBtnHtml = `<button onclick="event.stopPropagation(); movePedalToForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-tag text-xs text-[#EAB308]"></i> Vender</button>`;
     } else if (sectionType === 'wishlist') {
         actionBtnHtml = `<button onclick="event.stopPropagation(); moveWishlistToCollection('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#8B5CF6] border border-[#2A2D36] hover:border-[#8B5CF6]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-cart-shopping text-xs"></i> ¡Lo compré!</button>`;
     } else if (sectionType === 'forsale') {
