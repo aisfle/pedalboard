@@ -907,6 +907,19 @@
 <script>
 
 // --- GLOBAL STATE VARIABLES FOR V111 ---
+
+function normalizePedalData(p) {
+    if (!p) return p;
+    p.maBase = p.maBase || p.maDraw || 20;
+    p.maWithMargin = p.maWithMargin || p.maSafety || Math.round(p.maBase * 1.3);
+    p.maDraw = p.maBase;
+    p.maSafety = p.maWithMargin;
+    if (p.isStereo === undefined) {
+        p.isStereo = p.io ? (p.io === 'Stereo I/O') : false;
+    }
+    return p;
+}
+
 let activeTab = 'explore';
 let currentBrandFilter = 'ALL';
 let currentCategoryFilter = 'ALL';
@@ -1874,7 +1887,7 @@ function executeSaveCustomEquipment() {
         if (cemDest === 'wishlist') {
             wishlistDatabase.push(newPedal);
         } else {
-            pedalDatabase.push(newPedal);
+            pedalDatabase.push(normalizePedalData(newPedal));
         }
     } else {
         const brand = document.getElementById('cem-power-brand').value.trim();
@@ -5979,9 +5992,15 @@ function handleDrop(e) {
     const targetIndex = parseInt(this.dataset.index);
     if (draggedIndex !== null && draggedIndex !== targetIndex) {
         pushHistory();
+        const modesArray = currentChainIds.map((_, i) => chainSlotModes[i] || 'MONO');
         const movedItem = currentChainIds.splice(draggedIndex, 1)[0];
         currentChainIds.splice(targetIndex, 0, movedItem);
-        delete chainSlotModes[draggedIndex];
+
+        const movedMode = modesArray.splice(draggedIndex, 1)[0];
+        modesArray.splice(targetIndex, 0, movedMode);
+        chainSlotModes = {};
+        modesArray.forEach((m, idx) => { chainSlotModes[idx] = m; });
+
         renderSignalChain();
         saveStateToLocalStorage();
     }
@@ -6293,6 +6312,7 @@ function addPresetPowerSupply(presetType) {
 }
 
 function renderSignalChain() {
+    pedalDatabase.forEach(p => normalizePedalData(p));
     const container = document.getElementById('chain-container');
     if (!container) return;
     container.innerHTML = '';
@@ -6408,7 +6428,7 @@ function renderSignalChain() {
                     </div>
                 </div>
                 <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[10px] font-mono text-[#9CA3AF] mt-2">
-                    <span class="${isDuplicated ? 'text-[#F15A24] font-bold' : ''}">${pedal.maWithMargin}mA</span>
+                    <span class="${isDuplicated ? 'text-[#F15A24] font-bold' : ''}">${pedal.maWithMargin || pedal.maSafety || Math.round((pedal.maBase || pedal.maDraw || 20) * 1.3)}mA</span>
                     <select onchange="swapPedalViaSelect(${index}, this.value)" onclick="event.stopPropagation()" class="bg-[#121316] text-[#9CA3AF] rounded border border-[#2A2D36] px-1 py-0.5 text-[10px] focus:outline-none max-w-[120px] truncate">
                         ${generateGroupedOptions(pedal.id)}
                     </select>
@@ -6606,9 +6626,13 @@ function addExtraSlot() {
 }
 
 function removeSlot(index, e) {
-    e.stopPropagation();
+    if (e && e.stopPropagation) e.stopPropagation();
     pushHistory();
+    const modesArray = currentChainIds.map((_, i) => chainSlotModes[i] || 'MONO');
     currentChainIds.splice(index, 1);
+    modesArray.splice(index, 1);
+    chainSlotModes = {};
+    modesArray.forEach((m, idx) => { chainSlotModes[idx] = m; });
     renderSignalChain();
     saveStateToLocalStorage();
 }
@@ -7492,7 +7516,7 @@ function executeRegisterNewPedal() {
             imageUrl: tempPhotoBase64 || null,
             notes: ''
         };
-        pedalDatabase.push(newPedal);
+        pedalDatabase.push(normalizePedalData(newPedal));
     }
     saveStateToLocalStorage();
     renderBrandFilters();
