@@ -8492,7 +8492,10 @@ function executeRegisterNewPowerSupply() {
 
 function promptDeletePedal(pedalId, event) {
     if (event) event.stopPropagation();
-    const pedal = pedalDatabase.find(p => p.id === pedalId);
+    let pedal = pedalDatabase.find(p => p.id === pedalId);
+    if (!pedal && typeof wishlistDatabase !== 'undefined') {
+        pedal = wishlistDatabase.find(p => p.id === pedalId);
+    }
     if (!pedal) return;
     pedalToDeleteId = pedalId;
     document.getElementById('delete-pedal-target-name').textContent = `${pedal.brand} - ${pedal.name}`;
@@ -8510,12 +8513,19 @@ function executeDeletePedal() {
     const delId = pedalToDeleteId;
     const idx = pedalDatabase.findIndex(p => p.id === delId);
     if (idx !== -1) pedalDatabase.splice(idx, 1);
+    if (typeof wishlistDatabase !== 'undefined') {
+        const wIdx = wishlistDatabase.findIndex(p => p.id === delId);
+        if (wIdx !== -1) wishlistDatabase.splice(wIdx, 1);
+    }
     currentChainIds = currentChainIds.map(id => id === delId ? 'EMPTY' : id);
     delete currentPowerAssignments[delId];
     selectedPedalIds.delete(delId);
     if (typeof activeInspectorId !== 'undefined' && activeInspectorId === delId) {
         activeInspectorId = null;
         renderTabEmptyInspector(activeTab);
+    }
+    if (typeof selectedWishlistPedalId !== 'undefined' && selectedWishlistPedalId === delId) {
+        selectedWishlistPedalId = null;
     }
     saveStateToLocalStorage();
     renderBrandFilters();
@@ -8529,10 +8539,13 @@ function executeDeletePedal() {
 
 function promptDeletePowerSupply(psId, event) {
     if (event) event.stopPropagation();
-    const ps = powerSuppliesDatabase.find(p => p.id === psId);
+    let ps = powerSuppliesDatabase.find(p => p.id === psId);
+    if (!ps && typeof wishlistDatabase !== 'undefined') {
+        ps = wishlistDatabase.find(p => p.id === psId);
+    }
     if (!ps) return;
     powerToDeleteId = psId;
-    document.getElementById('delete-power-target-name').textContent = `${ps.brand} - ${ps.model}`;
+    document.getElementById('delete-power-target-name').textContent = `${ps.brand} - ${ps.model || ps.name}`;
     document.getElementById('delete-power-modal').classList.remove('hidden');
 }
 
@@ -8547,6 +8560,10 @@ function executeDeletePowerSupply() {
     const delId = powerToDeleteId;
     const idx = powerSuppliesDatabase.findIndex(p => p.id === delId);
     if (idx !== -1) powerSuppliesDatabase.splice(idx, 1);
+    if (typeof wishlistDatabase !== 'undefined') {
+        const wIdx = wishlistDatabase.findIndex(p => p.id === delId);
+        if (wIdx !== -1) wishlistDatabase.splice(wIdx, 1);
+    }
     Object.keys(currentPowerAssignments).forEach(pedalId => {
         if (currentPowerAssignments[pedalId]?.psId === delId) {
             delete currentPowerAssignments[delId];
