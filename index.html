@@ -1547,8 +1547,14 @@ function restorePedalFromForSale(id) {
 }
 
 function executeDeleteForSaleItem(id) {
-    pedalDatabase = pedalDatabase.filter(x => x.id !== id);
-    powerSuppliesDatabase = powerSuppliesDatabase.filter(x => x.id !== id);
+    if (typeof pedalDatabase !== 'undefined') {
+        const pIdx = pedalDatabase.findIndex(x => x.id === id);
+        if (pIdx !== -1) pedalDatabase.splice(pIdx, 1);
+    }
+    if (typeof powerSuppliesDatabase !== 'undefined') {
+        const psIdx = powerSuppliesDatabase.findIndex(x => x.id === id);
+        if (psIdx !== -1) powerSuppliesDatabase.splice(psIdx, 1);
+    }
     if (typeof currentChainIds !== 'undefined') {
         currentChainIds = currentChainIds.filter(x => x !== id);
     }
@@ -2120,8 +2126,8 @@ function addMasterPedalToWishlist(id) {
 
 
 // MASTER PEDAL DATABASE & POWER SUPPLIES
-const pedalDatabase = [];
-const powerSuppliesDatabase = [];
+let pedalDatabase = [];
+let powerSuppliesDatabase = [];
 
 // APP STATE VARIABLES
 let currentChainIds = [];
@@ -5325,11 +5331,10 @@ function handlePowerSupplyImgError(img) {
 
 function getPedalIconHTML(item, imgClasses = 'w-10 h-10') {
     if (item && item.imageUrl) {
-        const titleSafe = (item.name || '').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-        const urlSafe = (item.imageUrl || '').replace(/'/g, "%27");
+        const titleClean = (item.name || '').replace(/"/g, '&quot;');
         return `
-        <div class="relative group/zoom shrink-0 cursor-pointer overflow-hidden rounded-xl border border-[#2A2D36] bg-[#121316]" onclick="event.stopPropagation(); openImageZoomModal('${urlSafe}', '${titleSafe}')">
-            <img src="${item.imageUrl}" alt="${titleSafe}" onerror="handlePedalImgError(this)" class="${imgClasses} object-cover group-hover/zoom:scale-105 transition-all">
+        <div class="relative group/zoom shrink-0 cursor-pointer overflow-hidden rounded-xl border border-[#2A2D36] bg-[#121316]" onclick="zoomPedalImageById('${item.id}', event)">
+            <img src="${item.imageUrl}" alt="${titleClean}" onerror="handlePedalImgError(this)" class="${imgClasses} object-cover group-hover/zoom:scale-105 transition-all">
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/zoom:opacity-100 flex items-center justify-center transition-all">
                 <i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i>
             </div>
@@ -5348,11 +5353,10 @@ function isFactoryPowerSupply(ps) {
 
 function getPowerSupplyIconHTML(item, imgClasses = 'w-10 h-10') {
     if (item && item.imageUrl) {
-        const titleSafe = (item.name || '').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-        const urlSafe = (item.imageUrl || '').replace(/'/g, "%27");
+        const titleClean = (item.name || item.model || '').replace(/"/g, '&quot;');
         return `
-        <div class="relative group/zoom shrink-0 cursor-pointer overflow-hidden rounded-xl border border-[#2A2D36] bg-[#121316]" onclick="event.stopPropagation(); openImageZoomModal('${urlSafe}', '${titleSafe}')">
-            <img src="${item.imageUrl}" alt="${titleSafe}" onerror="handlePowerSupplyImgError(this)" class="${imgClasses} object-cover group-hover/zoom:scale-105 transition-all">
+        <div class="relative group/zoom shrink-0 cursor-pointer overflow-hidden rounded-xl border border-[#2A2D36] bg-[#121316]" onclick="zoomPedalImageById('${item.id}', event)">
+            <img src="${item.imageUrl}" alt="${titleClean}" onerror="handlePowerSupplyImgError(this)" class="${imgClasses} object-cover group-hover/zoom:scale-105 transition-all">
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/zoom:opacity-100 flex items-center justify-center transition-all">
                 <i class="fa-solid fa-magnifying-glass-plus text-white text-xs"></i>
             </div>
@@ -8394,6 +8398,27 @@ window.onload = async () => {
     renderSignalChain();
 };
 
+
+
+function zoomPedalImageById(id, e) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (!id) return;
+    
+    let item = (typeof pedalDatabase !== 'undefined' ? pedalDatabase.find(p => p.id === id) : null) ||
+               (typeof powerSuppliesDatabase !== 'undefined' ? powerSuppliesDatabase.find(p => p.id === id) : null) ||
+               (typeof wishlistDatabase !== 'undefined' ? wishlistDatabase.find(p => p.id === id) : null);
+               
+    if (!item && typeof DEFAULT_PEDALS_FALLBACK !== 'undefined') {
+        item = DEFAULT_PEDALS_FALLBACK.find(p => p.id === id);
+    }
+    if (!item && typeof DEFAULT_POWER_SUPPLIES_FALLBACK !== 'undefined') {
+        item = DEFAULT_POWER_SUPPLIES_FALLBACK.find(p => p.id === id);
+    }
+    
+    if (item && item.imageUrl) {
+        openImageZoomModal(item.imageUrl, item.name || item.model || 'Vista Previa');
+    }
+}
 
 function openImageZoomModal(imageUrl, title = 'Vista Previa') {
     if (!imageUrl) return;
