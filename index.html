@@ -7604,29 +7604,29 @@ function renderInspector(itemId, currentSlotMode = null) {
             }
 
             container.innerHTML = `
-                <div class="flex flex-col gap-0.5 border-b border-[#2A2D36] pb-3">
-                    <div class="flex items-center justify-between gap-2">
-                        <span class="text-[11px] font-mono font-bold text-[#00A8CC] uppercase tracking-wider block">
+                <div class="relative pt-0.5 pr-32 pb-2 border-b border-[#2A2D36]">
+                    <div class="absolute top-0 right-0 flex items-center gap-2 z-10">
+                        <div class="flex items-center gap-1 font-mono text-xs">
+                            <span class="text-[#9CA3AF] text-[10px]">Seteo:</span>
+                            <select onchange="toggleInspectorPedalStereo('${pedal.id}', this.value)" ${isMonoOnly ? 'disabled' : ''} class="bg-[#1C1E24] ${modeToDisplay === 'STEREO' ? 'text-[#9E7BB5] border-[#9E7BB5]' : 'text-[#00A8CC] border-[#00A8CC]'} border rounded px-2 py-0.5 text-xs font-bold focus:outline-none ${isMonoOnly ? 'opacity-60 cursor-not-allowed' : ''}">
+                                <option value="MONO" ${modeToDisplay === 'MONO' ? 'selected' : ''}>Mono</option>
+                                ${!isMonoOnly ? `<option value="STEREO" ${modeToDisplay === 'STEREO' ? 'selected' : ''}>Stereo</option>` : ''}
+                            </select>
+                        </div>
+                        <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold ml-1.5">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[11px] font-mono font-bold text-[#00A8CC] uppercase tracking-wider block" style="margin-bottom: 2px; line-height: 1;">
                             ${pedal.brand}
                         </span>
-                        <div class="flex items-center gap-2">
-                            <div class="flex items-center gap-1 font-mono text-xs">
-                                <span class="text-[#9CA3AF] text-[10px]">Seteo:</span>
-                                <select onchange="toggleInspectorPedalStereo('${pedal.id}', this.value)" ${isMonoOnly ? 'disabled' : ''} class="bg-[#1C1E24] ${modeToDisplay === 'STEREO' ? 'text-[#9E7BB5] border-[#9E7BB5]' : 'text-[#00A8CC] border-[#00A8CC]'} border rounded px-2 py-0.5 text-xs font-bold focus:outline-none ${isMonoOnly ? 'opacity-60 cursor-not-allowed' : ''}">
-                                    <option value="MONO" ${modeToDisplay === 'MONO' ? 'selected' : ''}>Mono</option>
-                                    ${!isMonoOnly ? `<option value="STEREO" ${modeToDisplay === 'STEREO' ? 'selected' : ''}>Stereo</option>` : ''}
-                                </select>
-                            </div>
-                            <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold ml-1.5">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
+                        <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-none m-0 p-0" style="margin: 0 !important; padding: 0 !important; line-height: 1.1 !important;">${pedal.name}</h3>
+                        <div style="margin-top: 4px;">
+                            <span class="inline-block text-[10px] font-mono bg-[#121316] text-[#00A8CC] border border-[#00A8CC]/40 px-2 py-0.5 rounded">
+                                ${pedal.category}
+                            </span>
                         </div>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-none m-0 p-0" style="margin: 0 !important; padding: 0 !important;">${pedal.name}</h3>
-                    <div class="pt-0.5">
-                        <span class="inline-block text-[10px] font-mono bg-[#121316] text-[#00A8CC] border border-[#00A8CC]/40 px-2 py-0.5 rounded">
-                            ${pedal.category}
-                        </span>
                     </div>
                 </div>
                 ${photoSection}
@@ -7754,30 +7754,30 @@ function renderInspector(itemId, currentSlotMode = null) {
             }
 
             container.innerHTML = `
-                <div class="flex flex-col gap-0.5">
-                    <div class="flex items-center justify-between gap-2">
-                        <span class="text-[11px] font-mono font-bold uppercase tracking-wider block" style="color: ${themeColor}">
+                <div class="relative pt-0.5 pr-24 pb-1">
+                    <div class="absolute top-0 right-0 flex items-center gap-2 z-10">
+                        ${!isFactory ? `
+                            <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#20232B] border px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" style="color: ${themeColor}; border-color: ${themeColor};">
+                                <i class="fa-solid fa-pen-to-square"></i> Editar
+                            </button>
+                        ` : ''}
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold ${badgeClass} shrink-0">
+                            ${badgeText}
+                        </span>
+                        <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[11px] font-mono font-bold uppercase tracking-wider block" style="color: ${themeColor}; margin-bottom: 2px; line-height: 1;">
                             ${pedal.brand}
                         </span>
-                        <div class="flex items-center gap-2">
-                            ${!isFactory ? `
-                                <button onclick="openEditPedalModal('${pedal.id}')" class="bg-[#1C1E24] hover:bg-[#20232B] border px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" style="color: ${themeColor}; border-color: ${themeColor};">
-                                    <i class="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                            ` : ''}
-                            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold ${badgeClass} shrink-0">
-                                ${badgeText}
+                        <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-none m-0 p-0" style="margin: 0 !important; padding: 0 !important; line-height: 1.1 !important;">${pedal.name}</h3>
+                        <div style="margin-top: 4px;">
+                            <span class="inline-block text-[10px] font-mono bg-[#121316] border px-2 py-0.5 rounded" style="color: ${themeColor}; border-color: ${themeColor}40;">
+                                ${effCat}
                             </span>
-                            <button onclick="closeInspector()" title="Cerrar detalle" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
                         </div>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-none m-0 p-0" style="margin: 0 !important; padding: 0 !important;">${pedal.name}</h3>
-                    <div class="pt-0.5">
-                        <span class="inline-block text-[10px] font-mono bg-[#121316] border px-2 py-0.5 rounded" style="color: ${themeColor}; border-color: ${themeColor}40;">
-                            ${effCat}
-                        </span>
                     </div>
                 </div>
                 ${photoSection}
