@@ -927,6 +927,9 @@ function normalizePedalData(p) {
     if (p.isStereo === undefined) {
         p.isStereo = p.io ? (p.io === 'Stereo I/O') : false;
     }
+    if (p.category) {
+        p.effectCategory = getEffectCategory(p);
+    }
     return p;
 }
 
@@ -1912,6 +1915,7 @@ function executeSaveCustomEquipment() {
                 p.isStereo = cemIo === 'stereo';
                 p.voltage = cemVolt + 'V';
                 p.category = category;
+                p.effectCategory = category;
                 p.notes = notes;
                 p.manualUrl = manual || null;
                 if (cemPhotoBase64) {
@@ -1934,6 +1938,7 @@ function executeSaveCustomEquipment() {
                 isStereo: cemIo === 'stereo',
                 voltage: cemVolt + 'V',
                 category: category,
+                effectCategory: category,
                 notes: notes,
                 manualUrl: manual || null,
                 imageUrl: cemPhotoBase64,
@@ -2426,6 +2431,22 @@ function getEffectCategory(p) {
     }
     if (p.effectCategory && p.effectCategory.trim() !== '') {
         return p.effectCategory.trim();
+    }
+    const stdCategories = [
+        'Dinámica & modelado',
+        'Saturación & ganancia',
+        'Pitch & sintetizador',
+        'Modulación',
+        'Delay & eco',
+        'Reverberación & espacio',
+        'Lo-Fi, glitch & texturas',
+        'Loopers de frase',
+        'Utilidad & ruteo'
+    ];
+    if (p.category && typeof p.category === 'string') {
+        const pCatClean = p.category.trim().toLowerCase();
+        const matched = stdCategories.find(c => pCatClean.startsWith(c.toLowerCase()) || pCatClean.includes(c.toLowerCase()));
+        if (matched) return matched;
     }
 
     const cat = (p.category || '').toLowerCase();
