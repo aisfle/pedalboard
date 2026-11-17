@@ -7503,7 +7503,12 @@ function isFactoryPedal(p) {
     if (!p) return false;
     if (p.isFactory === true) return true;
     if (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_PEDALS_FALLBACK)) {
-        return DEFAULT_PEDALS_FALLBACK.some(fp => fp.id === p.id || (fp.name && p.name && fp.name.trim().toLowerCase() === p.name.trim().toLowerCase() && fp.brand && p.brand && fp.brand.trim().toLowerCase() === p.brand.trim().toLowerCase()));
+        const isDefaultMatch = DEFAULT_PEDALS_FALLBACK.some(fp => 
+            fp.id === p.id || 
+            (fp.name && p.name && fp.name.trim().toLowerCase() === p.name.trim().toLowerCase() && 
+             fp.brand && p.brand && fp.brand.trim().toLowerCase() === p.brand.trim().toLowerCase())
+        );
+        if (isDefaultMatch) return true;
     }
     if (p.id && (p.id.startsWith('custom-') || p.id.startsWith('wishlist-custom-'))) return false;
     return false;
@@ -7599,7 +7604,7 @@ function renderInspector(itemId, currentSlotMode = null) {
             }
 
             container.innerHTML = `
-                <div class="space-y-0.5 border-b border-[#2A2D36] pb-3">
+                <div class="flex flex-col gap-0.5 border-b border-[#2A2D36] pb-3">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-[11px] font-mono font-bold text-[#00A8CC] uppercase tracking-wider block">
                             ${pedal.brand}
@@ -7617,7 +7622,7 @@ function renderInspector(itemId, currentSlotMode = null) {
                             </button>
                         </div>
                     </div>
-                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-tight my-0 py-0">${pedal.name}</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-none m-0 p-0" style="margin: 0 !important; padding: 0 !important;">${pedal.name}</h3>
                     <div class="pt-0.5">
                         <span class="inline-block text-[10px] font-mono bg-[#121316] text-[#00A8CC] border border-[#00A8CC]/40 px-2 py-0.5 rounded">
                             ${pedal.category}
@@ -7749,7 +7754,7 @@ function renderInspector(itemId, currentSlotMode = null) {
             }
 
             container.innerHTML = `
-                <div class="space-y-0.5">
+                <div class="flex flex-col gap-0.5">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-[11px] font-mono font-bold uppercase tracking-wider block" style="color: ${themeColor}">
                             ${pedal.brand}
@@ -7768,8 +7773,8 @@ function renderInspector(itemId, currentSlotMode = null) {
                             </button>
                         </div>
                     </div>
-                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-tight my-0 py-0">${pedal.name}</h3>
-                    <div class="pt-0 mt-0">
+                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-none m-0 p-0" style="margin: 0 !important; padding: 0 !important;">${pedal.name}</h3>
+                    <div class="pt-0.5">
                         <span class="inline-block text-[10px] font-mono bg-[#121316] border px-2 py-0.5 rounded" style="color: ${themeColor}; border-color: ${themeColor}40;">
                             ${effCat}
                         </span>
