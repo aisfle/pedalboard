@@ -1179,7 +1179,7 @@ function generateCemOutletRows(count) {
     if (!container) return;
     count = parseInt(count) || 1;
     let html = '';
-    for (let i = 1; i <= count; i+ ) {
+    for (let i = 1; i <= count; i++) {
         html += `
             <div class="flex items-center gap-2 bg-[#121316] p-2 rounded-lg border border-[#2A2D36] font-mono text-xs">
                 <span class="text-[#F15A24] font-bold text-[10px] w-14">Salida ${i}</span>
@@ -1200,7 +1200,7 @@ function copyCemOutlet1ToAll() {
     const v1 = document.getElementById('cem-outlet-volt-1')?.value || '9V';
     const ma1 = document.getElementById('cem-outlet-ma-1')?.value || '250';
 
-    for (let i = 2; i <= count; i+ ) {
+    for (let i = 2; i <= count; i++) {
         const vEl = document.getElementById(`cem-outlet-volt-${i}`);
         const maEl = document.getElementById(`cem-outlet-ma-${i}`);
         if (vEl) vEl.value = v1;
@@ -1268,7 +1268,7 @@ function executeRegisterCustomEquipment() {
         }
 
         const outlets = [];
-        for (let i = 1; i <= count; i+ ) {
+        for (let i = 1; i <= count; i++) {
             const v = document.getElementById(`cem-outlet-volt-${i}`)?.value || '9V';
             const ma = parseInt(document.getElementById(`cem-outlet-ma-${i}`)?.value) || 250;
             outlets.push({ id: i, label: `Salida ${i}`, voltage: v, maxMa: ma });
@@ -5375,7 +5375,7 @@ function renderSignalChain() {
         let slotMode = isPedalMonoOnly ? 'MONO' : (chainSlotModes[index] || 'MONO');
         chainSlotModes[index] = slotMode;
         if (pedal && pedalId !== 'EMPTY') {
-            activeCount+ ;
+            activeCount++;
             if (!isDuplicated) {
                 totalMaSum += pedal.maWithMargin;
                 baseMaSum += pedal.maBase;
@@ -5580,23 +5580,23 @@ function renderSignalChain() {
         return 'DUAL_TS';
     }
 
-    for (let i = 0; i < activeChainSlots.length - 1; i+ ) {
+    for (let i = 0; i < activeChainSlots.length - 1; i++) {
         const slotA = activeChainSlots[i];
         const slotB = activeChainSlots[i + 1];
 
         if (slotA.slotMode === 'MONO' || slotB.slotMode === 'MONO') {
-            monoCablesCount+ ;
+            monoCablesCount++;
         } else if (slotA.slotMode === 'STEREO' && slotB.slotMode === 'STEREO') {
             const outA = getPedalOutputConfig(slotA.pedal);
             const inB = getPedalInputConfig(slotB.pedal);
             if (outA === 'STEREO_TRS' && inB === 'STEREO_TRS') {
-                stereoCablesCount+ ;
+                stereoCablesCount++;
             } else if ((outA === 'STEREO_TRS' && inB === 'DUAL_TS') || (outA === 'DUAL_TS' && inB === 'STEREO_TRS')) {
-                splitterCablesCount+ ;
+                splitterCablesCount++;
             } else if (outA === 'DUAL_TS' && inB === 'DUAL_TS') {
                 monoCablesCount += 2;
             } else {
-                monoCablesCount+ ;
+                monoCablesCount++;
             }
         }
     }
@@ -6793,7 +6793,7 @@ function generateCustomOutletEditors() {
     const count = parseInt(document.getElementById('nps-outlets-count').value) || 5;
     const container = document.getElementById('nps-outlets-editor-list');
     container.innerHTML = '';
-    for (let i = 1; i <= count; i+ ) {
+    for (let i = 1; i <= count; i++) {
         container.innerHTML += `
             <div class="flex items-center gap-2 text-xs font-mono">
                 <span class="w-16 text-[#9CA3AF]">Salida ${i}:</span>
@@ -6821,7 +6821,7 @@ function executeRegisterNewPowerSupply() {
     pushHistory();
     const psId = `ps-custom-${Date.now()}`;
     const outlets = [];
-    for (let i = 1; i <= count; i+ ) {
+    for (let i = 1; i <= count; i++) {
         const v = document.getElementById(`nps-out-v-${i}`)?.value || '9V';
         const ma = parseInt(document.getElementById(`nps-out-ma-${i}`)?.value) || 500;
         outlets.push({
