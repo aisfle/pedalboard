@@ -1343,6 +1343,16 @@ function renderDashboardStats() {
 }
 
 // --- RENDER COLLECTION PEDALS (EFFECTS & UTILITY) ---
+
+function renderPowerSupplies() {
+    if (typeof renderCollectionPower === 'function') renderCollectionPower();
+    if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
+}
+
+function renderWishlist(b) {
+    if (typeof renderCollectionWishlist === 'function') renderCollectionWishlist();
+}
+
 function renderCollectionPedals() {
     const effectsGrid = document.getElementById('collection-effects-grid');
     const utilityGrid = document.getElementById('collection-utility-grid');
@@ -6110,7 +6120,6 @@ function undoChainState() {
 
         renderSignalChain();
         renderCatalog(currentBrandFilter);
-        renderPowerSupplies();
         refreshAllCollectionViews();
         if (typeof renderDashboardStats === 'function') renderDashboardStats();
         if (typeof renderBrandFilters === 'function') renderBrandFilters();
@@ -6157,7 +6166,6 @@ function redoChainState() {
 
         renderSignalChain();
         renderCatalog(currentBrandFilter);
-        renderPowerSupplies();
         refreshAllCollectionViews();
         if (typeof renderDashboardStats === 'function') renderDashboardStats();
         if (typeof renderBrandFilters === 'function') renderBrandFilters();
@@ -8147,7 +8155,7 @@ function executeDeletePowerSupply() {
     if (idx !== -1) powerSuppliesDatabase.splice(idx, 1);
     Object.keys(currentPowerAssignments).forEach(pedalId => {
         if (currentPowerAssignments[pedalId]?.psId === delId) {
-            delete currentPowerAssignments[pedalId];
+            delete currentPowerAssignments[delId];
         }
     });
     if (typeof activeInspectorId !== 'undefined' && activeInspectorId === delId) {
@@ -8155,7 +8163,7 @@ function executeDeletePowerSupply() {
         renderTabEmptyInspector(activeTab);
     }
     saveStateToLocalStorage();
-    renderPowerSupplies();
+    renderCollectionPower();
     renderCatalog('ALL');
     refreshAllCollectionViews();
     if (typeof renderDashboardStats === 'function') renderDashboardStats();
