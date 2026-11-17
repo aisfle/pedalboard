@@ -7501,10 +7501,11 @@ function unassignPedalFromOutlet(pedalId, psId) {
 
 function isFactoryPedal(p) {
     if (!p) return false;
-    if (p.id && (p.id.startsWith('custom-') || p.id.startsWith('wishlist-custom-'))) return false;
+    if (p.isFactory === true) return true;
     if (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_PEDALS_FALLBACK)) {
-        return DEFAULT_PEDALS_FALLBACK.some(fp => fp.id === p.id || (fp.name && p.name && fp.name.toLowerCase() === p.name.toLowerCase() && fp.brand && p.brand && fp.brand.toLowerCase() === p.brand.toLowerCase()));
+        return DEFAULT_PEDALS_FALLBACK.some(fp => fp.id === p.id || (fp.name && p.name && fp.name.trim().toLowerCase() === p.name.trim().toLowerCase() && fp.brand && p.brand && fp.brand.trim().toLowerCase() === p.brand.trim().toLowerCase()));
     }
+    if (p.id && (p.id.startsWith('custom-') || p.id.startsWith('wishlist-custom-'))) return false;
     return false;
 }
 
@@ -7598,9 +7599,9 @@ function renderInspector(itemId, currentSlotMode = null) {
             }
 
             container.innerHTML = `
-                <div class="space-y-2 border-b border-[#2A2D36] pb-4">
+                <div class="space-y-0.5 border-b border-[#2A2D36] pb-3">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-[#00A8CC]/10 text-[#00A8CC] border border-[#00A8CC]/20">
+                        <span class="text-[11px] font-mono font-bold text-[#00A8CC] uppercase tracking-wider block">
                             ${pedal.brand}
                         </span>
                         <div class="flex items-center gap-2">
@@ -7616,8 +7617,12 @@ function renderInspector(itemId, currentSlotMode = null) {
                             </button>
                         </div>
                     </div>
-                    <h2 class="text-2xl font-bold text-[#FFFFFF]">${pedal.name}</h2>
-                    <p class="text-xs text-[#9CA3AF]">${pedal.category}</p>
+                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-tight my-0 py-0">${pedal.name}</h3>
+                    <div class="pt-0.5">
+                        <span class="inline-block text-[10px] font-mono bg-[#121316] text-[#00A8CC] border border-[#00A8CC]/40 px-2 py-0.5 rounded">
+                            ${pedal.category}
+                        </span>
+                    </div>
                 </div>
                 ${photoSection}
                 <p id="insp-photo-error" class="hidden text-[11px] text-[#F15A24] font-mono"></p>
@@ -7744,7 +7749,7 @@ function renderInspector(itemId, currentSlotMode = null) {
             }
 
             container.innerHTML = `
-                <div class="space-y-1">
+                <div class="space-y-0.5">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-[11px] font-mono font-bold uppercase tracking-wider block" style="color: ${themeColor}">
                             ${pedal.brand}
@@ -7763,8 +7768,8 @@ function renderInspector(itemId, currentSlotMode = null) {
                             </button>
                         </div>
                     </div>
-                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-tight">${pedal.name}</h3>
-                    <div class="pt-0.5">
+                    <h3 class="text-base sm:text-lg font-bold text-[#FFFFFF] leading-tight my-0 py-0">${pedal.name}</h3>
+                    <div class="pt-0 mt-0">
                         <span class="inline-block text-[10px] font-mono bg-[#121316] border px-2 py-0.5 rounded" style="color: ${themeColor}; border-color: ${themeColor}40;">
                             ${effCat}
                         </span>
@@ -8258,7 +8263,12 @@ function addFactoryPedalToCollection(factoryId) {
 
     pushHistory();
     const copy = JSON.parse(JSON.stringify(item));
-    copy.id = 'custom-' + Date.now();
+    copy.isFactory = true;
+    if (pedalDatabase.some(p => p.id === item.id)) {
+        copy.id = 'factory-' + Date.now();
+    } else {
+        copy.id = item.id;
+    }
     copy.forSale = false;
     copy.isWishlist = false;
     pedalDatabase.push(copy);
