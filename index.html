@@ -693,7 +693,17 @@
             </div>
             <div id="fav-tags-selector" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-2 bg-[#121316] border border-[#2A2D36] rounded-xl text-xs scrollbar-thin"></div>
         </div>
-</div></div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
+            <button onclick="closeSaveFavoriteModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#9CA3AF] hover:text-[#FFFFFF] bg-[#121316] hover:bg-[#20232B] transition-all cursor-pointer">
+                Cancelar
+            </button>
+            <button onclick="executeSaveFavorite()" class="px-4 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#F15A24] hover:bg-[#d44d1b] transition-all shadow-md flex items-center gap-2 cursor-pointer active:scale-95">
+                <i class="fa-solid fa-bookmark"></i> Guardar Preset
+            </button>
+        </div>
+    </div>
+</div>
 
 <div id="add-ps-to-chain-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
@@ -1873,65 +1883,16 @@ function handleCemPhotoUpload(e) {
 }
 
 function executeSaveCustomEquipment() {
-    pushHistory();
     if (cemType === 'pedal') {
         const brand = document.getElementById('cem-pedal-brand').value.trim();
         const model = document.getElementById('cem-pedal-model').value.trim();
         const ma = parseInt(document.getElementById('cem-pedal-ma').value) || 20;
         const category = document.getElementById('cem-pedal-category').value;
         const notes = document.getElementById('cem-notes').value.trim();
-        let manual = document.getElementById('cem-manual-url').value.trim();
-
-        if (manual && !manual.startsWith('http://') && !manual.startsWith('https://') && !manual.startsWith('assets/')) {
-            manual = 'https://' + manual;
-        }
+        const manual = document.getElementById('cem-manual-url').value.trim();
 
         if (!brand || !model) {
             alert('Por favor completá la Marca y el Modelo del pedal.');
-            return;
-        }
-
-        if (editingPedalId) {
-            let existing = pedalDatabase.find(p => p.id === editingPedalId);
-            let inWishlist = false;
-            if (!existing && typeof wishlistDatabase !== 'undefined') {
-                existing = wishlistDatabase.find(w => w.id === editingPedalId);
-                inWishlist = true;
-            }
-            if (existing) {
-                existing.brand = brand;
-                existing.name = model;
-                existing.maBase = ma;
-                existing.maWithMargin = Math.round(ma * 1.3);
-                existing.maDraw = ma;
-                existing.maSafety = Math.round(ma * 1.3);
-                existing.isStereo = (cemIo === 'stereo');
-                existing.voltage = `${cemVolt}V`;
-                existing.category = category;
-                existing.notes = notes;
-                existing.manualUrl = manual || null;
-                if (cemPhotoBase64) {
-                    existing.imageUrl = cemPhotoBase64;
-                    existing.customPhotoUrl = cemPhotoBase64;
-                }
-                existing.forSale = (cemDest === 'sale');
-                existing.isWishlist = (cemDest === 'wishlist');
-
-                if (cemDest === 'wishlist' && !inWishlist) {
-                    pedalDatabase = pedalDatabase.filter(p => p.id !== editingPedalId);
-                    wishlistDatabase.push(existing);
-                } else if (cemDest !== 'wishlist' && inWishlist) {
-                    wishlistDatabase = wishlistDatabase.filter(w => w.id !== editingPedalId);
-                    pedalDatabase.push(normalizePedalData(existing));
-                }
-            }
-            const targetId = editingPedalId;
-            editingPedalId = null;
-            cemPhotoBase64 = null;
-            saveStateToLocalStorage();
-            refreshAllCollectionViews();
-            renderInspector(targetId);
-            closeCustomEquipmentModal();
             return;
         }
 
@@ -1942,15 +1903,14 @@ function executeSaveCustomEquipment() {
             name: model,
             maBase: ma,
             maWithMargin: Math.round(ma * 1.3),
-            isStereo: (cemIo === 'stereo'),
+            isStereo: cemIo === 'stereo',
             voltage: `${cemVolt}V`,
             category: category,
             notes: notes,
-            manualUrl: manual || null,
-            imageUrl: cemPhotoBase64 || null,
-            customPhotoUrl: cemPhotoBase64 || null,
-            forSale: (cemDest === 'sale'),
-            isWishlist: (cemDest === 'wishlist')
+            manualUrl: manual,
+            customPhotoUrl: cemPhotoBase64,
+            forSale: cemDest === 'sale',
+            isWishlist: cemDest === 'wishlist'
         };
 
         if (cemDest === 'wishlist') {
@@ -1984,18 +1944,22 @@ function executeSaveCustomEquipment() {
             outlets: outlets,
             notes: notes,
             customPhotoUrl: cemPhotoBase64,
-            forSale: (cemDest === 'sale')
+            forSale: cemDest === 'sale'
         };
 
         powerSuppliesDatabase.push(newPs);
     }
 
     saveStateToLocalStorage();
-    refreshAllCollectionViews();
     closeCustomEquipmentModal();
+    refreshAllCollectionViews();
+    alert('¡Equipo personalizado guardado con éxito!');
 }
 
+// --- MASTER CATALOG MODAL JS ---
 function openMasterCatalogModal() {
+    masterCatalogEquipmentType = 'PEDAL';
+    switchMasterCatalogEquipmentType('PEDAL');
     masterCatalogBrandFilter = 'ALL';
     masterCatalogCategoryFilter = 'ALL';
     masterCatalogSearchQuery = '';
@@ -2034,12 +1998,17 @@ function renderMasterCatalogBrandFilters() {
     if (!container) return;
 
     const brandSet = new Set();
-    DEFAULT_PEDALS_FALLBACK.forEach(p => p.brand && brandSet.add(p.brand));
+    if (masterCatalogEquipmentType === 'POWER') {
+        (DEFAULT_POWER_SUPPLIES_FALLBACK || []).forEach(p => p.brand && brandSet.add(p.brand));
+    } else {
+        (DEFAULT_PEDALS_FALLBACK || []).forEach(p => p.brand && brandSet.add(p.brand));
+    }
     const brands = Array.from(brandSet).sort();
+    const activeColorClass = masterCatalogEquipmentType === 'POWER' ? 'bg-[#00A8CC] text-white border border-[#00A8CC]' : 'bg-[#F15A24] text-white border border-[#F15A24]';
 
-    let html = `<button onclick="filterMasterCatalogByBrand('ALL')" class="px-2.5 py-1 rounded-lg transition-all font-mono text-xs cursor-pointer ${masterCatalogBrandFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">Todas las marcas</button>`;
+    let html = `<button onclick="filterMasterCatalogByBrand('ALL')" class="px-2.5 py-1 rounded-lg transition-all font-mono text-xs cursor-pointer ${masterCatalogBrandFilter === 'ALL' ? activeColorClass : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">Todas las marcas</button>`;
     brands.forEach(b => {
-        html += `<button onclick="filterMasterCatalogByBrand('${b}')" class="px-2.5 py-1 rounded-lg transition-all font-mono text-xs cursor-pointer ${masterCatalogBrandFilter === b ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">${b}</button>`;
+        html += `<button onclick="filterMasterCatalogByBrand('${b}')" class="px-2.5 py-1 rounded-lg transition-all font-mono text-xs cursor-pointer ${masterCatalogBrandFilter === b ? activeColorClass : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">${b}</button>`;
     });
 
     container.innerHTML = html;
@@ -6235,9 +6204,9 @@ function openEditManualModal(targetType, id) {
         const ps = powerSuppliesDatabase.find(x => x.id === id);
         if (ps && isFactoryPowerSupply(ps)) return;
     }
-    currentManualEditTarget = { targetType: targetType, type: targetType, id: id };
-    const item = (targetType === 'PEDAL' || targetType === 'WISHLIST') ?
-                 (pedalDatabase.find(p => p.id === id) || (typeof wishlistDatabase !== 'undefined' ? wishlistDatabase.find(w => w.id === id) : null)) :
+    currentManualEditTarget = { targetType, id };
+    const item = targetType === 'PEDAL' ? pedalDatabase.find(p => p.id === id) :
+                 targetType === 'WISHLIST' ? wishlistDatabase.find(p => p.id === id) :
                  powerSuppliesDatabase.find(p => p.id === id);
     document.getElementById('manual-url-input').value = item?.manualUrl || '';
     document.getElementById('edit-manual-modal').classList.remove('hidden');
@@ -6250,23 +6219,17 @@ function closeEditManualModal() {
 
 function saveItemManualUrl() {
     if (!currentManualEditTarget) return;
-    let url = document.getElementById('manual-url-input').value.trim();
-    if (url && !url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('assets/')) {
-        url = 'https://' + url;
-    }
+    const url = document.getElementById('manual-url-input').value.trim();
     pushHistory();
-    const targetType = currentManualEditTarget.targetType || currentManualEditTarget.type;
-    const targetId = currentManualEditTarget.id;
-
-    if (targetType === 'PEDAL' || targetType === 'WISHLIST') {
-        const pedal = pedalDatabase.find(p => p.id === targetId) || (typeof wishlistDatabase !== 'undefined' ? wishlistDatabase.find(w => w.id === targetId) : null);
+    if (currentManualEditTarget.type === 'PEDAL') {
+        const pedal = pedalDatabase.find(p => p.id === currentManualEditTarget.id);
         if (pedal) pedal.manualUrl = url || null;
-    } else if (targetType === 'POWER') {
-        const ps = powerSuppliesDatabase.find(p => p.id === targetId);
+    } else if (currentManualEditTarget.type === 'POWER') {
+        const ps = powerSuppliesDatabase.find(p => p.id === currentManualEditTarget.id);
         if (ps) ps.manualUrl = url || null;
     }
     saveStateToLocalStorage();
-    renderInspector(targetId);
+    renderInspector(currentManualEditTarget.id);
     closeEditManualModal();
 }
 
@@ -8147,43 +8110,56 @@ function openNewPedalModal() {
 }
 
 function openEditPedalModal(id) {
-    const pedal = pedalDatabase.find(p => p.id === id) || (typeof wishlistDatabase !== 'undefined' ? wishlistDatabase.find(w => w.id === id) : null);
+    const pedal = pedalDatabase.find(p => p.id === id);
     if (!pedal) return;
     editingPedalId = id;
-    cemPhotoBase64 = pedal.imageUrl || pedal.customPhotoUrl || null;
+    tempPhotoBase64 = pedal.imageUrl || null;
+    const titleEl = document.getElementById('np-modal-title');
+    if (titleEl) titleEl.textContent = 'Editar Pedal de mi Colección';
     
-    setCemType('pedal');
-    const dest = pedal.isWishlist ? 'wishlist' : (pedal.forSale ? 'sale' : 'collection');
-    setCemDest(dest);
+    document.getElementById('np-name').value = pedal.name || '';
+    document.getElementById('np-brand').value = pedal.brand || '';
+    document.getElementById('np-mabase').value = pedal.maBase || '';
+    document.getElementById('np-io-type').value = pedal.isStereo ? 'STEREO' : 'MONO';
+    const isUtility = pedal.category && (pedal.category.toLowerCase().includes('utilidad') || pedal.category.toLowerCase().includes('utility'));
+    document.getElementById('np-category-type').value = isUtility ? 'UTILITY' : 'EFFECT';
+    let cleanCat = pedal.category || '';
+    cleanCat = cleanCat.replace(/^Utilidad\s*\/\s*/i, '');
+    document.getElementById('np-category').value = cleanCat;
+    
+    const effCat = getEffectCategory(pedal);
+    const catSelect = document.getElementById('np-effect-category');
+    if (catSelect) catSelect.value = effCat;
 
-    const elBrand = document.getElementById('cem-pedal-brand');
-    if (elBrand) elBrand.value = pedal.brand || '';
-
-    const elModel = document.getElementById('cem-pedal-model');
-    if (elModel) elModel.value = pedal.name || '';
-
-    const elMa = document.getElementById('cem-pedal-ma');
-    if (elMa) elMa.value = pedal.maBase || pedal.maDraw || 20;
-
-    setCemIo(pedal.isStereo ? 'stereo' : 'mono');
-
-    let voltNum = 9;
-    if (pedal.voltage) {
-        if (pedal.voltage.includes('12')) voltNum = 12;
-        else if (pedal.voltage.includes('18')) voltNum = 18;
+    // Check if pedal is factory pedal
+    const isFactory = DEFAULT_PEDALS_FALLBACK.some(fp => fp.id === pedal.id || (!pedal.id.startsWith('custom-') && fp.name.toLowerCase() === pedal.name.toLowerCase() && fp.brand.toLowerCase() === pedal.brand.toLowerCase()));
+    const lockNote = document.getElementById('np-category-lock-note');
+    if (isFactory) {
+        if (catSelect) {
+            catSelect.disabled = true;
+            catSelect.classList.add('opacity-60', 'cursor-not-allowed', 'bg-[#1A1C23]');
+        }
+        if (lockNote) lockNote.classList.remove('hidden');
+    } else {
+        if (catSelect) {
+            catSelect.disabled = false;
+            catSelect.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-[#1A1C23]');
+        }
+        if (lockNote) lockNote.classList.add('hidden');
     }
-    setCemVolt(voltNum);
 
-    const elCat = document.getElementById('cem-pedal-category');
-    if (elCat) elCat.value = getEffectCategory(pedal);
-
-    const elNotes = document.getElementById('cem-notes');
-    if (elNotes) elNotes.value = pedal.notes || '';
-
-    const elManual = document.getElementById('cem-manual-url');
-    if (elManual) elManual.value = pedal.manualUrl || '';
-
-    document.getElementById('custom-equipment-modal').classList.remove('hidden');
+    document.getElementById('np-manual-url').value = pedal.manualUrl || '';
+    document.getElementById('np-photo-file').value = '';
+    document.getElementById('np-photo-error').classList.add('hidden');
+    const previewEl = document.getElementById('np-photo-preview');
+    const previewContainer = document.getElementById('np-photo-preview-container');
+    if (tempPhotoBase64) {
+        previewEl.src = tempPhotoBase64;
+        previewContainer.classList.remove('hidden');
+    } else {
+        previewContainer.classList.add('hidden');
+    }
+    document.getElementById('new-pedal-modal').classList.remove('hidden');
 }
 
 function closeNewPedalModal() {
@@ -8408,7 +8384,7 @@ function executeRegisterNewPowerSupply() {
 
 function promptDeletePedal(pedalId, event) {
     if (event) event.stopPropagation();
-    const pedal = pedalDatabase.find(p => p.id === pedalId) || (typeof wishlistDatabase !== 'undefined' ? wishlistDatabase.find(w => w.id === pedalId) : null);
+    const pedal = pedalDatabase.find(p => p.id === pedalId);
     if (!pedal) return;
     pedalToDeleteId = pedalId;
     document.getElementById('delete-pedal-target-name').textContent = `${pedal.brand} - ${pedal.name}`;
@@ -8426,10 +8402,6 @@ function executeDeletePedal() {
     const delId = pedalToDeleteId;
     const idx = pedalDatabase.findIndex(p => p.id === delId);
     if (idx !== -1) pedalDatabase.splice(idx, 1);
-    if (typeof wishlistDatabase !== 'undefined') {
-        const wIdx = wishlistDatabase.findIndex(w => w.id === delId);
-        if (wIdx !== -1) wishlistDatabase.splice(wIdx, 1);
-    }
     currentChainIds = currentChainIds.map(id => id === delId ? 'EMPTY' : id);
     delete currentPowerAssignments[delId];
     selectedPedalIds.delete(delId);
