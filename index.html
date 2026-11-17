@@ -32,10 +32,11 @@
         }
     </script>
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #121316; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2A2D36; border-radius: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #3F4452; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #121316; }
+        ::-webkit-scrollbar-thumb { background: #2A2D36; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F15A24; }
+        .drag-over { border-color: #F15A24 !important; background-color: rgba(241, 90, 36, 0.1) !important; }
     </style>
 </head>
 <body class="bg-[#121316] text-[#FFFFFF] font-sans min-h-screen flex flex-col antialiased selection:bg-[#F15A24] selection:text-[#FFFFFF]">
@@ -71,7 +72,7 @@
     </div>
     <!-- RIGHT BLOCK: GLOBAL BACKUP SYSTEM BUTTONS -->
     <div class="grid grid-cols-2 gap-1.5 bg-[#121316] border border-[#2A2D36] p-1 rounded-xl shrink-0 w-full sm:w-auto">
-        <button onclick="exportFullBackup()" title="Descargar copia de seguridad completa (Rig, Cadenas, Fotos y Fuentes)" class="w-full justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/50 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-2 text-xs transition-all active:scale-95 cursor-pointer">
+        <button onclick="exportFullBackup()" title="Descargar copia de seguridad completa" class="w-full justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/50 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-2 text-xs transition-all active:scale-95 cursor-pointer">
             <i class="fa-solid fa-download"></i> <span>Exportar backup</span>
         </button>
         <label title="Cargar copia de seguridad completa desde archivo JSON" class="w-full justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] hover:text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC] px-3 py-1.5 rounded-lg font-semibold flex items-center gap-2 text-xs cursor-pointer transition-all active:scale-95">
@@ -81,240 +82,217 @@
     </div>
 </header>
 
-<!-- MAIN FLEX CONTAINER (VIEWS + SIDEBAR INSPECTOR) -->
-<div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+<!-- MAIN FLEX CONTAINER (SIDEBAR INSPECTOR PERMANENTLY ON RIGHT) -->
+<div class="flex-1 flex flex-row overflow-hidden w-full">
     <!-- LEFT CONTAINER (SWITCHABLE VIEWS) -->
-    <main class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+    <main class="flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 space-y-6">
 
-        <!-- VISTA 1: EXPLORAR (DASHBOARD & ESTADÍSTICAS) -->
+        <!-- VISTA 1: EXPLORAR (DEFAULT) -->
         <div id="view-explore" class="space-y-6">
-            <!-- TOP UNIFIED BANNER (PURPLE BORDER) -->
-            <div class="bg-[#1C1E24] border-2 border-[#8B5CF6] p-5 !mt-0 rounded-2xl shadow-xl space-y-4">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
-                    <div class="space-y-1">
-                        <h2 class="text-base sm:text-lg font-bold text-[#FFFFFF] tracking-tight">
-                            Dashboard y estadísticas de tu rig
+            <!-- BANNER UNIFICADO DE EXPLORAR -->
+            <div class="bg-[#1C1E24] border-2 border-[#8B5CF6] p-5 rounded-2xl shadow-xl space-y-2">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-bold text-[#FFFFFF] tracking-tight flex items-center gap-2">
+                            <i class="fa-solid fa-compass text-[#8B5CF6]"></i> Dashboard y estadísticas de tu rig
                         </h2>
-                        <p class="text-xs text-[#9CA3AF] leading-relaxed">
+                        <p class="text-xs text-[#9CA3AF] leading-relaxed mt-1">
                             Resumen analítico en tiempo real de tu equipamiento, marcas y tipos de efecto.
                         </p>
                     </div>
-                    <!-- KPI SUMMARY BADGES -->
-                    <div class="flex items-center gap-2.5 flex-wrap shrink-0">
-                        <div class="bg-[#121316] px-3.5 py-1.5 rounded-xl border border-[#2A2D36] font-mono space-y-0.5 min-w-[140px]">
-                            <span class="text-[#9CA3AF] text-[10px] font-bold block border-b border-[#2A2D36] pb-0.5">En mi colección</span>
-                            <span id="stat-collection-count" class="text-[#8B5CF6] font-bold text-sm block">0 Pedales</span>
-                        </div>
-                        <div class="bg-[#121316] px-3.5 py-1.5 rounded-xl border border-[#2A2D36] font-mono space-y-0.5 min-w-[140px]">
-                            <span class="text-[#9CA3AF] text-[10px] font-bold block border-b border-[#2A2D36] pb-0.5">En Wishlist</span>
-                            <span id="stat-wishlist-count" class="text-[#F15A24] font-bold text-sm block">0 Pedales</span>
-                        </div>
-                    </div>
                 </div>
-                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-                    <div class="flex items-center gap-2 text-xs font-mono font-bold text-[#8B5CF6]">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        <span>ESTADÍSTICAS DEL RIG:</span>
+            </div>
+
+            <!-- PURPLE BORDER CONTAINER AROUND THE 4 METRIC CARDS (Fuente 203.png) -->
+            <div class="bg-[#1C1E24] border-2 border-[#8B5CF6] p-5 rounded-2xl shadow-xl space-y-4">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- CARD 1: EN MI COLECCIÓN (NARANJA) -->
+                    <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-[11px] font-mono text-[#F15A24] uppercase font-bold tracking-wider">En mi colección</p>
+                            <h3 id="stat-collection-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-[#1C1E24] border border-[#F15A24]/40 flex items-center justify-center text-white shadow-inner">
+                            <i class="fa-solid fa-box text-sm"></i>
+                        </div>
                     </div>
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
-                        <span class="text-xs text-[#9CA3AF] font-mono">Telemetría analítica en tiempo real</span>
+
+                    <!-- CARD 2: EN WISHLIST (PÚRPURA) -->
+                    <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-[11px] font-mono text-[#8B5CF6] uppercase font-bold tracking-wider">En Wishlist</p>
+                            <h3 id="stat-wishlist-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-[#1C1E24] border border-[#8B5CF6]/40 flex items-center justify-center text-white shadow-inner">
+                            <i class="fa-solid fa-heart text-sm"></i>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: EN VENTA (AMARILLO) -->
+                    <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-[11px] font-mono text-[#EAB308] uppercase font-bold tracking-wider">En venta</p>
+                            <h3 id="stat-forsale-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-[#1C1E24] border border-[#EAB308]/40 flex items-center justify-center text-white shadow-inner">
+                            <i class="fa-solid fa-tag text-sm"></i>
+                        </div>
+                    </div>
+
+                    <!-- CARD 4: CADENAS CREADAS (CIAN) -->
+                    <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-[11px] font-mono text-[#00A8CC] uppercase font-bold tracking-wider">Cadenas creadas</p>
+                            <h3 id="stat-chains-count" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-[#1C1E24] border border-[#00A8CC]/40 flex items-center justify-center text-white shadow-inner">
+                            <i class="fa-solid fa-diagram-project text-sm"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- METRICS CARDS (4 KPIs) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En mi colección</p>
-                        <h3 id="stat-kpi-collection" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                        <i class="fa-solid fa-box text-sm"></i>
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En Wishlist</p>
-                        <h3 id="stat-kpi-wishlist" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                        <i class="fa-solid fa-heart text-sm"></i>
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">En venta</p>
-                        <h3 id="stat-kpi-forsale" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                        <i class="fa-solid fa-tag text-sm"></i>
-                    </div>
-                </div>
-
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div>
-                        <p class="text-[11px] font-mono text-[#9CA3AF] uppercase font-bold">Cadenas creadas</p>
-                        <h3 id="stat-kpi-chains" class="text-2xl font-black text-[#FFFFFF] mt-1">0</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-[#121316] border border-[#2A2D36] flex items-center justify-center text-[#FFFFFF]">
-                        <i class="fa-solid fa-diagram-project text-sm"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VISUAL ANALYTICS: CHARTS SIDE BY SIDE -->
+            <!-- CHARTS SIDE BY SIDE (Fuente 204.png) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4 shadow-md">
+                <!-- CHART 1: ADN POR TIPO DE EFECTO (SORTED DESCENDING) -->
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4 shadow-xl">
                     <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
                         <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-white"></i> ADN por Tipo de Efecto
+                            <i class="fa-solid fa-chart-pie text-[#8B5CF6]"></i> ADN por Tipo de Efecto
                         </h3>
                         <span class="text-[10px] font-mono text-[#9CA3AF]">Distribución %</span>
                     </div>
                     <div id="chart-effects-container" class="space-y-3 pt-2">
-                        <!-- Rendered by JS -->
                     </div>
                 </div>
 
-                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4 shadow-md">
+                <!-- CHART 2: DISTRIBUCIÓN POR MARCAS (WITH COLORED BARS) -->
+                <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4 shadow-xl">
                     <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
                         <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
-                            <i class="fa-solid fa-tags text-white"></i> Distribución por Marcas
+                            <i class="fa-solid fa-tags text-[#00A8CC]"></i> Distribución por Marcas
                         </h3>
                         <span class="text-[10px] font-mono text-[#9CA3AF]">Top Fabricantes</span>
                     </div>
                     <div id="chart-brands-container" class="space-y-3 pt-2">
-                        <!-- Rendered by JS -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA 2: MI COLECCIÓN E INVENTARIO -->
-        <div id="view-collection" class="hidden space-y-6 !mt-0">
-            <!-- TOP UNIFIED BANNER (ORANGE BORDER) -->
-            <div class="bg-[#1C1E24] border-2 border-[#F15A24] p-5 !mt-0 rounded-2xl shadow-xl space-y-4">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
-                    <div class="space-y-1">
-                        <h2 class="text-base sm:text-lg font-bold text-[#FFFFFF] tracking-tight">
-                            Mi colección e inventario
-                        </h2>
-                        <p class="text-xs text-[#9CA3AF] leading-relaxed">
-                            Administra tus pedales personales, armá cadenas de efecto y configurá tus fuentes de alimentación.
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-2.5 flex-wrap shrink-0">
-                        <div class="bg-[#121316] px-3.5 py-1.5 rounded-xl border border-[#2A2D36] font-mono space-y-0.5 min-w-[140px]">
-                            <span class="text-[#9CA3AF] text-[10px] font-bold block border-b border-[#2A2D36] pb-0.5">En mi colección</span>
-                            <span id="col-summary-pedals" class="text-[#F15A24] font-bold text-sm block">0 Pedales</span>
-                        </div>
-                    </div>
+        <!-- VISTA 2: MI COLECCIÓN -->
+        <div id="view-collection" class="space-y-6 hidden">
+            <!-- BANNER UNIFICADO DE MI COLECCIÓN (Fuente 202.png) -->
+            <div class="bg-[#1C1E24] border-2 border-[#F15A24] p-5 rounded-2xl shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                <div class="space-y-1 min-w-[280px] flex-1">
+                    <h2 class="text-base sm:text-lg font-bold text-[#FFFFFF] tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Mi colección e inventario
+                    </h2>
+                    <p class="text-xs text-[#9CA3AF] max-w-xl leading-relaxed">
+                        Administra tus pedales personales, armá cadenas de efecto y configurá tus fuentes de alimentación.
+                    </p>
                 </div>
-                <!-- ACTION BUTTONS -->
-                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-                    <div class="flex items-center gap-2 text-xs font-mono font-bold text-[#F15A24]">
-                        <i class="fa-solid fa-sliders"></i>
-                        <span>ACCIONES DE COLECCIÓN:</span>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 sm:gap-2.5">
-                        <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer">
-                            <i class="fa-solid fa-magnifying-glass"></i> Buscar pedal o fuente
-                        </button>
-                        <button onclick="openCustomEquipmentModal()" class="bg-[#121316] hover:bg-[#1A1C22] text-[#F15A24] border border-[#F15A24] font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer">
-                            <i class="fa-solid fa-plus"></i> Cargar equipo personalizado
-                        </button>
-                    </div>
+                <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 shrink-0 max-w-full">
+                    <button onclick="openMasterCatalogModal()" class="bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 whitespace-nowrap cursor-pointer">
+                        <i class="fa-solid fa-magnifying-glass"></i> Buscar pedal o fuente
+                    </button>
+                    <button onclick="openCustomEquipmentModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24] font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 whitespace-nowrap cursor-pointer">
+                        <i class="fa-solid fa-plus"></i> Cargar equipo personalizado
+                    </button>
                 </div>
             </div>
 
-            <!-- FILTROS (FUENTE 200.png) -->
-            <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl space-y-4 shadow-md">
+            <!-- FILTROS POR BOTONES PILL (Fuente 200.png) -->
+            <div class="bg-[#1C1E24] border border-[#2A2D36] p-4 rounded-2xl space-y-4 shadow-xl">
                 <!-- FILTRO POR MARCA -->
                 <div class="space-y-2">
-                    <div class="text-[#F15A24] font-bold text-xs uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-filter"></i>
-                        <span>FILTRO POR MARCA</span>
+                    <div class="flex items-center gap-2 text-xs font-bold text-[#F15A24] font-mono uppercase tracking-wider">
+                        <i class="fa-solid fa-filter"></i> FILTRO POR MARCA
                     </div>
-                    <div id="collection-brand-filters" class="flex flex-wrap items-center gap-2">
-                        <!-- Rendered by JS -->
+                    <div id="brand-filters" class="flex flex-wrap items-center gap-2">
                     </div>
                 </div>
+                
+                <div class="h-px bg-[#2A2D36] w-full"></div>
 
                 <!-- FILTRO POR TIPO DE EFECTO -->
-                <div class="space-y-2 pt-2 border-t border-[#2A2D36]">
-                    <div class="text-[#F15A24] font-bold text-xs uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i>
-                        <span>FILTRO POR TIPO DE EFECTO</span>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-xs font-bold text-[#F15A24] font-mono uppercase tracking-wider">
+                        <i class="fa-solid fa-sliders"></i> FILTRO POR TIPO DE EFECTO
                     </div>
-                    <div id="collection-category-filters" class="flex flex-wrap items-center gap-2">
-                        <!-- Rendered by JS -->
+                    <div id="category-filters" class="flex flex-wrap items-center gap-2">
                     </div>
                 </div>
             </div>
 
-            <!-- SECTION 1: PEDALES DE EFECTO -->
-            <section class="space-y-3" id="sec-effects" ondragover="allowCollectionDrop(event)" ondrop="handleCollectionDrop(event, 'effects')">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2A2D36] pb-2.5">
-                    <div class="flex items-center gap-3">
-                        <h3 class="text-sm font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-sliders"></i> PEDALES DE EFECTO
-                        </h3>
-                        <!-- SEARCH BOX RIGHT NEXT TO TITLE AS IN 200.png / 201.png -->
-                        <div class="relative">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs"></i>
-                            <input type="text" id="collection-search-input" oninput="handleCollectionSearch(this.value)" placeholder="Buscar por nombre o marca..." class="bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-full pl-8 pr-3 py-1 text-xs font-mono focus:outline-none transition-all w-48 sm:w-64">
-                        </div>
+            <!-- 4 VERTICAL SECTIONS WITH DRAG & DROP -->
+
+            <!-- SECCIÓN 1: PEDALES DE EFECTO -->
+            <section class="space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#2A2D36] pb-2">
+                    <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-[#F15A24]"></i> PEDALES DE EFECTO
+                    </h3>
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-xs"></i>
+                        <input type="text" 
+                               id="collection-effects-search" 
+                               oninput="handleCatalogSearch(this.value)"
+                               placeholder="Buscar por nombre o marca..." 
+                               class="w-full bg-[#121316] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl pl-8 pr-3 py-1.5 text-xs font-mono focus:outline-none transition-all">
                     </div>
-                    <span id="effects-counter-badge" class="text-xs font-mono text-[#9CA3AF]">0 Pedales</span>
                 </div>
-                <div id="collection-effects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-2 border-2 border-dashed border-transparent hover:border-[#2A2D36] rounded-2xl transition-all">
-                    <!-- Cards rendered by JS -->
-                </div>
-            </section>
-
-            <!-- SECTION 2: PEDALES DE UTILIDAD -->
-            <section class="space-y-3" id="sec-utility" ondragover="allowCollectionDrop(event)" ondrop="handleCollectionDrop(event, 'utility')">
-                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
-                    <h3 class="text-sm font-bold text-[#F15A24] uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-wrench"></i> PEDALES DE UTILIDAD
-                    </h3>
-                    <span id="utility-counter-badge" class="text-xs font-mono text-[#9CA3AF]">0 Pedales</span>
-                </div>
-                <div id="collection-utility-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-2 border-2 border-dashed border-transparent hover:border-[#2A2D36] rounded-2xl transition-all">
-                    <!-- Cards rendered by JS -->
+                <div id="effects-catalog-grid" 
+                     ondragover="handleSectionDragOver(event)" 
+                     ondrop="handleSectionDrop(event, 'effects')" 
+                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[100px] p-2 rounded-xl transition-all border border-transparent">
                 </div>
             </section>
 
-            <!-- SECTION 3: WISHLIST -->
-            <section class="space-y-3" id="sec-wishlist" ondragover="allowCollectionDrop(event)" ondrop="handleCollectionDrop(event, 'wishlist')">
-                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
-                    <h3 class="text-sm font-bold text-[#8B5CF6] uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-heart"></i> WISHLIST
+            <!-- SECCIÓN 2: FUENTES DE ALIMENTACIÓN -->
+            <section class="space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                    <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                        <i class="fa-solid fa-bolt text-[#00A8CC]"></i> FUENTES DE ALIMENTACIÓN
                     </h3>
-                    <span id="wishlist-counter-badge" class="text-xs font-mono text-[#9CA3AF]">0 Pedales</span>
                 </div>
-                <div id="collection-wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-2 border-2 border-dashed border-transparent hover:border-[#2A2D36] rounded-2xl transition-all">
-                    <!-- Cards rendered by JS -->
+                <div id="power-supplies-grid" 
+                     ondragover="handleSectionDragOver(event)" 
+                     ondrop="handleSectionDrop(event, 'power')" 
+                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[100px] p-2 rounded-xl transition-all border border-transparent">
                 </div>
             </section>
 
-            <!-- SECTION 4: EN VENTA -->
-            <section class="space-y-3" id="sec-forsale" ondragover="allowCollectionDrop(event)" ondrop="handleCollectionDrop(event, 'forsale')">
-                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
-                    <h3 class="text-sm font-bold text-[#EAB308] uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-tag"></i> EN VENTA
+            <!-- SECCIÓN 3: WISHLIST -->
+            <section class="space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                    <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                        <i class="fa-solid fa-heart text-[#8B5CF6]"></i> WISHLIST
                     </h3>
-                    <span id="forsale-counter-badge" class="text-xs font-mono text-[#9CA3AF]">0 Pedales</span>
                 </div>
-                <div id="collection-forsale-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-2 border-2 border-dashed border-transparent hover:border-[#2A2D36] rounded-2xl transition-all">
-                    <!-- Cards rendered by JS -->
+                <div id="wishlist-grid" 
+                     ondragover="handleSectionDragOver(event)" 
+                     ondrop="handleSectionDrop(event, 'wishlist')" 
+                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[100px] p-2 rounded-xl transition-all border border-transparent">
+                </div>
+            </section>
+
+            <!-- SECCIÓN 4: EN VENTA -->
+            <section class="space-y-3">
+                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                    <h3 class="text-sm font-bold text-[#FFFFFF] flex items-center gap-2">
+                        <i class="fa-solid fa-tag text-[#EAB308]"></i> EN VENTA
+                    </h3>
+                </div>
+                <div id="collection-forsale-grid" 
+                     ondragover="handleSectionDragOver(event)" 
+                     ondrop="handleSectionDrop(event, 'forsale')" 
+                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[100px] p-2 rounded-xl transition-all border border-transparent">
                 </div>
             </section>
         </div>
-<div id="view-chain" class="hidden space-y-6 !mt-0">
+<!-- VISTA 3: MIS CADENAS -->
+        <div id="view-chain" class="hidden space-y-6 !mt-0">
             <div class="bg-[#1C1E24] border-2 border-[#00A8CC] p-5 !mt-0 rounded-2xl shadow-xl space-y-4">
                 <!-- FILA 1: TÍTULO / DESCRIPCIÓN + TELEMETRÍA (CONSUMO Y PEDALES) -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A2D36] pb-4">
@@ -446,185 +424,15 @@
                 </div>
             </section>
         </div>
-    
-        <!-- VISTA 3: LISTA DE DESEOS
     </main>
 
-    <!-- RIGHT SIDEBAR: DYNAMIC INSPECTOR PANEL (BASE V98) -->
-    <aside id="inspector-panel" class="w-full lg:w-96 bg-[#1C1E24] border-t lg:border-t-0 lg:border-l border-[#F15A24] p-6 flex flex-col overflow-y-auto shrink-0">
-        <div id="inspector-content" class="space-y-[#121316]">
-            <!-- Dynamic Inspector Content rendered by JS -->
+    <!-- RIGHT SIDEBAR: DYNAMIC INSPECTOR PANEL (ALWAYS ON RIGHT SIDE) -->
+    <aside id="inspector-panel" class="w-80 lg:w-96 bg-[#1C1E24] border-l border-[#8B5CF6] p-6 flex flex-col overflow-y-auto shrink-0">
+        <div id="inspector-content" class="space-y-4">
+            <!-- Populated dynamically -->
         </div>
     </aside>
 </div>
-
-<!-- CUSTOM EQUIPMENT MODAL -->
-<div id="custom-equipment-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
-        <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
-            <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-plus text-[#F15A24]"></i>
-                <span>Cargar equipo personalizado</span>
-            </h3>
-            <button onclick="closeCustomEquipmentModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm cursor-pointer">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <!-- EQUIPMENT TYPE TOGGLE BUTTONS -->
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Tipo de equipo *</label>
-            <div class="grid grid-cols-2 gap-2">
-                <button type="button" id="cem-type-pedal" onclick="setCemEquipmentType('PEDAL')" class="py-2 px-3 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-sliders"></i> Pedal de efecto o utilidad
-                </button>
-                <button type="button" id="cem-type-power" onclick="setCemEquipmentType('POWER')" class="py-2 px-3 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-bolt"></i> Fuente de alimentación
-                </button>
-            </div>
-        </div>
-
-        <!-- DESTINATION BUTTONS -->
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Destino inicial *</label>
-            <div class="grid grid-cols-3 gap-2">
-                <button type="button" id="cem-dest-collection" onclick="setCemDestination('collection')" class="py-1.5 px-2 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] text-center cursor-pointer">
-                    Colección
-                </button>
-                <button type="button" id="cem-dest-wishlist" onclick="setCemDestination('wishlist')" class="py-1.5 px-2 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white text-center cursor-pointer">
-                    Wishlist
-                </button>
-                <button type="button" id="cem-dest-sale" onclick="setCemDestination('sale')" class="py-1.5 px-2 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white text-center cursor-pointer">
-                    En venta
-                </button>
-            </div>
-        </div>
-
-        <!-- PEDAL FIELDS CONTAINER -->
-        <div id="cem-pedal-fields" class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Marca / Fabricante *</label>
-                    <input type="text" id="cem-pedal-brand" placeholder="Ej: Boss" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Modelo / Nombre *</label>
-                    <input type="text" id="cem-pedal-model" placeholder="Ej: OD-2 TURBO OverDrive" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Categoría *</label>
-                    <select id="cem-pedal-category" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                        <option value="Saturación & ganancia">Saturación & ganancia</option>
-                        <option value="Dinámica & modelado">Dinámica & modelado</option>
-                        <option value="Pitch & sintetizador">Pitch & sintetizador</option>
-                        <option value="Modulación">Modulación</option>
-                        <option value="Delay & eco">Delay & eco</option>
-                        <option value="Reverberación & espacio">Reverberación & espacio</option>
-                        <option value="Lo-Fi, glitch & texturas">Lo-Fi, glitch & texturas</option>
-                        <option value="Loopers de frase">Loopers de frase</option>
-                        <option value="Utilidad & ruteo">Utilidad & ruteo</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Consumo (mA base) *</label>
-                    <input type="number" id="cem-pedal-ma" value="20" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura I/O *</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" id="cem-io-mono" onclick="setCemIo('MONO')" class="py-1.5 px-2 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] cursor-pointer">
-                            Mono I/O
-                        </button>
-                        <button type="button" id="cem-io-stereo" onclick="setCemIo('STEREO')" class="py-1.5 px-2 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white cursor-pointer">
-                            Stereo I/O
-                        </button>
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Voltaje *</label>
-                    <div class="grid grid-cols-3 gap-1.5">
-                        <button type="button" id="cem-volt-9v" onclick="setCemVolt('9V')" class="py-1.5 px-1 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] cursor-pointer">
-                            9V
-                        </button>
-                        <button type="button" id="cem-volt-12v" onclick="setCemVolt('12V')" class="py-1.5 px-1 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white cursor-pointer">
-                            12V
-                        </button>
-                        <button type="button" id="cem-volt-18v" onclick="setCemVolt('18V')" class="py-1.5 px-1 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white cursor-pointer">
-                            18V
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- POWER SUPPLY FIELDS CONTAINER -->
-        <div id="cem-power-fields" class="hidden space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Marca / Fabricante *</label>
-                    <input type="text" id="cem-power-brand" placeholder="Ej: Voodoo Lab" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Modelo / Nombre *</label>
-                    <input type="text" id="cem-power-model" placeholder="Ej: Pedal Power 2 Plus" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                    <label class="text-xs text-[#9CA3AF] block font-mono">Cantidad de salidas aisladas *</label>
-                    <button type="button" onclick="copyFirstOutputToAll()" class="text-[11px] font-mono text-[#F15A24] hover:underline cursor-pointer">
-                        <i class="fa-solid fa-copy"></i> Copiar Salida 1 a todas
-                    </button>
-                </div>
-                <input type="number" id="cem-power-outlet-count" value="8" min="1" max="24" onchange="generatePowerOutletRows()" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-            </div>
-
-            <div id="cem-power-outlets-container" class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar p-2 bg-[#121316] border border-[#2A2D36] rounded-xl">
-                <!-- Dynamic outlet rows -->
-            </div>
-        </div>
-
-        <!-- COMMON FIELDS -->
-        <div class="space-y-3 pt-2 border-t border-[#2A2D36]">
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Link al manual (PDF opcional)</label>
-                <input type="url" id="cem-manual-url" placeholder="https://..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-            </div>
-
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Notas personalizadas (opcional)</label>
-                <textarea id="cem-notes" rows="2" placeholder="Seteos recomendados, observaciones..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]"></textarea>
-            </div>
-
-            <div class="space-y-2 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
-                <label class="text-xs text-[#F15A24] font-bold block font-mono flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera"></i> Subir foto del equipo (Máx 1 MB)
-                </label>
-                <input type="file" id="cem-photo-file" accept="image/*" onchange="handleCemPhotoUpload(event)" class="text-xs text-[#9CA3AF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#1C1E24] file:text-[#F15A24] hover:file:bg-[#20232B] cursor-pointer">
-                <div id="cem-photo-preview-container" class="hidden pt-2 flex justify-center">
-                    <img id="cem-photo-preview" src="" alt="Vista previa" class="h-24 object-contain rounded-lg border border-[#2A2D36]">
-                </div>
-            </div>
-        </div>
-
-        <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
-            <button onclick="closeCustomEquipmentModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-[#121316] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] cursor-pointer">
-                Cancelar
-            </button>
-            <button onclick="executeSaveCustomEquipment()" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#F15A24] hover:bg-[#d94d1b] text-[#FFFFFF] shadow-md transition-all cursor-pointer flex items-center gap-2">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar equipo
-            </button>
-        </div>
-    </div>
-</div>
-<!-- REGISTER / EDIT PEDAL MODAL -->
 <div id="new-pedal-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -660,66 +468,6 @@
                 <input type="text" id="np-brand" placeholder="Ej: Boss" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
             </div>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Consumo (mA) *</label>
-                <input type="number" id="np-mabase" value="20" placeholder="20" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura I/O *</label>
-                <select id="np-io-type" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] font-mono text-xs">
-                    <option value="STEREO">Stereo I/O (Soporta Mono/Stereo)</option>
-                    <option value="MONO">Mono I/O Solamente (Bloqueado)</option>
-                </select>
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Tipo de Unidad *</label>
-                <select id="np-category-type" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] font-mono text-xs">
-                    <option value="EFFECT">Efecto</option>
-                    <option value="UTILITY">Utilidad</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Categoría de efecto *</label>
-            <select id="np-effect-category" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24] font-mono text-xs">
-                <option value="">-- Seleccionar Categoría Obligatoria --</option>
-                <option value="Saturación & ganancia">Saturación & ganancia (Overdrive / Distorsión / Fuzz)</option>
-                <option value="Delay & eco">Delay & eco (Digital / Analógico BBD / Tape)</option>
-                <option value="Reverberación & espacio">Reverberación & espacio (Hall / Ambient / Shimmer / Plate / Spring)</option>
-                <option value="Modulación">Modulación (Chorus / Phaser / Flanger / Tremolo / Vibrato / Filter)</option>
-                <option value="Lo-Fi, glitch & texturas">Lo-Fi, glitch & texturas (Tape Loss / Bitcrusher / Glitch / Granular)</option>
-                <option value="Pitch & sintetizador">Pitch & sintetizador (Octavador / Pitch Shifter / Synth / Ring Mod)</option>
-                <option value="Dinámica & modelado">Dinámica & modelado (Compresor / Preamp / Amp Sim / EQ / Boost)</option>
-                <option value="Loopers de frase">Loopers de frase (Phrase Looper / Multi-track)</option>
-                <option value="Utilidad & ruteo">Utilidad & ruteo (Afinador / Switcher / Noise Gate / Expression / Buffer)</option>
-            </select>
-
-        </div>
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Detalle / Especificación del efecto</label>
-            <input type="text" id="np-category" placeholder="Ej: Analog Overdrive / Distortion / Swells" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">URL Manual / Documentación (Opcional)</label>
-            <input type="text" id="np-manual-url" placeholder="https://drive.google.com/file/d/..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#F15A24]">
-        </div>
-
-        <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
-            <button onclick="closeNewPedalModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#9CA3AF] hover:text-[#FFFFFF] bg-[#121316] hover:bg-[#20232B] transition-all">
-                Cancelar
-            </button>
-            <button onclick="executeRegisterNewPedal()" class="px-4 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#F15A24] hover:bg-[#d94d1b] transition-all shadow-lg">
-                Guardar Pedal
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- SAVE FAVORITE CHAIN MODAL -->
 <div id="save-fav-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -757,19 +505,6 @@
             </div>
             <div id="fav-tags-selector" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-2 bg-[#121316] border border-[#2A2D36] rounded-xl text-xs scrollbar-thin"></div>
         </div>
-
-        <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
-            <button onclick="closeSaveFavoriteModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#9CA3AF] hover:text-[#FFFFFF] bg-[#121316] hover:bg-[#20232B] transition-all">
-                Cancelar
-            </button>
-            <button onclick="executeSaveFavorite()" class="px-4 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#F15A24] hover:bg-[#d94d1b] transition-all shadow-lg">
-                Guardar Favorito
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ADD POWER SUPPLY TO CHAIN MODAL -->
 <div id="add-ps-to-chain-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -788,9 +523,6 @@
             </button>
         </div>
     </div>
-</div>
-
-<!-- REGISTER NEW POWER SUPPLY MODAL (CUSTOM CREATOR) -->
 <div id="new-power-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -826,42 +558,6 @@
                 <input type="text" id="nps-model" placeholder="Ej: Zuma" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#00A8CC]">
             </div>
         </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Cantidad de salidas físicas *</label>
-            <div class="flex gap-2">
-                <input type="number" id="nps-outlets-count" value="5" min="1" max="16" placeholder="5" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#00A8CC]">
-                <button onclick="generateCustomOutletEditors()" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] font-mono text-xs font-bold px-4 py-2 rounded-xl shrink-0 border border-[#2A2D36]">Configurar salidas</button>
-            </div>
-        </div>
-
-        <div class="space-y-2">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Configuración individual de salidas (Voltaje & maxmA)</label>
-            <div id="nps-outlets-editor-list" class="space-y-2 bg-[#121316] p-3 rounded-xl border border-[#2A2D36] max-h-48 overflow-y-auto"></div>
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Detalles / Especificaciones adicionales</label>
-            <textarea id="nps-details" rows="2" placeholder="Ej: Salidas aisladas de alta corriente." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl p-2.5 text-xs text-[#FFFFFF] focus:outline-none focus:border-[#00A8CC] resize-none font-sans"></textarea>
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">URL Manual / Documentación (Opcional)</label>
-            <input type="text" id="nps-manual-url" placeholder="https://drive.google.com/file/d/..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#00A8CC]">
-        </div>
-
-        <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
-            <button onclick="closeNewPowerSupplyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#9CA3AF] hover:text-[#FFFFFF] bg-[#121316] hover:bg-[#20232B] transition-all">
-                Cancelar
-            </button>
-            <button onclick="executeRegisterNewPowerSupply()" class="px-4 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#00A8CC] hover:bg-[#0092b3] transition-all shadow-lg">
-                Guardar Fuente Custom
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ADD / EDIT MANUAL MODAL -->
 <div id="edit-manual-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -885,9 +581,6 @@
             </button>
         </div>
     </div>
-</div>
-
-<!-- DELETE PEDAL CONFIRMATION MODAL -->
 <div id="delete-pedal-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -911,9 +604,6 @@
             </button>
         </div>
     </div>
-</div>
-
-<!-- DELETE POWER SUPPLY CONFIRMATION MODAL -->
 <div id="delete-power-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
@@ -937,746 +627,272 @@
             </button>
         </div>
     </div>
-</div>
+<div id="master-wishlist-modal" onclick="closeMasterWishlistModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#8B5CF6]/50 rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
+        <!-- MODAL HEADER -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
+            <div>
+                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#8B5CF6]"></i> Catálogo de pedales para wishlist
+                </h3>
+                <p class="text-xs text-[#9CA3AF]">
+                    Explorá los pedales del catálogo ordenados de A-Z y agregalos a tu lista de deseos.
+                </p>
+            </div>
+            <button onclick="closeMasterWishlistModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
 
-<!-- JAVASCRIPT LOGIC -->
+        <!-- SEARCH AND FILTERS TOOLBAR -->
+        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <input type="text" id="mw-search" oninput="handleMasterWishlistSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#8B5CF6] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
+                </div>
+            </div>
+<div id="new-wishlist-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
+            <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
+                <i class="fa-solid fa-gift text-[#8B5CF6]"></i>
+                <span id="nw-modal-title">Agregar pedal a lista de deseos</span>
+            </h3>
+            <button onclick="closeNewWishlistPedalModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="space-y-2 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
+            <label class="text-xs text-[#8B5CF6] font-bold block font-mono flex items-center gap-1.5">
+                <i class="fa-solid fa-camera"></i> Subir Foto del Pedal (Máx 1 MB)
+            </label>
+            <div class="flex items-center gap-3">
+                <input type="file" id="nw-photo-file" accept="image/*" onchange="handlePedalPhotoUpload(event, 'WISHLIST_NEW')" class="text-xs text-[#9CA3AF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#121316] file:text-[#8B5CF6] hover:file:bg-[#20232B] cursor-pointer">
+            </div>
+            <div id="nw-photo-preview-container" class="hidden pt-2 flex justify-center">
+                <img id="nw-photo-preview" src="" alt="Vista previa" class="h-28 object-contain rounded-lg border border-[#2A2D36]">
+            </div>
+            <p id="nw-photo-error" class="hidden text-[11px] text-[#F15A24] font-mono"></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Nombre del pedal *</label>
+                <input type="text" id="nw-name" placeholder="Ej: Bonsai" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+            </div>
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Marca / Fabricante *</label>
+                <input type="text" id="nw-brand" placeholder="Ej: JHS Pedals" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
+            </div>
+        </div>
+<div id="master-catalog-modal" onclick="closeMasterCatalogModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
+        <!-- MODAL HEADER -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
+            <div>
+                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo de pedales de fábrica
+                </h3>
+                <p class="text-xs text-[#9CA3AF]">
+                    Explorá los pedales del catálogo ordenados de A-Z y agregá los que tengas a tu colección personal.
+                </p>
+            </div>
+            <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- SEARCH AND FILTERS TOOLBAR -->
+        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <input type="text" id="master-catalog-search-input" oninput="handleMasterCatalogSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
+                </div>
+            </div>
+<div id="image-zoom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeImageZoomModal(event)">
+        <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
+                <h3 id="image-zoom-title" class="text-sm font-bold text-[#FFFFFF] truncate max-w-[85%]">Vista Previa del Pedal</h3>
+                <button onclick="closeImageZoomModal()" title="Cerrar vista previa" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex justify-center items-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] min-h-[220px]">
+                <img id="image-zoom-img" src="" alt="Pedal Ampliado" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-md">
+            </div>
+        </div>
+
+<!-- CUSTOM EQUIPMENT REGISTRATION MODAL -->
+<div id="custom-equipment-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+        <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
+            <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
+                <i class="fa-solid fa-plus text-[#F15A24]"></i>
+                <span>Cargar equipo personalizado</span>
+            </h3>
+            <button onclick="closeCustomEquipmentModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- PASO 1: CONMUTADOR PEDAL O FUENTE -->
+        <div class="space-y-1.5">
+            <label class="text-xs text-[#9CA3AF] block font-mono">Tipo de equipamiento *</label>
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" id="cem-type-pedal" onclick="setCemEquipmentType('PEDAL')" class="py-2 px-3 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-sliders"></i> Pedal de efecto o utilidad
+                </button>
+                <button type="button" id="cem-type-power" onclick="setCemEquipmentType('POWER')" class="py-2 px-3 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-bolt"></i> Fuente de alimentación
+                </button>
+            </div>
+        </div>
+
+        <!-- DESTINO -->
+        <div class="space-y-1.5">
+            <label class="text-xs text-[#9CA3AF] block font-mono">Destino inicial *</label>
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" id="cem-dest-collection" onclick="setCemDestination('COLLECTION')" class="py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-box"></i> Colección
+                </button>
+                <button type="button" id="cem-dest-wishlist" onclick="setCemDestination('WISHLIST')" class="py-1.5 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-heart"></i> Wishlist
+                </button>
+                <button type="button" id="cem-dest-sale" onclick="setCemDestination('SALE')" class="py-1.5 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-tag"></i> Venta
+                </button>
+            </div>
+        </div>
+
+        <!-- FORMULARIO SI ES PEDAL -->
+        <div id="cem-pedal-fields" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Marca *</label>
+                    <input type="text" id="cem-pedal-brand" placeholder="Ej: Boss, Strymon" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Modelo *</label>
+                    <input type="text" id="cem-pedal-model" placeholder="Ej: BD-2w, Timeline" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Categoría *</label>
+                    <select id="cem-pedal-category" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+                        <option value="Saturación & ganancia">Saturación & ganancia</option>
+                        <option value="Modulación">Modulación</option>
+                        <option value="Delay & eco">Delay & eco</option>
+                        <option value="Reverberación & espacio">Reverberación & espacio</option>
+                        <option value="Dinámica & modelado">Dinámica & modelado</option>
+                        <option value="Pitch & sintetizador">Pitch & sintetizador</option>
+                        <option value="Lo-Fi, glitch & texturas">Lo-Fi, glitch & texturas</option>
+                        <option value="Loopers de frase">Loopers de frase</option>
+                        <option value="Utilidad & ruteo">Utilidad & ruteo</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Consumo (mA base) *</label>
+                    <input type="number" id="cem-pedal-ma" value="20" min="1" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+                </div>
+            </div>
+
+            <!-- ARQUITECTURA I/O Y VOLTAJE -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura I/O *</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" id="cem-io-mono" onclick="setCemIo('MONO')" class="py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] cursor-pointer">Mono I/O</button>
+                        <button type="button" id="cem-io-stereo" onclick="setCemIo('STEREO')" class="py-1.5 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer">Stereo I/O</button>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Voltaje requerido *</label>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <button type="button" id="cem-volt-9v" onclick="setCemVolt('9V')" class="py-1.5 px-1 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] cursor-pointer">9V</button>
+                        <button type="button" id="cem-volt-12v" onclick="setCemVolt('12V')" class="py-1.5 px-1 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer">12V</button>
+                        <button type="button" id="cem-volt-18v" onclick="setCemVolt('18V')" class="py-1.5 px-1 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer">18V</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORMULARIO SI ES FUENTE -->
+        <div id="cem-power-fields" class="space-y-3 hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Marca *</label>
+                    <input type="text" id="cem-power-brand" placeholder="Ej: Voodoo Lab, Strymon" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-[#9CA3AF] block font-mono">Modelo *</label>
+                    <input type="text" id="cem-power-model" placeholder="Ej: Pedal Power 2 Plus" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Cantidad de salidas aisladas *</label>
+                <input type="number" id="cem-power-outlet-count" value="8" min="1" max="24" onchange="generatePowerOutletRows(this.value)" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+                <span class="text-xs font-bold text-[#F15A24] font-mono">Configuración de salidas</span>
+                <button type="button" onclick="copyFirstOutputToAll()" class="text-[11px] bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-copy"></i> Copiar Salida 1 a todas
+                </button>
+            </div>
+
+            <div id="cem-power-outlets-container" class="space-y-2 max-h-48 overflow-y-auto p-2 bg-[#121316] rounded-xl border border-[#2A2D36]">
+            </div>
+        </div>
+
+        <!-- CAMPOS COMUNES -->
+        <div class="space-y-3 pt-2 border-t border-[#2A2D36]">
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Link del manual (opcional)</label>
+                <input type="url" id="cem-manual-url" placeholder="https://..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]">
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs text-[#9CA3AF] block font-mono">Notas personalizadas (opcional)</label>
+                <textarea id="cem-notes" rows="2" placeholder="Seteos favoritos, fecha de compra, etc..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#F15A24]"></textarea>
+            </div>
+
+            <div class="space-y-1.5 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
+                <label class="text-xs text-[#F15A24] font-bold block font-mono flex items-center gap-1.5">
+                    <i class="fa-solid fa-camera"></i> Subir Foto (Máx 1 MB)
+                </label>
+                <input type="file" id="cem-photo-file" accept="image/*" onchange="handleCemPhotoUpload(event)" class="text-xs text-[#9CA3AF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#1C1E24] file:text-[#F15A24] hover:file:bg-[#20232B] cursor-pointer">
+                <div id="cem-photo-preview-container" class="hidden pt-2 flex justify-center">
+                    <img id="cem-photo-preview" src="" alt="Vista previa" class="h-24 object-contain rounded-lg border border-[#2A2D36]">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 border-t border-[#2A2D36]">
+            <button type="button" onclick="closeCustomEquipmentModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36] cursor-pointer">Cancelar</button>
+            <button type="button" onclick="executeSaveCustomEquipment()" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#F15A24] hover:bg-[#d94d1b] text-white shadow-md cursor-pointer">Guardar equipamiento</button>
+        </div>
+    </div>
+</div>
 
 <script>
 
-// ==========================================
-// V106 UNIFIED SPA APPLICATION LOGIC
-// ==========================================
-
-let activeTab = 'explore'; // Default tab 1 on load
+let activeTab = 'explore';
 let currentBrandFilter = 'ALL';
 let currentCategoryFilter = 'ALL';
-let collectionSearchQuery = '';
-
-// Custom equipment modal state
-let cemType = 'PEDAL';
-let cemDest = 'collection';
-let cemIo = 'MONO';
-let cemVolt = '9V';
-let cemPhotoBase64 = null;
+let catalogSearchQuery = '';
 let draggedPedalId = null;
+let cemEquipmentType = 'PEDAL';
+let cemDestination = 'COLLECTION';
+let cemIoType = 'MONO';
+let cemVoltage = '9V';
+let tempCemPhotoBase64 = null;
 
-// TAB SWITCHING LOGIC
-function switchTab(tab) {
-    activeTab = tab;
-    const viewExplore = document.getElementById('view-explore');
-    const viewCollection = document.getElementById('view-collection');
-    const viewChain = document.getElementById('view-chain');
 
-    const btnExplore = document.getElementById('tab-btn-explore');
-    const btnCollection = document.getElementById('tab-btn-collection');
-    const btnChain = document.getElementById('tab-btn-chain');
-
-    const inspector = document.getElementById('inspector-panel');
-
-    const activeExplore = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#8B5CF6] text-[#FFFFFF] border border-[#8B5CF6] shadow-md flex items-center gap-2 cursor-pointer';
-    const activeCollection = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer';
-    const activeChain = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] shadow-md flex items-center gap-2 cursor-pointer';
-    const inactiveClass = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer';
-
-    if (viewExplore) viewExplore.classList.add('hidden');
-    if (viewCollection) viewCollection.classList.add('hidden');
-    if (viewChain) viewChain.classList.add('hidden');
-
-    if (btnExplore) btnExplore.className = inactiveClass;
-    if (btnCollection) btnCollection.className = inactiveClass;
-    if (btnChain) btnChain.className = inactiveClass;
-
-    if (tab === 'explore') {
-        if (viewExplore) viewExplore.classList.remove('hidden');
-        if (btnExplore) btnExplore.className = activeExplore;
-        if (inspector) inspector.style.borderColor = '#8B5CF6';
-        renderDashboardStats();
-    } else if (tab === 'collection') {
-        if (viewCollection) viewCollection.classList.remove('hidden');
-        if (btnCollection) btnCollection.className = activeCollection;
-        if (inspector) inspector.style.borderColor = '#F15A24';
-        renderCollectionViews();
-    } else if (tab === 'chain') {
-        if (viewChain) viewChain.classList.remove('hidden');
-        if (btnChain) btnChain.className = activeChain;
-        if (inspector) inspector.style.borderColor = '#00A8CC';
-        renderChainPowerSupplies();
-        renderSignalChain();
-    }
-
-    if (activeInspectorId) {
-        renderInspector(activeInspectorId);
-    } else {
-        renderTabEmptyInspector(tab);
-    }
-}
-
-// RENDER DASHBOARD STATS (TAB 1)
-function renderDashboardStats() {
-    const colCount = pedalDatabase ? pedalDatabase.length : 0;
-    const wishCount = wishlistDatabase ? wishlistDatabase.length : 0;
-    const saleCount = pedalDatabase ? pedalDatabase.filter(p => p.forSale).length : 0;
-    const chainCount = favoriteChains ? favoriteChains.length : 0;
-
-    const elCol = document.getElementById('stat-kpi-collection');
-    const elWish = document.getElementById('stat-kpi-wishlist');
-    const elSale = document.getElementById('stat-kpi-forsale');
-    const elChain = document.getElementById('stat-kpi-chains');
-    const elSummaryCol = document.getElementById('stat-collection-count');
-    const elSummaryWish = document.getElementById('stat-wishlist-count');
-
-    if (elCol) elCol.textContent = colCount;
-    if (elWish) elWish.textContent = wishCount;
-    if (elSale) elSale.textContent = saleCount;
-    if (elChain) elChain.textContent = chainCount;
-    if (elSummaryCol) elSummaryCol.textContent = `${colCount} Pedales`;
-    if (elSummaryWish) elSummaryWish.textContent = `${wishCount} Pedales`;
-
-    // Render effect types chart
-    const chartEffects = document.getElementById('chart-effects-container');
-    if (chartEffects) {
-        if (pedalDatabase.length === 0) {
-            chartEffects.innerHTML = '<p class="text-xs text-[#9CA3AF] italic text-center py-4">No hay pedales cargados en tu colección</p>';
-        } else {
-            const categories = {};
-            pedalDatabase.forEach(p => {
-                const cat = getEffectCategory(p) || 'Utilidad & ruteo';
-                categories[cat] = (categories[cat] || 0) + 1;
-            });
-            const total = pedalDatabase.length;
-            let html = '';
-            const catColors = {
-                'Saturación & ganancia': '#F15A24',
-                'Dinámica & modelado': '#EAB308',
-                'Pitch & sintetizador': '#10B981',
-                'Modulación': '#00A8CC',
-                'Delay & eco': '#3B82F6',
-                'Reverberación & espacio': '#8B5CF6',
-                'Lo-Fi, glitch & texturas': '#EC4899',
-                'Loopers de frase': '#6366F1',
-                'Utilidad & ruteo': '#6B7280'
-            };
-            Object.keys(categories).forEach(cat => {
-                const count = categories[cat];
-                const pct = Math.round((count / total) * 100);
-                const color = catColors[cat] || '#8B5CF6';
-                html += `
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-mono">
-                            <span class="text-white">${cat}</span>
-                            <span class="text-[#9CA3AF]">${count} (${pct}%)</span>
-                        </div>
-                        <div class="w-full h-2 bg-[#121316] rounded-full overflow-hidden border border-[#2A2D36]">
-                            <div class="h-full rounded-full transition-all" style="width: ${pct}%; background-color: ${color};"></div>
-                        </div>
-                    </div>
-                `;
-            });
-            chartEffects.innerHTML = html;
-        }
-    }
-
-    // Render brands chart
-    const chartBrands = document.getElementById('chart-brands-container');
-    if (chartBrands) {
-        if (pedalDatabase.length === 0) {
-            chartBrands.innerHTML = '<p class="text-xs text-[#9CA3AF] italic text-center py-4">No hay marcas registradas en tu colección</p>';
-        } else {
-            const brands = {};
-            pedalDatabase.forEach(p => {
-                const b = p.brand || 'Personalizado';
-                brands[b] = (brands[b] || 0) + 1;
-            });
-            const sortedBrands = Object.keys(brands).sort((a,b) => brands[b] - brands[a]).slice(0, 5);
-            const total = pedalDatabase.length;
-            let html = '';
-            sortedBrands.forEach(b => {
-                const count = brands[b];
-                const pct = Math.round((count / total) * 100);
-                html += `
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-mono">
-                            <span class="text-white font-bold">${b}</span>
-                            <span class="text-[#9CA3AF]">${count} (${pct}%)</span>
-                        </div>
-                        <div class="w-full h-2 bg-[#121316] rounded-full overflow-hidden border border-[#2A2D36]">
-                            <div class="h-full bg-[#8B5CF6] rounded-full transition-all" style="width: ${pct}%;"></div>
-                        </div>
-                    </div>
-                `;
-            });
-            chartBrands.innerHTML = html;
-        }
-    }
-}
-
-// RENDER COLLECTION VIEWS (TAB 2)
-function renderCollectionViews() {
-    renderCollectionBrandFilters();
-    renderCollectionCategoryFilters();
-    renderCollectionGrids();
-}
-
-function filterCollectionByBrand(brand) {
-    currentBrandFilter = brand;
-    renderCollectionViews();
-}
-
-function filterCollectionByCategory(cat) {
-    currentCategoryFilter = cat;
-    renderCollectionViews();
-}
-
-function handleCollectionSearch(query) {
-    collectionSearchQuery = query.toLowerCase().trim();
-    renderCollectionGrids();
-}
-
-function renderCollectionBrandFilters() {
-    const container = document.getElementById('collection-brand-filters');
-    if (!container) return;
-
-    const brandSet = new Set();
-    pedalDatabase.forEach(p => { if (p.brand) brandSet.add(p.brand); });
-    wishlistDatabase.forEach(w => { if (w.brand) brandSet.add(w.brand); });
-    const brands = ['ALL', ...Array.from(brandSet).sort()];
-
-    let html = '';
-    brands.forEach(b => {
-        const isActive = currentBrandFilter === b;
-        const activeClass = 'bg-[#F15A24] text-white border-[#F15A24] shadow-md font-bold';
-        const inactiveClass = 'bg-[#121316] text-[#9CA3AF] hover:text-white border-[#2A2D36]';
-        html += `
-            <button onclick="filterCollectionByBrand('${b.replace(/'/g, "\'")}')" class="px-3 py-1 rounded-full text-xs font-mono border transition-all cursor-pointer ${isActive ? activeClass : inactiveClass}">
-                ${b}
-            </button>
-        `;
-    });
-    container.innerHTML = html;
-}
-
-function renderCollectionCategoryFilters() {
-    const container = document.getElementById('collection-category-filters');
-    if (!container) return;
-
-    const categories = [
-        'ALL',
-        'Dinámica & modelado',
-        'Saturación & ganancia',
-        'Pitch & sintetizador',
-        'Modulación',
-        'Delay & eco',
-        'Reverberación & espacio',
-        'Lo-Fi, glitch & texturas',
-        'Loopers de frase',
-        'Utilidad & ruteo'
-    ];
-
-    let html = '';
-    categories.forEach(c => {
-        const isActive = currentCategoryFilter === c;
-        const displayLabel = c === 'ALL' ? 'Todos los efectos' : c;
-        const activeClass = 'bg-[#F15A24] text-white border-[#F15A24] shadow-md font-bold';
-        const inactiveClass = 'bg-[#121316] text-[#9CA3AF] hover:text-white border-[#2A2D36]';
-        html += `
-            <button onclick="filterCollectionByCategory('${c.replace(/'/g, "\'")}')" class="px-3 py-1 rounded-full text-xs font-mono border transition-all cursor-pointer ${isActive ? activeClass : inactiveClass}">
-                ${displayLabel}
-            </button>
-        `;
-    });
-    container.innerHTML = html;
-}
-
-// RENDER COLLECTION CARDS GRIDS (Fuente 201.png design)
-function renderCollectionGrids() {
-    const gridEffects = document.getElementById('collection-effects-grid');
-    const gridUtility = document.getElementById('collection-utility-grid');
-    const gridWishlist = document.getElementById('collection-wishlist-grid');
-    const gridForsale = document.getElementById('collection-forsale-grid');
-
-    if (!gridEffects || !gridUtility || !gridWishlist || !gridForsale) return;
-
-    gridEffects.innerHTML = '';
-    gridUtility.innerHTML = '';
-    gridWishlist.innerHTML = '';
-    gridForsale.innerHTML = '';
-
-    const badgeEffects = document.getElementById('effects-counter-badge');
-    const badgeUtility = document.getElementById('utility-counter-badge');
-    const badgeWishlist = document.getElementById('wishlist-counter-badge');
-    const badgeForsale = document.getElementById('forsale-counter-badge');
-    const summaryPedals = document.getElementById('col-summary-pedals');
-
-    // Filter pedal database
-    const filteredPedals = pedalDatabase.filter(p => {
-        const matchesBrand = (currentBrandFilter === 'ALL' || p.brand === currentBrandFilter);
-        const pCat = getEffectCategory(p);
-        const matchesCat = (currentCategoryFilter === 'ALL' || pCat === currentCategoryFilter);
-        const q = collectionSearchQuery;
-        const matchesSearch = !q || 
-            (p.name && p.name.toLowerCase().includes(q)) ||
-            (p.brand && p.brand.toLowerCase().includes(q)) ||
-            (p.category && p.category.toLowerCase().includes(q));
-        return matchesBrand && matchesCat && matchesSearch;
-    });
-
-    // Filter wishlist database
-    const filteredWishlist = wishlistDatabase.filter(w => {
-        const matchesBrand = (currentBrandFilter === 'ALL' || w.brand === currentBrandFilter);
-        const wCat = getEffectCategory(w);
-        const matchesCat = (currentCategoryFilter === 'ALL' || wCat === currentCategoryFilter);
-        const q = collectionSearchQuery;
-        const matchesSearch = !q || 
-            (w.name && w.name.toLowerCase().includes(q)) ||
-            (w.brand && w.brand.toLowerCase().includes(q));
-        return matchesBrand && matchesCat && matchesSearch;
-    });
-
-    const effects = filteredPedals.filter(p => !p.forSale && getEffectCategory(p) !== 'Utilidad & ruteo');
-    const utilities = filteredPedals.filter(p => !p.forSale && getEffectCategory(p) === 'Utilidad & ruteo');
-    const forSaleItems = filteredPedals.filter(p => p.forSale);
-
-    if (badgeEffects) badgeEffects.textContent = `${effects.length} Pedales`;
-    if (badgeUtility) badgeUtility.textContent = `${utilities.length} Pedales`;
-    if (badgeWishlist) badgeWishlist.textContent = `${filteredWishlist.length} Pedales`;
-    if (badgeForsale) badgeForsale.textContent = `${forSaleItems.length} Pedales`;
-    if (summaryPedals) summaryPedals.textContent = `${pedalDatabase.length} Pedales`;
-
-    // Render cards helper (Fuente 201.png layout)
-    function createPedalCard201(item, statusText, isWish = false) {
-        const card = document.createElement('div');
-        card.className = 'bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-3.5 space-y-2.5 shadow-md hover:border-[#F15A24]/60 transition-all cursor-pointer active:scale-[0.99] select-none';
-        card.draggable = true;
-        card.addEventListener('dragstart', (e) => handleCollectionDragStart(e, item.id));
-        card.onclick = () => {
-            if (isWish) inspectWishlistPedal(item.id);
-            else inspectPedal(item.id);
-        };
-
-        const maBase = item.maBase || 20;
-        const maText = `${maBase}mA`;
-        const iconHtml = getPedalIconHTML(item, 'w-10 h-10');
-        const descText = item.description || item.desc || '';
-        const effCat = getEffectCategory(item);
-        const categoryLabel = `${effCat} / ${effCat}`;
-
-        card.innerHTML = `
-            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2 gap-2">
-                <span class="bg-[#121316] text-[#9CA3AF] text-[10px] font-mono px-2 py-0.5 rounded-md border border-[#2A2D36] truncate max-w-[110px]">
-                    ${item.brand || 'Boss'}
-                </span>
-                <div class="flex items-center gap-2">
-                    <span class="text-[#00A8CC] font-mono text-[11px] font-bold">${maText}</span>
-                    <button onclick="event.stopPropagation(); ${isWish ? `removeFromWishlist('${item.id}')` : `promptDeletePedal('${item.id}', event)`}" title="Eliminar" class="text-[#9CA3AF] hover:text-[#F15A24] p-1 text-xs cursor-pointer">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-[#121316] rounded-lg border border-[#2A2D36] p-1 flex items-center justify-center overflow-hidden shrink-0">
-                    ${iconHtml}
-                </div>
-                <div class="min-w-0 flex-1 space-y-0.5">
-                    <h4 class="text-xs font-bold text-white truncate" title="${item.name}">${item.name}</h4>
-                    <p class="text-[10px] text-[#9CA3AF] truncate" title="${categoryLabel}">${categoryLabel}</p>
-                </div>
-            </div>
-            ${descText ? `<p class="text-[11px] text-[#9CA3AF] italic line-clamp-2 leading-snug" title="${descText}">${descText}</p>` : ''}
-            <div class="flex items-center justify-between pt-1 border-t border-[#2A2D36] text-[10px] text-[#9CA3AF]">
-                <span>${statusText}</span>
-                <i class="fa-solid fa-chevron-right text-xs text-[#9CA3AF]"></i>
-            </div>
-        `;
-        return card;
-    }
-
-    // Render Effects section
-    if (effects.length === 0) {
-        gridEffects.innerHTML = '<p class="col-span-full text-xs text-[#9CA3AF] italic text-center py-4">No hay pedales de efecto en esta sección</p>';
-    } else {
-        effects.forEach(item => gridEffects.appendChild(createPedalCard201(item, 'En mi colección')));
-    }
-
-    // Render Utility section
-    if (utilities.length === 0) {
-        gridUtility.innerHTML = '<p class="col-span-full text-xs text-[#9CA3AF] italic text-center py-4">No hay pedales de utilidad en esta sección</p>';
-    } else {
-        utilities.forEach(item => gridUtility.appendChild(createPedalCard201(item, 'En mi colección')));
-    }
-
-    // Render Wishlist section
-    if (filteredWishlist.length === 0) {
-        gridWishlist.innerHTML = '<p class="col-span-full text-xs text-[#9CA3AF] italic text-center py-4">No hay pedales en tu wishlist</p>';
-    } else {
-        filteredWishlist.forEach(item => gridWishlist.appendChild(createPedalCard201(item, 'En wishlist', true)));
-    }
-
-    // Render For Sale section
-    if (forSaleItems.length === 0) {
-        gridForsale.innerHTML = '<p class="col-span-full text-xs text-[#9CA3AF] italic text-center py-4">No hay pedales publicados en venta</p>';
-    } else {
-        forSaleItems.forEach(item => gridForsale.appendChild(createPedalCard201(item, 'En venta')));
-    }
-}
-
-// DRAG AND DROP LOGIC FOR TAB 2 SECTIONS
-function handleCollectionDragStart(event, itemId) {
-    draggedPedalId = itemId;
-    event.dataTransfer.setData('text/plain', itemId);
-}
-
-function allowCollectionDrop(event) {
-    event.preventDefault();
-}
-
-function handleCollectionDrop(event, targetStatus) {
-    event.preventDefault();
-    const itemId = event.dataTransfer.getData('text/plain') || draggedPedalId;
-    if (!itemId) return;
-
-    let pedalInCol = pedalDatabase.find(p => p.id === itemId);
-    let pedalInWish = wishlistDatabase.find(w => w.id === itemId);
-
-    pushHistory();
-
-    if (targetStatus === 'effects') {
-        if (pedalInWish) {
-            const idx = wishlistDatabase.findIndex(w => w.id === itemId);
-            if (idx !== -1) wishlistDatabase.splice(idx, 1);
-            pedalInWish.forSale = false;
-            if (getEffectCategory(pedalInWish) === 'Utilidad & ruteo') pedalInWish.category = 'Saturación & ganancia';
-            pedalDatabase.push(pedalInWish);
-        } else if (pedalInCol) {
-            pedalInCol.forSale = false;
-            if (getEffectCategory(pedalInCol) === 'Utilidad & ruteo') pedalInCol.category = 'Saturación & ganancia';
-        }
-    } else if (targetStatus === 'utility') {
-        if (pedalInWish) {
-            const idx = wishlistDatabase.findIndex(w => w.id === itemId);
-            if (idx !== -1) wishlistDatabase.splice(idx, 1);
-            pedalInWish.forSale = false;
-            pedalInWish.category = 'Utilidad & ruteo';
-            pedalDatabase.push(pedalInWish);
-        } else if (pedalInCol) {
-            pedalInCol.forSale = false;
-            pedalInCol.category = 'Utilidad & ruteo';
-        }
-    } else if (targetStatus === 'wishlist') {
-        if (pedalInCol) {
-            const idx = pedalDatabase.findIndex(p => p.id === itemId);
-            if (idx !== -1) pedalDatabase.splice(idx, 1);
-            pedalInCol.forSale = false;
-            wishlistDatabase.push(pedalInCol);
-        }
-    } else if (targetStatus === 'forsale') {
-        if (pedalInWish) {
-            const idx = wishlistDatabase.findIndex(w => w.id === itemId);
-            if (idx !== -1) wishlistDatabase.splice(idx, 1);
-            pedalInWish.forSale = true;
-            pedalDatabase.push(pedalInWish);
-        } else if (pedalInCol) {
-            pedalInCol.forSale = true;
-        }
-    }
-
-    saveStateToLocalStorage();
-    renderCollectionViews();
-    renderDashboardStats();
-}
-
-// DYNAMIC INSPECTOR SIDEBAR WELCOME TEXTS
-function renderTabEmptyInspector(tabName) {
-    const container = document.getElementById('inspector-content');
-    if (!container) return;
-
-    if (tabName === 'explore') {
-        container.innerHTML = `
-            <div class="text-center py-12 text-[#9CA3AF] space-y-3 animate-fade-in">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#8B5CF6]/30 flex items-center justify-center mx-auto text-[#8B5CF6] shadow-inner">
-                    <i class="fa-solid fa-compass text-2xl"></i>
-                </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF]">Dashboard y estadísticas de tu rig</h3>
-                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-                    Esta sección es el centro de mando analítico de tu sonido.<br><br>
-                    Acá vas a encontrar una radiografía instantánea de tu equipamiento: la cantidad de pedales en tu colección, los que tenés en tu Wishlist, los que pusiste en venta y las cadenas que tenés creadas.<br><br>
-                    Además, vas a poder visualizar gráficos interactivos con el ADN de tu colección para entender mejor cómo está constituido tu rig.
-                </p>
-            </div>
-        `;
-    } else if (tabName === 'collection' || tabName === 'catalog') {
-        container.innerHTML = `
-            <div class="text-center py-12 text-[#9CA3AF] space-y-3 animate-fade-in">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/30 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
-                    <i class="fa-solid fa-layer-group text-2xl"></i>
-                </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF]">Colección e inventario</h3>
-                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-                    Esta sección está dedicada para que armes tu colección personal de pedales.<br><br>
-                    Tenés dos formas de agregarlos a tu inventario: mediante el catálogo general (botón <strong class="text-[#F15A24]">Buscar pedal o fuente</strong>) y, si no lo encontrás ahí, lo podés registrar manualmente (botón <strong class="text-[#F15A24]">Cargar equipo personalizado</strong>). Lo mismo con tus fuentes de energía.<br><br>
-                    Seleccionando cualquier elemento de tu colección vas a poder inspeccionar sus detalles, manuales e incluso dejar <strong class="text-[#F15A24]">notas personalizadas</strong>.
-                </p>
-            </div>
-        `;
-    } else if (tabName === 'chain') {
-        container.innerHTML = `
-            <div class="text-center py-12 text-[#9CA3AF] space-y-3 animate-fade-in">
-                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#00A8CC]/30 flex items-center justify-center mx-auto text-[#00A8CC] shadow-inner">
-                    <i class="fa-solid fa-diagram-project text-2xl"></i>
-                </div>
-                <h3 class="text-sm font-bold text-[#FFFFFF]">Cadena de señal y ruteo</h3>
-                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
-                    Selecciona cualquier pedal de tu cadena activa para verificar sus consumos, tipo de señal (Mono/Stereo) y fuente asignada.<br><br>
-                    O hace clic en una de tus fuentes para administrar las salidas individuales y evitar problemas de diferencia de voltaje o sobrecargas eléctricas.
-                </p>
-            </div>
-        `;
-    }
-}
-
-// CUSTOM EQUIPMENT MODAL HANDLERS
-function openCustomEquipmentModal() {
-    const modal = document.getElementById('custom-equipment-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeCustomEquipmentModal() {
-    const modal = document.getElementById('custom-equipment-modal');
-    if (modal) modal.classList.add('hidden');
-}
-
-function setCemEquipmentType(type) {
-    cemType = type;
-    const btnPedal = document.getElementById('cem-type-pedal');
-    const btnPower = document.getElementById('cem-type-power');
-    const fieldsPedal = document.getElementById('cem-pedal-fields');
-    const fieldsPower = document.getElementById('cem-power-fields');
-
-    const activeClass = 'py-2 px-3 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] flex items-center justify-center gap-2 cursor-pointer';
-    const inactiveClass = 'py-2 px-3 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white flex items-center justify-center gap-2 cursor-pointer';
-
-    if (type === 'PEDAL') {
-        if (btnPedal) btnPedal.className = activeClass;
-        if (btnPower) btnPower.className = inactiveClass;
-        if (fieldsPedal) fieldsPedal.classList.remove('hidden');
-        if (fieldsPower) fieldsPower.classList.add('hidden');
-    } else {
-        if (btnPedal) btnPedal.className = inactiveClass;
-        if (btnPower) btnPower.className = activeClass;
-        if (fieldsPedal) fieldsPedal.classList.add('hidden');
-        if (fieldsPower) fieldsPower.classList.remove('hidden');
-        generatePowerOutletRows();
-    }
-}
-
-function setCemDestination(dest) {
-    cemDest = dest;
-    const bCol = document.getElementById('cem-dest-collection');
-    const bWish = document.getElementById('cem-dest-wishlist');
-    const bSale = document.getElementById('cem-dest-sale');
-
-    const activeClass = 'py-1.5 px-2 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] text-center cursor-pointer';
-    const inactiveClass = 'py-1.5 px-2 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white text-center cursor-pointer';
-
-    if (bCol) bCol.className = dest === 'collection' ? activeClass : inactiveClass;
-    if (bWish) bWish.className = dest === 'wishlist' ? activeClass : inactiveClass;
-    if (bSale) bSale.className = dest === 'sale' ? activeClass : inactiveClass;
-}
-
-function setCemIo(io) {
-    cemIo = io;
-    const bMono = document.getElementById('cem-io-mono');
-    const bStereo = document.getElementById('cem-io-stereo');
-    const activeClass = 'py-1.5 px-2 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] cursor-pointer';
-    const inactiveClass = 'py-1.5 px-2 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white cursor-pointer';
-    if (bMono) bMono.className = io === 'MONO' ? activeClass : inactiveClass;
-    if (bStereo) bStereo.className = io === 'STEREO' ? activeClass : inactiveClass;
-}
-
-function setCemVolt(v) {
-    cemVolt = v;
-    const b9 = document.getElementById('cem-volt-9v');
-    const b12 = document.getElementById('cem-volt-12v');
-    const b18 = document.getElementById('cem-volt-18v');
-    const activeClass = 'py-1.5 px-1 rounded-xl text-xs font-bold border transition-all bg-[#F15A24] text-white border-[#F15A24] cursor-pointer';
-    const inactiveClass = 'py-1.5 px-1 rounded-xl text-xs font-semibold border transition-all bg-[#121316] text-[#9CA3AF] border-[#2A2D36] hover:text-white cursor-pointer';
-    if (b9) b9.className = v === '9V' ? activeClass : inactiveClass;
-    if (b12) b12.className = v === '12V' ? activeClass : inactiveClass;
-    if (b18) b18.className = v === '18V' ? activeClass : inactiveClass;
-}
-
-function generatePowerOutletRows() {
-    const container = document.getElementById('cem-power-outlets-container');
-    const inputCount = document.getElementById('cem-power-outlet-count');
-    if (!container || !inputCount) return;
-
-    const count = parseInt(inputCount.value) || 8;
-    let html = '';
-    for (let i = 1; i <= count; i++) {
-        html += `
-            <div class="flex items-center justify-between gap-3 text-xs">
-                <span class="font-mono text-[#9CA3AF]">Salida ${i}</span>
-                <div class="flex items-center gap-2">
-                    <select id="cem-outlet-volt-${i}" class="bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-xs text-white focus:outline-none font-mono">
-                        <option value="9V">9V DC</option>
-                        <option value="12V">12V DC</option>
-                        <option value="18V">18V DC</option>
-                    </select>
-                    <input type="number" id="cem-outlet-ma-${i}" value="100" class="w-20 bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-xs text-white focus:outline-none font-mono" placeholder="mA">
-                    <span class="text-[#9CA3AF] font-mono text-[10px]">mA</span>
-                </div>
-            </div>
-        `;
-    }
-    container.innerHTML = html;
-}
-
-function copyFirstOutputToAll() {
-    const inputCount = document.getElementById('cem-power-outlet-count');
-    if (!inputCount) return;
-    const count = parseInt(inputCount.value) || 8;
-    const v1 = document.getElementById('cem-outlet-volt-1')?.value || '9V';
-    const ma1 = document.getElementById('cem-outlet-ma-1')?.value || '100';
-
-    for (let i = 2; i <= count; i++) {
-        const vEl = document.getElementById(`cem-outlet-volt-${i}`);
-        const maEl = document.getElementById(`cem-outlet-ma-${i}`);
-        if (vEl) vEl.value = v1;
-        if (maEl) maEl.value = ma1;
-    }
-}
-
-function handleCemPhotoUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        cemPhotoBase64 = e.target.result;
-        const previewCon = document.getElementById('cem-photo-preview-container');
-        const previewImg = document.getElementById('cem-photo-preview');
-        if (previewCon && previewImg) {
-            previewImg.src = cemPhotoBase64;
-            previewCon.classList.remove('hidden');
-        }
-    };
-    reader.readAsDataURL(file);
-}
-
-function executeSaveCustomEquipment() {
-    pushHistory();
-    const now = Date.now();
-
-    if (cemType === 'PEDAL') {
-        const brand = document.getElementById('cem-pedal-brand')?.value.trim() || 'Personalizado';
-        const model = document.getElementById('cem-pedal-model')?.value.trim() || 'Pedal Custom';
-        const category = document.getElementById('cem-pedal-category')?.value || 'Saturación & ganancia';
-        const maBase = parseInt(document.getElementById('cem-pedal-ma')?.value) || 20;
-        const manualUrl = document.getElementById('cem-manual-url')?.value.trim() || null;
-        const notes = document.getElementById('cem-notes')?.value.trim() || '';
-
-        const newPedal = {
-            id: `custom-pedal-${now}`,
-            brand: brand,
-            name: model,
-            category: category,
-            maBase: maBase,
-            maWithMargin: Math.round(maBase * 1.3),
-            isStereo: cemIo === 'STEREO',
-            voltage: cemVolt,
-            forSale: cemDest === 'sale',
-            manualUrl: manualUrl,
-            notes: notes,
-            photoBase64: cemPhotoBase64
-        };
-
-        if (cemDest === 'wishlist') {
-            wishlistDatabase.push(newPedal);
-        } else {
-            pedalDatabase.push(newPedal);
-        }
-    } else {
-        const brand = document.getElementById('cem-power-brand')?.value.trim() || 'Personalizado';
-        const model = document.getElementById('cem-power-model')?.value.trim() || 'Fuente Custom';
-        const outletCount = parseInt(document.getElementById('cem-power-outlet-count')?.value) || 8;
-        const manualUrl = document.getElementById('cem-manual-url')?.value.trim() || null;
-        const notes = document.getElementById('cem-notes')?.value.trim() || '';
-
-        const outlets = [];
-        for (let i = 1; i <= outletCount; i++) {
-            const v = document.getElementById(`cem-outlet-volt-${i}`)?.value || '9V';
-            const ma = parseInt(document.getElementById(`cem-outlet-ma-${i}`)?.value) || 100;
-            outlets.push({ id: `out-${i}`, name: `Salida ${i}`, volt: v, ma: ma });
-        }
-
-        const newPs = {
-            id: `ps-custom-${now}`,
-            brand: brand,
-            name: model,
-            outlets: outlets,
-            manualUrl: manualUrl,
-            notes: notes,
-            photoBase64: cemPhotoBase64
-        };
-
-        powerSuppliesDatabase.push(newPs);
-    }
-
-    saveStateToLocalStorage();
-    renderCollectionViews();
-    renderDashboardStats();
-    closeCustomEquipmentModal();
-    alert('¡Equipo guardado con éxito en tu inventario!');
-}
-
-// OVERRIDE BACKUP IMPORT FUNCTION
-function importFullBackup(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const parsed = JSON.parse(e.target.result);
-            pushHistory();
-
-            if (parsed.pedalDatabase) {
-                pedalDatabase.length = 0;
-                parsed.pedalDatabase.forEach(p => pedalDatabase.push(p));
-            }
-            if (parsed.powerSuppliesDatabase) {
-                powerSuppliesDatabase.length = 0;
-                parsed.powerSuppliesDatabase.forEach(ps => powerSuppliesDatabase.push(ps));
-            }
-            if (parsed.wishlistDatabase) {
-                wishlistDatabase.length = 0;
-                parsed.wishlistDatabase.forEach(w => wishlistDatabase.push(w));
-            }
-            if (parsed.favoriteChains) favoriteChains = parsed.favoriteChains;
-            if (parsed.currentChainIds) currentChainIds = parsed.currentChainIds;
-            if (parsed.chainSlotModes) chainSlotModes = parsed.chainSlotModes;
-            if (parsed.currentPowerAssignments) currentPowerAssignments = parsed.currentPowerAssignments;
-            if (parsed.currentChainPowerSupplyIds) currentChainPowerSupplyIds = parsed.currentChainPowerSupplyIds;
-
-            saveStateToLocalStorage();
-            renderDashboardStats();
-            renderCollectionViews();
-            renderSignalChain();
-            renderChainPowerSupplies();
-            renderTabEmptyInspector(activeTab);
-
-            alert('¡Respaldo completo cargado con éxito!');
-        } catch (err) {
-            console.error('Error backup load:', err);
-            alert('Error al procesar el archivo JSON de respaldo.');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// INITIALIZATION ON WINDOW LOAD
-window.addEventListener('DOMContentLoaded', () => {
-    loadSavedState();
-    switchTab('explore');
-});
-
+// TAB SWITCHING SPA LOGIC
 
 
 
@@ -1693,7 +909,6 @@ let chainHistory = [];
 let redoStack = [];
 let selectedPedalIds = new Set();
 
-let catalogSearchQuery = '';
 
 function getEffectCategory(p) {
     if (!p) return 'Varios & multi-FX';
@@ -5036,66 +4251,7 @@ function clearCatalogSearch() {
     renderCatalog(currentBrandFilter);
 }
 
-function renderCatalog(brandFilter = 'ALL') {
-    currentBrandFilter = brandFilter;
-    const effectsGrid = document.getElementById('effects-catalog-grid');
-    const utilityGrid = document.getElementById('utility-catalog-grid');
-    if (!effectsGrid || !utilityGrid) return;
-    effectsGrid.innerHTML = '';
-    utilityGrid.innerHTML = '';
-    
-    const filteredPedals = pedalDatabase.filter(p => {
-        const matchesBrand = (brandFilter === 'ALL' || p.brand === brandFilter);
-        const pedalCat = getEffectCategory(p);
-        const matchesCat = (currentCategoryFilter === 'ALL' || pedalCat === currentCategoryFilter);
-        const q = catalogSearchQuery.toLowerCase();
-        const matchesSearch = !q || 
-            (p.name && p.name.toLowerCase().includes(q)) || 
-            (p.brand && p.brand.toLowerCase().includes(q)) || 
-            (p.category && p.category.toLowerCase().includes(q)) || 
-            (p.desc && p.desc.toLowerCase().includes(q));
-        return matchesBrand && matchesCat && matchesSearch;
-    });
 
-    // Ensure sorted order in personal collection
-    filteredPedals.sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
-
-    const effects = filteredPedals.filter(p => getEffectCategory(p) !== 'Utilidad & ruteo');
-    const utilities = filteredPedals.filter(p => getEffectCategory(p) === 'Utilidad & ruteo');
-    
-    if (pedalDatabase.length === 0) {
-        effectsGrid.innerHTML = `
-            <div class="col-span-full bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-8 text-center space-y-4 my-2">
-                <div class="w-14 h-14 bg-[#F15A24]/10 border border-[#F15A24]/30 rounded-2xl flex items-center justify-center mx-auto text-[#F15A24]">
-                    <svg class="w-7 h-7 text-[#F15A24]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
-                        <circle cx="9" cy="6" r="1.5" fill="currentColor"/>
-                        <circle cx="15" cy="6" r="1.5" fill="currentColor"/>
-                        <circle cx="12" cy="11" r="1" fill="#F15A24"/>
-                        <circle cx="12" cy="17" r="2.5"/>
-                    </svg>
-                </div>
-                <div class="space-y-1">
-                    <h3 class="text-base font-bold text-[#FFFFFF]">Tu colección personal está vacía</h3>
-                    <p class="text-xs text-[#9CA3AF] max-w-md mx-auto leading-relaxed">
-                        Explorá el Catálogo de pedales para agregar tu equipamiento o agregá un pedal personalizado.
-                    </p>
-                </div>
-
-            </div>
-        `;
-    } else if (effects.length === 0) {
-        effectsGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales de efecto en tu colección con este filtro.</span>`;
-    } else {
-        effects.forEach(pedal => effectsGrid.appendChild(createPedalCatalogCard(pedal)));
-    }
-
-    if (utilities.length === 0 && pedalDatabase.length > 0) {
-        utilityGrid.innerHTML = `<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales de utilidad en tu colección con este filtro.</span>`;
-    } else {
-        utilities.forEach(pedal => utilityGrid.appendChild(createPedalCatalogCard(pedal)));
-    }
-}
 
 
 function createPedalCatalogCard(pedal) {
@@ -7882,78 +7038,7 @@ function inspectWishlistPedal(id) {
     renderWishlistInspector(id);
 }
 
-function renderWishlist(updateInspector = true) {
-    const grid = document.getElementById('wishlist-grid');
-    const counter = document.getElementById('wishlist-counter');
-    if (!grid) return;
-    
-    if (counter) counter.textContent = `${wishlistDatabase.length} pedal${wishlistDatabase.length !== 1 ? 'es' : ''}`;
-    grid.innerHTML = '';
-    
-    if (wishlistDatabase.length === 0) {
-        selectedWishlistPedalId = null;
-        grid.innerHTML = `
-            <div class="col-span-full text-center py-12 bg-[#121316] border border-[#2A2D36] rounded-2xl p-6 space-y-3">
-                <i class="fa-solid fa-gift text-4xl text-[#8B5CF6]/40"></i>
-                <p class="text-sm font-semibold text-[#FFFFFF]">Tu lista de deseos está vacía</p>
-                <p class="text-xs text-[#9CA3AF] max-w-md mx-auto">Explora el catálogo maestro o registra pedales desde cero utilizando los botones de la barra superior para agendarlos en tu Wishlist.</p>
-            </div>
-        `;
-        if (updateInspector) {
-            renderWishlistInspector(null);
-        }
-        return;
-    }
-    
-    wishlistDatabase.forEach(item => {
-        const card = document.createElement('div');
-        const photoTag = getPedalIconHTML(item, 'w-10 h-10');
-        const descText = item.description || item.desc || '';
-        const descHtml = descText ? `<p title="${descText.replace(/"/g, '&quot;')}" class="text-xs text-[#9CA3AF] line-clamp-2 hover:line-clamp-none italic transition-all cursor-help mt-1.5">${descText}</p>` : '';
-        const isSelected = selectedWishlistPedalId === item.id;
-        
-        card.className = `bg-[#1C1E24] border p-3.5 rounded-xl transition-all hover:shadow-lg flex flex-col justify-between group relative cursor-pointer ${isSelected ? 'border-2 border-[#8B5CF6] bg-[#8B5CF6]/10 ring-2 ring-[#8B5CF6]/30' : 'border-[#8B5CF6]/30 hover:border-[#8B5CF6]'}`;
-        card.onclick = () => inspectWishlistPedal(item.id);
-        
-        card.innerHTML = `
-            <div>
-                <div class="flex justify-between items-start gap-2 mb-2 pr-6">
-                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#121316] text-[#8B5CF6] border border-[#8B5CF6]/30 truncate max-w-[120px]">
-                        ${item.brand}
-                    </span>
-                    <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#121316] text-[#8B5CF6] border border-[#8B5CF6]/30">
-                        ${item.maBase || 20}mA
-                    </span>
-                </div>
-                <div class="flex items-center gap-2.5 my-1.5">
-                    ${photoTag}
-                    <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-sm text-[#FFFFFF] group-hover:text-[#8B5CF6] transition-colors truncate">${item.name}</h4>
-                        <p class="text-[10px] text-[#9CA3AF] truncate">${item.category || 'Efecto'}</p>
-                    </div>
-                </div>
-                ${descHtml}
-            </div>
-            
-            <div class="mt-3 pt-2 border-t border-[#2A2D36] space-y-2">
-                <button onclick="event.stopPropagation(); moveWishlistToCollection('${item.id}')" class="w-full bg-[#8B5CF6] hover:bg-[#7c3aed] text-white py-2 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95">
-                    ¡Lo compré! Enviar a mi colección
-                </button>
-            </div>
-            <button onclick="event.stopPropagation(); removeFromWishlist('${item.id}')" title="Quitar de Wishlist" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#121316] transition-all z-20">
-                <i class="fa-solid fa-trash-can text-xs"></i>
-            </button>
-        `;
-        grid.appendChild(card);
-    });
 
-    if (updateInspector) {
-        if (!selectedWishlistPedalId || !wishlistDatabase.some(p => p.id === selectedWishlistPedalId)) {
-            selectedWishlistPedalId = wishlistDatabase[0].id;
-        }
-        renderWishlistInspector(selectedWishlistPedalId);
-    }
-}
 
 function moveWishlistToCollection(id) {
     const itemIndex = wishlistDatabase.findIndex(p => p.id === id);
@@ -8343,227 +7428,644 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-</script>
 
+// GLOBAL STATE FOR V107
 
-<!-- MASTER CATALOG FOR WISHLIST MODAL -->
-<div id="master-wishlist-modal" onclick="closeMasterWishlistModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
-    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#8B5CF6]/50 rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
-        <!-- MODAL HEADER -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
-            <div>
-                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group text-[#8B5CF6]"></i> Catálogo de pedales para wishlist
-                </h3>
-                <p class="text-xs text-[#9CA3AF]">
-                    Explorá los pedales del catálogo ordenados de A-Z y agregalos a tu lista de deseos.
+function switchTab(tab) {
+    activeTab = tab;
+    const viewExplore = document.getElementById('view-explore');
+    const viewCollection = document.getElementById('view-collection');
+    const viewChain = document.getElementById('view-chain');
+
+    const btnExplore = document.getElementById('tab-btn-explore');
+    const btnCollection = document.getElementById('tab-btn-collection');
+    const btnChain = document.getElementById('tab-btn-chain');
+
+    const inspector = document.getElementById('inspector-panel');
+
+    const activeClassExplore = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#8B5CF6] text-[#FFFFFF] border border-[#8B5CF6] shadow-md flex items-center gap-2 cursor-pointer';
+    const activeClassCollection = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-[#FFFFFF] border border-[#F15A24] shadow-md flex items-center gap-2 cursor-pointer';
+    const activeClassChain = 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#00A8CC] text-[#FFFFFF] border border-[#00A8CC] shadow-md flex items-center gap-2 cursor-pointer';
+    const inactiveClass = 'px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-[#1C1E24] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] flex items-center gap-2 cursor-pointer';
+
+    if (viewExplore) viewExplore.classList.add('hidden');
+    if (viewCollection) viewCollection.classList.add('hidden');
+    if (viewChain) viewChain.classList.add('hidden');
+
+    if (btnExplore) btnExplore.className = inactiveClass;
+    if (btnCollection) btnCollection.className = inactiveClass;
+    if (btnChain) btnChain.className = inactiveClass;
+
+    if (tab === 'explore') {
+        if (viewExplore) viewExplore.classList.remove('hidden');
+        if (btnExplore) btnExplore.className = activeClassExplore;
+        if (inspector) inspector.style.borderColor = '#8B5CF6';
+        renderDashboardStats();
+        renderTabEmptyInspector('explore');
+    } else if (tab === 'collection' || tab === 'catalog') {
+        if (viewCollection) viewCollection.classList.remove('hidden');
+        if (btnCollection) btnCollection.className = activeClassCollection;
+        if (inspector) inspector.style.borderColor = '#F15A24';
+        renderBrandFilters();
+        renderCategoryFilters();
+        renderCatalog(currentBrandFilter);
+        renderPowerSupplies();
+        renderWishlist(false);
+        renderForSaleGear();
+        renderTabEmptyInspector('collection');
+    } else if (tab === 'chain') {
+        if (viewChain) viewChain.classList.remove('hidden');
+        if (btnChain) btnChain.className = activeClassChain;
+        if (inspector) inspector.style.borderColor = '#00A8CC';
+        renderChainPowerSupplies();
+        renderSignalChain();
+        renderTabEmptyInspector('chain');
+    }
+
+    if (activeInspectorId) {
+        renderInspector(activeInspectorId);
+    }
+}
+
+function renderTabEmptyInspector(tabName) {
+    const container = document.getElementById('inspector-content');
+    if (!container) return;
+
+    if (tabName === 'explore') {
+        container.innerHTML = `
+            <div class="text-center py-10 text-[#9CA3AF] space-y-3">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#8B5CF6]/40 flex items-center justify-center mx-auto text-[#8B5CF6] shadow-inner">
+                    <i class="fa-solid fa-compass text-2xl"></i>
+                </div>
+                <h3 class="text-sm font-bold text-[#FFFFFF]">Dashboard y estadísticas de tu rig</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
+                    Esta sección es el centro de mando analítico de tu sonido.<br><br>
+                    Acá vas a encontrar una radiografía instantánea de tu equipamiento: la cantidad de pedales en tu colección, los que tenés en tu Wishlist, los que pusiste en venta y las cadenas que tenés creadas.<br><br>
+                    Además, vas a poder visualizar gráficos interactivos con el ADN de tu colección para entender mejor cómo está constituido tu rig.
                 </p>
             </div>
-            <button onclick="closeMasterWishlistModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <!-- SEARCH AND FILTERS TOOLBAR -->
-        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
-            <div class="flex flex-col sm:flex-row gap-3">
-                <div class="relative flex-1">
-                    <input type="text" id="mw-search" oninput="handleMasterWishlistSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#8B5CF6] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
+        `;
+    } else if (tabName === 'collection' || tabName === 'catalog') {
+        container.innerHTML = `
+            <div class="text-center py-10 text-[#9CA3AF] space-y-3">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#F15A24]/40 flex items-center justify-center mx-auto text-[#F15A24] shadow-inner">
+                    <i class="fa-solid fa-layer-group text-2xl"></i>
                 </div>
-            </div>
-            
-            <!-- BRAND FILTERS -->
-            <div class="space-y-1.5">
-                <label class="text-[11px] font-bold text-[#8B5CF6] uppercase tracking-wider block font-mono">
-                    <i class="fa-solid fa-filter"></i> Filtrar por marca:
-                </label>
-                <div id="mw-brand-filters" class="flex flex-wrap gap-1 text-xs"></div>
-            </div>
-
-            <!-- CATEGORY FILTERS -->
-            <div class="space-y-1.5 pt-1">
-                <label class="text-[11px] font-bold text-[#8B5CF6] uppercase tracking-wider block font-mono">
-                    <i class="fa-solid fa-sliders"></i> Filtrar por categoría de efecto:
-                </label>
-                <div id="mw-category-filters" class="flex flex-wrap gap-1 text-xs"></div>
-            </div>
-        </div>
-
-        <!-- MASTER CATALOG GRID -->
-        <div id="mw-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[300px]"></div>
-
-        <!-- MODAL FOOTER -->
-        <div class="flex justify-between items-center pt-3 border-t border-[#2A2D36] text-xs text-[#9CA3AF]">
-            <span id="mw-counter">Mostrando pedales</span>
-            <button onclick="closeMasterWishlistModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] px-5 py-2 rounded-xl font-bold transition-all">
-                Cerrar
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- NEW CUSTOM WISHLIST PEDAL MODAL -->
-<div id="new-wishlist-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
-        <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
-            <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
-                <i class="fa-solid fa-gift text-[#8B5CF6]"></i>
-                <span id="nw-modal-title">Agregar pedal a lista de deseos</span>
-            </h3>
-            <button onclick="closeNewWishlistPedalModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-sm">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <div class="space-y-2 bg-[#121316] p-3 rounded-xl border border-[#2A2D36]">
-            <label class="text-xs text-[#8B5CF6] font-bold block font-mono flex items-center gap-1.5">
-                <i class="fa-solid fa-camera"></i> Subir Foto del Pedal (Máx 1 MB)
-            </label>
-            <div class="flex items-center gap-3">
-                <input type="file" id="nw-photo-file" accept="image/*" onchange="handlePedalPhotoUpload(event, 'WISHLIST_NEW')" class="text-xs text-[#9CA3AF] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#121316] file:text-[#8B5CF6] hover:file:bg-[#20232B] cursor-pointer">
-            </div>
-            <div id="nw-photo-preview-container" class="hidden pt-2 flex justify-center">
-                <img id="nw-photo-preview" src="" alt="Vista previa" class="h-28 object-contain rounded-lg border border-[#2A2D36]">
-            </div>
-            <p id="nw-photo-error" class="hidden text-[11px] text-[#F15A24] font-mono"></p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Nombre del pedal *</label>
-                <input type="text" id="nw-name" placeholder="Ej: Bonsai" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Marca / Fabricante *</label>
-                <input type="text" id="nw-brand" placeholder="Ej: JHS Pedals" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Consumo (mA) *</label>
-                <input type="number" id="nw-mabase" value="20" placeholder="20" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Arquitectura I/O *</label>
-                <select id="nw-io-type" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6] font-mono text-xs">
-                    <option value="STEREO">Stereo I/O (Soporta Mono/Stereo)</option>
-                    <option value="MONO">Mono I/O Solamente (Bloqueado)</option>
-                </select>
-            </div>
-            <div class="space-y-1">
-                <label class="text-xs text-[#9CA3AF] block font-mono">Tipo de Unidad *</label>
-                <select id="nw-category-type" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6] font-mono text-xs">
-                    <option value="EFFECT">Efecto</option>
-                    <option value="UTILITY">Utilidad</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Categoría de efecto *</label>
-            <select id="nw-effect-category" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6] font-mono text-xs">
-                <option value="">-- Seleccionar Categoría Obligatoria --</option>
-                <option value="Saturación & ganancia">Saturación & ganancia (Overdrive / Distorsión / Fuzz)</option>
-                <option value="Delay & eco">Delay & eco (Digital / Analógico BBD / Tape)</option>
-                <option value="Reverberación & espacio">Reverberación & espacio (Hall / Ambient / Shimmer / Plate / Spring)</option>
-                <option value="Modulación">Modulación (Chorus / Phaser / Flanger / Tremolo / Vibrato / Filter)</option>
-                <option value="Lo-Fi, glitch & texturas">Lo-Fi, glitch & texturas (Tape Loss / Bitcrusher / Glitch / Granular)</option>
-                <option value="Pitch & sintetizador">Pitch & sintetizador (Octavador / Pitch Shifter / Synth / Ring Mod)</option>
-                <option value="Dinámica & modelado">Dinámica & modelado (Compresor / Preamp / Amp Sim / EQ / Boost)</option>
-                <option value="Loopers de frase">Loopers de frase (Phrase Looper / Multi-track)</option>
-                <option value="Utilidad & ruteo">Utilidad & ruteo (Afinador / Switcher / Noise Gate / Expression / Buffer)</option>
-            </select>
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">Detalle / Especificación del efecto</label>
-            <input type="text" id="nw-category" placeholder="Ej: 9 tipos de Tube Screamer analógicos" class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-        </div>
-
-        <div class="space-y-1">
-            <label class="text-xs text-[#9CA3AF] block font-mono">URL Manual / Documentación (Opcional)</label>
-            <input type="text" id="nw-manual-url" placeholder="https://drive.google.com/file/d/..." class="w-full bg-[#121316] border border-[#2A2D36] rounded-xl px-3 py-2 text-sm text-[#FFFFFF] focus:outline-none focus:border-[#8B5CF6]">
-        </div>
-
-        <div class="flex justify-end gap-3 pt-3 border-t border-[#2A2D36]">
-            <button onclick="closeNewWishlistPedalModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-[#9CA3AF] hover:text-[#FFFFFF] bg-[#121316] hover:bg-[#20232B] transition-all">
-                Cancelar
-            </button>
-            <button onclick="executeRegisterNewWishlistPedal()" class="px-4 py-2 rounded-xl text-xs font-bold text-[#FFFFFF] bg-[#8B5CF6] hover:bg-[#7c3aed] transition-all shadow-lg">
-                Guardar en Wishlist
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL: CATÁLOGO MAESTRO DE PEDALES (144) -->
-<div id="master-catalog-modal" onclick="closeMasterCatalogModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 cursor-pointer">
-    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-6xl w-full p-6 space-y-5 shadow-2xl overflow-y-auto max-h-[92vh] cursor-default">
-        <!-- MODAL HEADER -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#2A2D36] pb-4">
-            <div>
-                <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group text-[#F15A24]"></i> Catálogo de pedales de fábrica
-                </h3>
-                <p class="text-xs text-[#9CA3AF]">
-                    Explorá los pedales del catálogo ordenados de A-Z y agregá los que tengas a tu colección personal.
+                <h3 class="text-sm font-bold text-[#FFFFFF]">Colección e inventario</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
+                    Esta sección está dedicada para que armes tu colección personal de pedales.<br><br>
+                    Tenés dos formas de agregarlos a tu inventario: mediante el catálogo general (botón <strong class="text-[#F15A24]">Buscar pedal o fuente</strong>) y, si no lo encontrás ahí, lo podés registrar manualmente (botón <strong class="text-[#F15A24]">Cargar equipo personalizado</strong>). Lo mismo con tus fuentes de energía.<br><br>
+                    Seleccionando cualquier elemento de tu colección vas a poder inspeccionar sus detalles, manuales e incluso dejar <strong class="text-[#F15A24]">notas personalizadas</strong>.
                 </p>
             </div>
-            <button onclick="closeMasterCatalogModal()" class="text-[#9CA3AF] hover:text-[#FFFFFF] text-lg px-2 py-1 rounded-lg hover:bg-[#20232B] transition-colors self-end sm:self-auto">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <!-- SEARCH AND FILTERS TOOLBAR -->
-        <div class="space-y-3 bg-[#121316] p-4 rounded-xl border border-[#2A2D36]">
-            <div class="flex flex-col sm:flex-row gap-3">
-                <div class="relative flex-1">
-                    <input type="text" id="master-catalog-search-input" oninput="handleMasterCatalogSearch(this.value)" placeholder="🔍 Buscar por nombre, marca o modelo..." class="w-full bg-[#1C1E24] text-[#FFFFFF] placeholder-[#9CA3AF]/60 border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-4 py-2.5 text-xs font-mono focus:outline-none transition-all shadow-inner">
+        `;
+    } else if (tabName === 'chain') {
+        container.innerHTML = `
+            <div class="text-center py-10 text-[#9CA3AF] space-y-3">
+                <div class="w-16 h-16 rounded-2xl bg-[#121316] border border-[#00A8CC]/40 flex items-center justify-center mx-auto text-[#00A8CC] shadow-inner">
+                    <i class="fa-solid fa-diagram-project text-2xl"></i>
                 </div>
+                <h3 class="text-sm font-bold text-[#FFFFFF]">Cadena de señal y ruteo</h3>
+                <p class="text-xs text-[#9CA3AF] max-w-xs mx-auto leading-relaxed text-center">
+                    Diseña el ruteo de tu señal, analiza consumos eléctricos en tiempo real y guarda tus presets favoritos.<br><br>
+                    Arrastra tus pedales para cambiar el orden de la cadena o asigna salidas aisladas de tus fuentes para evitar sobrecargas.
+                </p>
             </div>
-            
-            <!-- BRAND FILTERS -->
-            <div class="space-y-1.5">
-                <label class="text-[11px] font-bold text-[#F15A24] uppercase tracking-wider block font-mono">
-                    <i class="fa-solid fa-filter"></i> Filtrar por marca:
-                </label>
-                <div id="master-catalog-brand-filters" class="flex flex-wrap gap-1 text-xs"></div>
+        `;
+    }
+}
+
+function renderDashboardStats() {
+    const statCollection = document.getElementById('stat-collection-count');
+    const statWishlist = document.getElementById('stat-wishlist-count');
+    const statForsale = document.getElementById('stat-forsale-count');
+    const statChains = document.getElementById('stat-chains-count');
+
+    const collectionCount = (pedalDatabase ? pedalDatabase.filter(p => !p.forSale).length : 0) + (powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => !ps.forSale).length : 0);
+    const wishlistCount = wishlistDatabase ? wishlistDatabase.length : 0;
+    const forSaleCount = (pedalDatabase ? pedalDatabase.filter(p => p.forSale).length : 0) + (powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => ps.forSale).length : 0);
+    const chainsCount = favoriteChains ? favoriteChains.length : 0;
+
+    if (statCollection) statCollection.textContent = collectionCount;
+    if (statWishlist) statWishlist.textContent = wishlistCount;
+    if (statForsale) statForsale.textContent = forSaleCount;
+    if (statChains) statChains.textContent = chainsCount;
+
+    // Render Chart 1: ADN por Tipo de Efecto (Sorted Descending)
+    const effectsContainer = document.getElementById('chart-effects-container');
+    if (effectsContainer && pedalDatabase) {
+        const categories = {};
+        const activePedals = pedalDatabase.filter(p => !p.forSale);
+        activePedals.forEach(p => {
+            const cat = typeof getEffectCategory === 'function' ? getEffectCategory(p) : (p.category || 'Utilidad & ruteo');
+            categories[cat] = (categories[cat] || 0) + 1;
+        });
+        const total = activePedals.length || 1;
+        
+        // Sort categories by count descending (Fuente 204.png requirement)
+        const sortedCats = Object.entries(categories).sort((a, b) => b[1] - a[1]);
+        
+        const catColors = {
+            'Saturación & ganancia': '#F15A24',
+            'Modulación': '#8B5CF6',
+            'Delay & eco': '#00A8CC',
+            'Reverberación & espacio': '#3B82F6',
+            'Dinámica & modelado': '#10B981',
+            'Pitch & sintetizador': '#EC4899',
+            'Lo-Fi, glitch & texturas': '#F59E0B',
+            'Loopers de frase': '#EAB308',
+            'Utilidad & ruteo': '#9CA3AF'
+        };
+
+        if (sortedCats.length === 0) {
+            effectsContainer.innerHTML = '<p class="text-xs text-[#9CA3AF] text-center py-4 italic">No hay pedales cargados en tu colección</p>';
+        } else {
+            effectsContainer.innerHTML = sortedCats.map(([cat, count]) => {
+                const pct = Math.round((count / total) * 100);
+                const color = catColors[cat] || '#F15A24';
+                return `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-[#FFFFFF] font-medium">${cat}</span>
+                            <span class="font-mono text-[#9CA3AF]">${count} (${pct}%)</span>
+                        </div>
+                        <div class="w-full bg-[#121316] h-2 rounded-full overflow-hidden border border-[#2A2D36]">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${color}"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
+    // Render Chart 2: Distribución por Marcas (With Colored Progress Bars - Fuente 204.png requirement)
+    const brandsContainer = document.getElementById('chart-brands-container');
+    if (brandsContainer && (pedalDatabase || powerSuppliesDatabase)) {
+        const brandCounts = {};
+        const allItems = [
+            ...(pedalDatabase ? pedalDatabase.filter(p => !p.forSale) : []),
+            ...(powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => !ps.forSale) : [])
+        ];
+        allItems.forEach(item => {
+            const b = item.brand || 'Personalizado';
+            brandCounts[b] = (brandCounts[b] || 0) + 1;
+        });
+        const total = allItems.length || 1;
+        const sortedBrands = Object.entries(brandCounts).sort((a, b) => b[1] - a[1]);
+        const brandPalette = ['#F15A24', '#00A8CC', '#8B5CF6', '#EAB308', '#10B981', '#EC4899', '#3B82F6', '#F59E0B', '#6366F1', '#14B8A6'];
+
+        if (sortedBrands.length === 0) {
+            brandsContainer.innerHTML = '<p class="text-xs text-[#9CA3AF] text-center py-4 italic">No hay fabricantes en tu colección</p>';
+        } else {
+            brandsContainer.innerHTML = sortedBrands.slice(0, 6).map(([brand, count], idx) => {
+                const pct = Math.round((count / total) * 100);
+                const color = brandPalette[idx % brandPalette.length];
+                return `
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-[#FFFFFF] font-medium">${brand}</span>
+                            <span class="font-mono text-[#9CA3AF]">${count} (${pct}%)</span>
+                        </div>
+                        <div class="w-full bg-[#121316] h-2 rounded-full overflow-hidden border border-[#2A2D36]">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${color}"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+}
+
+function renderCatalog(brandFilter = 'ALL') {
+    currentBrandFilter = brandFilter;
+    const effectsGrid = document.getElementById('effects-catalog-grid');
+    if (!effectsGrid) return;
+    effectsGrid.innerHTML = '';
+    
+    const activePedals = pedalDatabase.filter(p => !p.forSale);
+    const filteredPedals = activePedals.filter(p => {
+        const matchesBrand = (brandFilter === 'ALL' || p.brand === brandFilter);
+        const pedalCat = getEffectCategory(p);
+        const matchesCat = (currentCategoryFilter === 'ALL' || pedalCat === currentCategoryFilter);
+        const q = catalogSearchQuery.toLowerCase();
+        const matchesSearch = !q || 
+            (p.name && p.name.toLowerCase().includes(q)) || 
+            (p.brand && p.brand.toLowerCase().includes(q)) || 
+            (p.category && p.category.toLowerCase().includes(q));
+        return matchesBrand && matchesCat && matchesSearch;
+    });
+
+    filteredPedals.sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
+    
+    if (filteredPedals.length === 0) {
+        effectsGrid.innerHTML = `
+            <div class="col-span-full bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-8 text-center space-y-3">
+                <i class="fa-solid fa-sliders text-3xl text-[#F15A24]/40"></i>
+                <p class="text-sm font-semibold text-white">No hay pedales en tu colección</p>
+                <p class="text-xs text-[#9CA3AF] max-w-sm mx-auto">Usa los botones superiores para importar pedales del catálogo maestro o registrarlos manualmente.</p>
             </div>
+        `;
+        return;
+    }
+    
+    filteredPedals.forEach(pedal => {
+        const card = createPedalCardForSection(pedal, 'collection');
+        effectsGrid.appendChild(card);
+    });
+}
 
-            <!-- CATEGORY FILTERS -->
-            <div class="space-y-1.5 pt-1">
-                <label class="text-[11px] font-bold text-[#F15A24] uppercase tracking-wider block font-mono">
-                    <i class="fa-solid fa-sliders"></i> Filtrar por categoría de efecto:
-                </label>
-                <div id="master-catalog-category-filters" class="flex flex-wrap gap-1 text-xs"></div>
-            </div>
-        </div>
+function createPedalCardForSection(pedal, sectionType) {
+    const card = document.createElement('div');
+    card.className = "bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24] rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-md hover:shadow-xl transition-all cursor-pointer group";
+    card.draggable = true;
+    card.dataset.id = pedal.id;
+    card.onclick = () => inspectPedal(pedal.id);
+    card.ondragstart = (e) => {
+        draggedPedalId = pedal.id;
+        e.dataTransfer.setData('text/plain', pedal.id);
+    };
 
-        <!-- MASTER CATALOG GRID -->
-        <div id="master-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[300px]"></div>
+    const photoTag = getPedalIconHTML(pedal, 'w-12 h-12');
+    const descText = pedal.description || pedal.desc || '';
+    const descHtml = descText ? `<p title="${descText.replace(/"/g, '&quot;')}" class="text-[11px] text-[#9CA3AF] line-clamp-2 italic transition-all mt-1">${descText}</p>` : '';
+    const cleanCat = getEffectCategory(pedal);
+    const ioText = pedal.isStereo ? 'Stereo I/O' : 'Mono I/O';
+    const maText = `${pedal.maBase || 20} mA base | ${ioText}`;
 
-        <!-- MODAL FOOTER -->
-        <div class="flex justify-between items-center pt-3 border-t border-[#2A2D36] text-xs text-[#9CA3AF]">
-            <span id="master-catalog-counter">Mostrando pedales</span>
-            <button onclick="closeMasterCatalogModal()" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] px-5 py-2 rounded-xl font-bold transition-all">
-                Cerrar
+    let actionButtonHtml = '';
+    if (sectionType === 'collection') {
+        actionButtonHtml = `
+            <button onclick="moveToForSale('${pedal.id}', event)" class="w-full bg-[#EAB308]/15 hover:bg-[#EAB308] text-[#EAB308] hover:text-[#121316] border border-[#EAB308]/30 font-bold py-1.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1 cursor-pointer">
+                <i class="fa-solid fa-tag"></i> Vender
             </button>
-        </div>
-    </div>
-</div>
-
-<!-- IMAGE ZOOM MODAL -->
-    <div id="image-zoom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeImageZoomModal(event)">
-        <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl" onclick="event.stopPropagation()">
-            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
-                <h3 id="image-zoom-title" class="text-sm font-bold text-[#FFFFFF] truncate max-w-[85%]">Vista Previa del Pedal</h3>
-                <button onclick="closeImageZoomModal()" title="Cerrar vista previa" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
-                    <i class="fa-solid fa-xmark"></i>
+        `;
+    } else if (sectionType === 'wishlist') {
+        actionButtonHtml = `
+            <button onclick="buyWishlistPedal('${pedal.id}', event)" class="w-full bg-[#10B981]/15 hover:bg-[#10B981] text-[#10B981] hover:text-[#FFFFFF] border border-[#10B981]/30 font-bold py-1.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1 cursor-pointer">
+                <i class="fa-solid fa-circle-check"></i> ¡Lo compré!
+            </button>
+        `;
+    } else if (sectionType === 'forsale') {
+        actionButtonHtml = `
+            <div class="grid grid-cols-2 gap-1.5 w-full">
+                <button onclick="returnToCollection('${pedal.id}', event)" class="bg-[#F15A24]/15 hover:bg-[#F15A24] text-[#F15A24] hover:text-[#FFFFFF] border border-[#F15A24]/30 font-bold py-1.5 rounded-xl text-[11px] transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-rotate-left"></i> Colección
+                </button>
+                <button onclick="executeSoldAndRemove('${pedal.id}', event)" class="bg-[#10B981]/15 hover:bg-[#10B981] text-[#10B981] hover:text-[#FFFFFF] border border-[#10B981]/30 font-bold py-1.5 rounded-xl text-[11px] transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-check-double"></i> ¡Vendido!
                 </button>
             </div>
-            <div class="flex justify-center items-center bg-[#121316] p-4 rounded-xl border border-[#2A2D36] min-h-[220px]">
-                <img id="image-zoom-img" src="" alt="Pedal Ampliado" class="max-h-[65vh] max-w-full object-contain rounded-lg shadow-md">
+        `;
+    }
+
+    card.innerHTML = `
+        <div class="flex items-center justify-between gap-2">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[#121316] text-[#F15A24] border border-[#2A2D36] truncate">${pedal.brand}</span>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-mono text-[#00A8CC] font-bold bg-[#121316] px-1.5 py-0.5 rounded border border-[#2A2D36]">${maText}</span>
+                <button onclick="promptDeletePedal('${pedal.id}', event)" title="Eliminar pedal" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs p-1 rounded transition-colors cursor-pointer">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
             </div>
         </div>
-    </div>
+
+        <div class="flex items-center gap-3 py-1">
+            <div class="shrink-0 flex items-center justify-center bg-[#121316] p-1.5 rounded-xl border border-[#2A2D36]">
+                ${photoTag}
+            </div>
+            <div class="min-w-0 flex-1">
+                <h4 class="text-xs font-bold text-white truncate group-hover:text-[#F15A24] transition-colors">${pedal.name}</h4>
+                <p class="text-[11px] text-[#9CA3AF] font-mono">${cleanCat}</p>
+                ${descHtml}
+            </div>
+        </div>
+
+        <div class="pt-2 border-t border-[#2A2D36]/60">
+            ${actionButtonHtml}
+        </div>
+    `;
+
+    return card;
+}
+
+function renderWishlist(updateInspector = true) {
+    const grid = document.getElementById('wishlist-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    if (wishlistDatabase.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-6 text-center space-y-2">
+                <i class="fa-solid fa-heart text-2xl text-[#8B5CF6]/40"></i>
+                <p class="text-xs font-semibold text-white">Tu wishlist está vacía</p>
+            </div>
+        `;
+        return;
+    }
+
+    wishlistDatabase.forEach(item => {
+        const card = createPedalCardForSection(item, 'wishlist');
+        grid.appendChild(card);
+    });
+}
+
+function renderForSaleGear() {
+    const grid = document.getElementById('collection-forsale-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const forSalePedals = pedalDatabase.filter(p => p.forSale);
+    const forSalePowers = powerSuppliesDatabase.filter(ps => ps.forSale);
+    const totalForSale = forSalePedals.length + forSalePowers.length;
+
+    if (totalForSale === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full bg-[#1C1E24] border border-[#2A2D36] rounded-2xl p-6 text-center space-y-2">
+                <i class="fa-solid fa-tag text-2xl text-[#EAB308]/40"></i>
+                <p class="text-xs font-semibold text-white">No tenés equipos en venta</p>
+            </div>
+        `;
+        return;
+    }
+
+    forSalePedals.forEach(pedal => {
+        const card = createPedalCardForSection(pedal, 'forsale');
+        grid.appendChild(card);
+    });
+}
+
+function moveToForSale(id, event) {
+    if (event) event.stopPropagation();
+    const pedal = pedalDatabase.find(p => p.id === id);
+    if (pedal) {
+        pedal.forSale = true;
+        saveStateToLocalStorage();
+        renderCatalog(currentBrandFilter);
+        renderForSaleGear();
+        renderDashboardStats();
+    }
+}
+
+function returnToCollection(id, event) {
+    if (event) event.stopPropagation();
+    const pedal = pedalDatabase.find(p => p.id === id);
+    if (pedal) {
+        pedal.forSale = false;
+        saveStateToLocalStorage();
+        renderCatalog(currentBrandFilter);
+        renderForSaleGear();
+        renderDashboardStats();
+    }
+}
+
+function buyWishlistPedal(id, event) {
+    if (event) event.stopPropagation();
+    const idx = wishlistDatabase.findIndex(w => w.id === id);
+    if (idx !== -1) {
+        const item = wishlistDatabase.splice(idx, 1)[0];
+        item.forSale = false;
+        pedalDatabase.push(item);
+        saveStateToLocalStorage();
+        renderCatalog(currentBrandFilter);
+        renderWishlist(false);
+        renderDashboardStats();
+    }
+}
+
+function executeSoldAndRemove(id, event) {
+    if (event) event.stopPropagation();
+    const pIdx = pedalDatabase.findIndex(p => p.id === id);
+    if (pIdx !== -1) {
+        pedalDatabase.splice(pIdx, 1);
+    } else {
+        const psIdx = powerSuppliesDatabase.findIndex(ps => ps.id === id);
+        if (psIdx !== -1) powerSuppliesDatabase.splice(psIdx, 1);
+    }
+    saveStateToLocalStorage();
+    renderCatalog(currentBrandFilter);
+    renderPowerSupplies();
+    renderForSaleGear();
+    renderDashboardStats();
+}
+
+function handleSectionDragOver(event) {
+    event.preventDefault();
+    event.currentTarget.classList.add('drag-over');
+}
+
+function handleSectionDrop(event, targetSection) {
+    event.preventDefault();
+    event.currentTarget.classList.remove('drag-over');
+    if (!draggedPedalId) return;
+
+    const pedal = pedalDatabase.find(p => p.id === draggedPedalId);
+    if (pedal) {
+        if (targetSection === 'forsale') pedal.forSale = true;
+        else if (targetSection === 'effects' || targetSection === 'utility') pedal.forSale = false;
+        saveStateToLocalStorage();
+        renderCatalog(currentBrandFilter);
+        renderForSaleGear();
+        renderDashboardStats();
+    }
+    draggedPedalId = null;
+}
+
+// CUSTOM EQUIPMENT MODAL FUNCTIONS
+function openCustomEquipmentModal() {
+    document.getElementById('custom-equipment-modal').classList.remove('hidden');
+    generatePowerOutletRows(8);
+}
+
+function closeCustomEquipmentModal() {
+    document.getElementById('custom-equipment-modal').classList.add('hidden');
+}
+
+function setCemEquipmentType(type) {
+    cemEquipmentType = type;
+    const btnPedal = document.getElementById('cem-type-pedal');
+    const btnPower = document.getElementById('cem-type-power');
+    const pedalFields = document.getElementById('cem-pedal-fields');
+    const powerFields = document.getElementById('cem-power-fields');
+
+    if (type === 'PEDAL') {
+        btnPedal.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] flex items-center justify-center gap-2 cursor-pointer';
+        btnPower.className = 'py-2 px-3 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-2 cursor-pointer';
+        pedalFields.classList.remove('hidden');
+        powerFields.classList.add('hidden');
+    } else {
+        btnPower.className = 'py-2 px-3 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] flex items-center justify-center gap-2 cursor-pointer';
+        btnPedal.className = 'py-2 px-3 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-2 cursor-pointer';
+        powerFields.classList.remove('hidden');
+        pedalFields.classList.add('hidden');
+    }
+}
+
+function setCemDestination(dest) {
+    cemDestination = dest;
+    const btnCol = document.getElementById('cem-dest-collection');
+    const btnWish = document.getElementById('cem-dest-wishlist');
+    const btnSale = document.getElementById('cem-dest-sale');
+
+    const activeClass = 'py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] flex items-center justify-center gap-1 cursor-pointer';
+    const inactiveClass = 'py-1.5 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] flex items-center justify-center gap-1 cursor-pointer';
+
+    btnCol.className = dest === 'COLLECTION' ? activeClass : inactiveClass;
+    btnWish.className = dest === 'WISHLIST' ? activeClass : inactiveClass;
+    btnSale.className = dest === 'SALE' ? activeClass : inactiveClass;
+}
+
+function setCemIo(io) {
+    cemIoType = io;
+    const btnMono = document.getElementById('cem-io-mono');
+    const btnStereo = document.getElementById('cem-io-stereo');
+    btnMono.className = io === 'MONO' ? 'py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] cursor-pointer' : 'py-1.5 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer';
+    btnStereo.className = io === 'STEREO' ? 'py-1.5 px-2 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] cursor-pointer' : 'py-1.5 px-2 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer';
+}
+
+function setCemVolt(volt) {
+    cemVoltage = volt;
+    const btn9 = document.getElementById('cem-volt-9v');
+    const btn12 = document.getElementById('cem-volt-12v');
+    const btn18 = document.getElementById('cem-volt-18v');
+
+    const activeClass = 'py-1.5 px-1 rounded-xl text-xs font-bold transition-all bg-[#F15A24] text-white border border-[#F15A24] cursor-pointer';
+    const inactiveClass = 'py-1.5 px-1 rounded-xl text-xs font-semibold transition-all bg-[#121316] text-[#9CA3AF] border border-[#2A2D36] cursor-pointer';
+
+    btn9.className = volt === '9V' ? activeClass : inactiveClass;
+    btn12.className = volt === '12V' ? activeClass : inactiveClass;
+    btn18.className = volt === '18V' ? activeClass : inactiveClass;
+}
+
+function generatePowerOutletRows(count) {
+    const container = document.getElementById('cem-power-outlets-container');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 1; i <= count; i++) {
+        container.innerHTML += `
+            <div class="flex items-center gap-2 text-xs">
+                <span class="font-mono text-[#9CA3AF] w-16">Out ${i}:</span>
+                <select id="cem-outlet-volt-${i}" class="bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-white font-mono text-xs">
+                    <option value="9V">9V</option>
+                    <option value="12V">12V</option>
+                    <option value="18V">18V</option>
+                </select>
+                <input type="number" id="cem-outlet-ma-${i}" value="100" min="10" step="10" class="bg-[#1C1E24] border border-[#2A2D36] rounded-lg px-2 py-1 text-white font-mono text-xs w-24" placeholder="mA">
+                <span class="text-[10px] text-[#9CA3AF]">mA</span>
+            </div>
+        `;
+    }
+}
+
+function copyFirstOutputToAll() {
+    const countEl = document.getElementById('cem-power-outlet-count');
+    const count = parseInt(countEl.value) || 8;
+    const v1 = document.getElementById('cem-outlet-volt-1')?.value || '9V';
+    const ma1 = document.getElementById('cem-outlet-ma-1')?.value || '100';
+
+    for (let i = 2; i <= count; i++) {
+        const vEl = document.getElementById(`cem-outlet-volt-${i}`);
+        const maEl = document.getElementById(`cem-outlet-ma-${i}`);
+        if (vEl) vEl.value = v1;
+        if (maEl) maEl.value = ma1;
+    }
+}
+
+function handleCemPhotoUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        tempCemPhotoBase64 = e.target.result;
+        const prev = document.getElementById('cem-photo-preview');
+        const prevContainer = document.getElementById('cem-photo-preview-container');
+        if (prev && prevContainer) {
+            prev.src = tempCemPhotoBase64;
+            prevContainer.classList.remove('hidden');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+function executeSaveCustomEquipment() {
+    const manualUrl = document.getElementById('cem-manual-url').value.trim();
+    const notes = document.getElementById('cem-notes').value.trim();
+
+    if (cemEquipmentType === 'PEDAL') {
+        const brand = document.getElementById('cem-pedal-brand').value.trim() || 'Personalizado';
+        const model = document.getElementById('cem-pedal-model').value.trim() || 'Custom Pedal';
+        const cat = document.getElementById('cem-pedal-category').value;
+        const ma = parseInt(document.getElementById('cem-pedal-[#F15A24]')?.value || document.getElementById('cem-pedal-ma')?.value) || 20;
+
+        const newId = 'custom-' + Date.now();
+        const pedalObj = {
+            id: newId,
+            name: `${brand} ${model}`,
+            brand: brand,
+            category: cat,
+            maBase: ma,
+            maWithMargin: Math.round(ma * 1.3),
+            isStereo: cemIoType === 'STEREO',
+            voltage: cemVoltage,
+            manualUrl: manualUrl || null,
+            notes: notes || null,
+            photoUrl: tempCemPhotoBase64 || null,
+            forSale: cemDestination === 'SALE'
+        };
+
+        if (cemDestination === 'WISHLIST') {
+            wishlistDatabase.push(pedalObj);
+        } else {
+            pedalDatabase.push(pedalObj);
+        }
+    } else {
+        const brand = document.getElementById('cem-power-brand').value.trim() || 'Personalizado';
+        const model = document.getElementById('cem-power-model').value.trim() || 'Fuente Custom';
+        const count = parseInt(document.getElementById('cem-power-outlet-count').value) || 8;
+
+        const outlets = [];
+        for (let i = 1; i <= count; i++) {
+            const v = document.getElementById(`cem-outlet-volt-${i}`)?.value || '9V';
+            const ma = parseInt(document.getElementById(`cem-outlet-ma-${i}`)?.value) || 100;
+            outlets.push({ id: `out-${i}`, label: `Salida ${i}`, maxMa: ma, voltage: v });
+        }
+
+        const newPsId = 'ps-custom-' + Date.now();
+        const psObj = {
+            id: newPsId,
+            name: `${brand} ${model}`,
+            brand: brand,
+            outlets: outlets,
+            manualUrl: manualUrl || null,
+            notes: notes || null,
+            photoUrl: tempCemPhotoBase64 || null,
+            forSale: cemDestination === 'SALE'
+        };
+
+        powerSuppliesDatabase.push(psObj);
+    }
+
+    saveStateToLocalStorage();
+    closeCustomEquipmentModal();
+    renderCatalog(currentBrandFilter);
+    renderPowerSupplies();
+    renderWishlist(false);
+    renderForSaleGear();
+    renderDashboardStats();
+    alert('¡Equipamiento personalizado guardado con éxito!');
+}
+
+
+
+// INITIALIZATION ON PAGE LOAD
+document.addEventListener('DOMContentLoaded', function() {
+    loadSavedState();
+    switchTab('explore');
+});
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    loadSavedState();
+    switchTab('explore');
+}
+
+</script>
+</body>
+</html>
