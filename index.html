@@ -8819,7 +8819,8 @@ function exportFullBackup() {
         currentChainPowerSupplyIds,
         favoriteChains,
         pedalDatabase,
-        powerSuppliesDatabase
+        powerSuppliesDatabase,
+        wishlistDatabase
     };
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
     const downloadAnchor = document.createElement('a');
@@ -8851,15 +8852,26 @@ function importFullBackup(event) {
                 powerSuppliesDatabase.length = 0;
                 parsed.powerSuppliesDatabase.forEach(ps => powerSuppliesDatabase.push(ps));
             }
+            if (parsed.wishlistDatabase || parsed.wishlist) {
+                const wishArr = parsed.wishlistDatabase || parsed.wishlist;
+                wishlistDatabase.length = 0;
+                wishArr.forEach(w => wishlistDatabase.push(w));
+            }
             saveStateToLocalStorage();
             renderFavoriteBadges();
             renderSignalChain();
             renderBrandFilters();
-            renderCatalog('ALL');
-            renderPowerSupplies();
+            renderCategoryFilters();
+            refreshAllCollectionViews();
+            if (typeof renderDashboardStats === 'function') renderDashboardStats();
+            if (typeof renderChainPowerSupplies === 'function') renderChainPowerSupplies();
+            if (typeof switchTab === 'function') switchTab(activeTab);
             if (currentChainIds.length > 0 && currentChainIds[0] !== 'EMPTY') {
                 inspectPedal(currentChainIds[0]);
+            } else {
+                renderInspector(null);
             }
+            if (event && event.target) event.target.value = '';
             alert('¡Respaldo completo cargado con éxito!');
         } catch (err) {
             alert('Error al procesar el archivo JSON de respaldo.');
@@ -8867,7 +8879,6 @@ function importFullBackup(event) {
     };
     reader.readAsText(file);
 }
-
 
 // ==================== WISHLIST / WANT-LIST FUNCTIONS ====================
 let selectedWishlistPedalId = null;
