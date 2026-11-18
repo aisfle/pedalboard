@@ -233,7 +233,7 @@
                     </div>
                     <span id="effects-counter" class="text-xs font-mono text-[#9CA3AF]">0 pedales</span>
                 </div>
-                <div id="collection-effects-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'effects')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-3 border-2 border-dashed border-transparent hover:border-[#F15A24]/30 rounded-xl transition-all"></div>
+                <div id="collection-effects-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'effects')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-4 border-2 border-dashed border-transparent hover:border-[#F15A24]/30 rounded-xl transition-all"></div>
             </section>
 
             <!-- 2. PEDALES DE UTILIDAD -->
@@ -244,7 +244,7 @@
                     </h3>
                     <span id="utility-counter" class="text-xs font-mono text-[#9CA3AF]">0 pedales</span>
                 </div>
-                <div id="collection-utility-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'utility')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-3 border-2 border-dashed border-transparent hover:border-[#F15A24]/30 rounded-xl transition-all"></div>
+                <div id="collection-utility-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'utility')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-4 border-2 border-dashed border-transparent hover:border-[#F15A24]/30 rounded-xl transition-all"></div>
             </section>
 
             <!-- 3. FUENTES DE ALIMENTACIÓN -->
@@ -255,7 +255,7 @@
                     </h3>
                     <span id="power-counter" class="text-xs font-mono text-[#9CA3AF]">0 fuentes</span>
                 </div>
-                <div id="collection-power-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px]"></div>
+                <div id="collection-power-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-4"></div>
             </section>
 
             <!-- 4. WISHLIST -->
@@ -266,7 +266,7 @@
                     </h3>
                     <span id="wishlist-counter" class="text-xs font-mono text-[#9CA3AF]">0 equipos</span>
                 </div>
-                <div id="collection-wishlist-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'wishlist')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-3 border-2 border-dashed border-transparent hover:border-[#8B5CF6]/30 rounded-xl transition-all"></div>
+                <div id="collection-wishlist-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'wishlist')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-4 border-2 border-dashed border-transparent hover:border-[#8B5CF6]/30 rounded-xl transition-all"></div>
             </section>
 
             <!-- 5. EN VENTA -->
@@ -277,7 +277,7 @@
                     </h3>
                     <span id="forsale-counter" class="text-xs font-mono text-[#9CA3AF]">0 equipos</span>
                 </div>
-                <div id="collection-forsale-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'forsale')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-3 border-2 border-dashed border-transparent hover:border-[#EAB308]/30 rounded-xl transition-all"></div>
+                <div id="collection-forsale-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'forsale')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1.5 pb-4 border-2 border-dashed border-transparent hover:border-[#EAB308]/30 rounded-xl transition-all"></div>
             </section>
         </div>
 <div id="view-chain" class="hidden space-y-6 !mt-0">
@@ -370,7 +370,7 @@
                         <p class="text-xs text-[#9CA3AF]">Selecciona, cambia o arrastra (Drag & Drop) cualquier pedal para reordenar tu rig.</p>
                     </div>
                 </div>
-                <div id="chain-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 pb-2"></div>
+                <div id="chain-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 pb-4"></div>
                 <div id="stereo-collapse-notice" class="hidden"></div>
                 <div id="interpedal-cables-summary" class="hidden"></div>
             </section>
@@ -384,7 +384,7 @@
                         <p class="text-xs text-[#9CA3AF]">Monitoreo de miliamperios (mA) y asignación de salidas físicas para las fuentes agregadas a esta cadena de pedales.</p>
                     </div>
                 </div>
-                <div id="chain-power-supplies-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                <div id="chain-power-supplies-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4"></div>
             </section>
 
             <section class="bg-[#1C1E24] rounded-2xl border border-[#2A2D36] p-5 shadow-xl space-y-4">
@@ -1426,7 +1426,7 @@ function renderCollectionPower() {
 
     list.forEach(ps => {
         const card = document.createElement('div');
-        card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-3.5 pb-4.5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
+        card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-4 pb-5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
         card.onclick = () => inspectPowerSupply(ps.id);
 
         const photoHtml = getPowerSupplyIconHTML(ps, 'w-10 h-10');
@@ -1494,7 +1494,7 @@ function renderCollectionForSale() {
     forSalePedals.forEach(p => grid.appendChild(createPedalCatalogCard(p, 'forsale')));
     forSalePower.forEach(ps => {
         const card = document.createElement('div');
-        card.className = 'bg-[#1C1E24] border border-[#EAB308]/50 rounded-xl p-3.5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
+        card.className = 'bg-[#1C1E24] border border-[#EAB308]/50 rounded-xl p-4 pb-5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
         card.onclick = () => inspectPowerSupply(ps.id);
 
         const photoHtml = getPowerSupplyIconHTML(ps, 'w-10 h-10');
@@ -1541,7 +1541,7 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
     const descHtml = descText ? `<p title="${descText.replace(/"/g, '&quot;')}" class="text-xs text-[#9CA3AF] line-clamp-2 hover:line-clamp-none italic transition-all cursor-help mt-1.5">${descText}</p>` : '';
     const categoryText = getEffectCategory(pedal);
 
-    card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-3.5 pb-4.5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
+    card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-4 pb-5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative';
     card.onclick = () => {
         if (sectionType === 'wishlist') inspectWishlistPedal(pedal);
         else inspectPedal(pedal.id);
@@ -2096,7 +2096,7 @@ function renderMasterCatalog() {
 
         list.forEach(ps => {
             const card = document.createElement('div');
-            card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#00A8CC]/50 rounded-xl p-3.5 transition-all hover:shadow-lg flex flex-col justify-between group relative';
+            card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#00A8CC]/50 rounded-xl p-4 pb-5 transition-all hover:shadow-lg flex flex-col justify-between group relative';
             const photoHtml = getPowerSupplyIconHTML(ps, 'w-10 h-10');
             const outletCount = ps.outlets ? ps.outlets.length : 0;
 
@@ -2149,7 +2149,7 @@ function renderMasterCatalog() {
 
     list.forEach(pedal => {
         const card = document.createElement('div');
-        card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-3.5 pb-4.5 transition-all hover:shadow-lg flex flex-col justify-between group relative';
+        card.className = 'bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-4 pb-5 transition-all hover:shadow-lg flex flex-col justify-between group relative';
 
         const photoHtml = getPedalIconHTML(pedal, 'w-10 h-10');
         const descText = pedal.description || pedal.desc || '';
@@ -7091,7 +7091,7 @@ function renderSignalChain() {
         card.addEventListener('drop', handleDrop);
         card.addEventListener('dragend', handleDragEnd);
         if (!pedal || pedalId === 'EMPTY') {
-            card.className = `bg-[#121316]/50 border-2 border-dashed border-[#2A2D36] rounded-xl p-3 flex flex-col justify-between transition-all relative group cursor-grab active:cursor-grabbing hover:border-[#F15A24]/50`;
+            card.className = `bg-[#121316]/50 border-2 border-dashed border-[#2A2D36] rounded-xl p-4 pb-5 flex flex-col justify-between transition-all relative group cursor-grab active:cursor-grabbing hover:border-[#F15A24]/50`;
             card.innerHTML = `
                 <button onclick="removeSlot(${index}, event)" class="absolute top-2 right-2 text-[#9CA3AF] hover:text-[#F15A24] text-xs w-5 h-5 flex items-center justify-center rounded-full hover:bg-[#121316] transition-all z-10">
                     <i class="fa-solid fa-xmark"></i>
@@ -7117,7 +7117,7 @@ function renderSignalChain() {
                 </div>
             `;
         } else {
-            card.className = `bg-[#1C1E24] rounded-xl p-3 border transition-all cursor-grab active:cursor-grabbing relative group flex flex-col justify-between ${
+            card.className = `bg-[#1C1E24] rounded-xl p-4 pb-5 border transition-all cursor-grab active:cursor-grabbing relative group flex flex-col justify-between ${
                 isDuplicated 
                 ? 'border-2 border-[#F15A24] bg-[#F15A24]/10 shadow-lg shadow-[#F15A24]/20 animate-pulse' 
                 : (slotMode === 'STEREO' ? 'border-[#9E7BB5] hover:border-[#9E7BB5]' : 'border-[#00A8CC] hover:border-[#00A8CC]')
@@ -7478,7 +7478,7 @@ function renderChainPowerSupplies() {
         }
         const photoTag = getPowerSupplyIconHTML(ps, 'w-10 h-10');
         const card = document.createElement('div');
-        card.className = "bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-3.5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative";
+        card.className = "bg-[#1C1E24] border border-[#2A2D36] hover:border-[#F15A24]/50 rounded-xl p-4 pb-5 transition-all hover:shadow-lg cursor-pointer flex flex-col justify-between group relative";
         card.onclick = () => inspectPowerSupply(ps.id);
         card.innerHTML = `
             <button onclick="removePowerSupplyFromChain('${ps.id}', event)" title="Quitar fuente de esta cadena" class="absolute top-2.5 right-2.5 text-[#9CA3AF] hover:text-[#F15A24] text-xs w-6 h-6 flex items-center justify-center rounded-lg hover:bg-[#121316] transition-all z-10">
