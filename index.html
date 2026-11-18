@@ -264,7 +264,7 @@
                     <h3 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wide">
                         <i class="fa-solid fa-heart text-[#8B5CF6]"></i> WISHLIST
                     </h3>
-                    <span id="wishlist-counter" class="text-xs font-mono text-[#9CA3AF]">0 pedales</span>
+                    <span id="wishlist-counter" class="text-xs font-mono text-[#9CA3AF]">0 equipos</span>
                 </div>
                 <div id="collection-wishlist-grid" ondragover="allowDropSection(event)" ondrop="handleDropSection(event, 'wishlist')" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-[60px] p-1 border-2 border-dashed border-transparent hover:border-[#8B5CF6]/30 rounded-xl transition-all"></div>
             </section>
@@ -1468,8 +1468,8 @@ function renderCollectionWishlist() {
     if (!grid) return;
 
     let list = wishlistDatabase || [];
-    if (counter) counter.textContent = `${list.length} pedal${list.length !== 1 ? 'es' : ''}`;
-    grid.innerHTML = list.length === 0 ? '<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay pedales en tu lista de deseos.</span>' : '';
+    if (counter) counter.textContent = `${list.length} equipo${list.length !== 1 ? 's' : ''}`;
+    grid.innerHTML = list.length === 0 ? '<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay equipos en tu lista de deseos.</span>' : '';
 
     list.forEach(item => {
         grid.appendChild(createPedalCatalogCard(item, 'wishlist'));
@@ -6231,19 +6231,53 @@ function saveItemNotes(type, id) {
     if (!textarea) return;
     const notesVal = textarea.value;
     pushHistory();
-    if (type === 'PEDAL') {
-        let pedal = pedalDatabase.find(p => p.id === id);
-        if (!pedal && typeof wishlistDatabase !== 'undefined') {
-            pedal = wishlistDatabase.find(p => p.id === id);
-        }
-        if (pedal) pedal.notes = notesVal;
-    } else if (type === 'POWER') {
-        let ps = powerSuppliesDatabase.find(p => p.id === id);
-        if (!ps && typeof wishlistDatabase !== 'undefined') {
-            ps = wishlistDatabase.find(p => p.id === id);
-        }
-        if (ps) ps.notes = notesVal;
+
+    let updated = false;
+
+    // Search in pedalDatabase
+    let p = pedalDatabase.find(x => x.id === id);
+    if (p) {
+        p.notes = notesVal;
+        updated = true;
     }
+
+    // Search in powerSuppliesDatabase
+    let ps = powerSuppliesDatabase.find(x => x.id === id);
+    if (ps) {
+        ps.notes = notesVal;
+        updated = true;
+    }
+
+    // Search in wishlistDatabase
+    if (typeof wishlistDatabase !== 'undefined') {
+        let w = wishlistDatabase.find(x => x.id === id);
+        if (w) {
+            w.notes = notesVal;
+            updated = true;
+        }
+    }
+
+    // Fallback for factory items inspected directly from catalog
+    if (!updated) {
+        if (type === 'PEDAL') {
+            const fallback = (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined') ? DEFAULT_PEDALS_FALLBACK.find(x => x.id === id) : null;
+            if (fallback) {
+                const copy = JSON.parse(JSON.stringify(fallback));
+                copy.notes = notesVal;
+                pedalDatabase.push(normalizePedalData(copy));
+                updated = true;
+            }
+        } else if (type === 'POWER') {
+            const fallbackPs = (typeof DEFAULT_POWER_SUPPLIES_FALLBACK !== 'undefined') ? DEFAULT_POWER_SUPPLIES_FALLBACK.find(x => x.id === id) : null;
+            if (fallbackPs) {
+                const copy = JSON.parse(JSON.stringify(fallbackPs));
+                copy.notes = notesVal;
+                powerSuppliesDatabase.push(copy);
+                updated = true;
+            }
+        }
+    }
+
     saveStateToLocalStorage();
     alert('¡Notas guardadas correctamente!');
 }
