@@ -6232,10 +6232,16 @@ function saveItemNotes(type, id) {
     const notesVal = textarea.value;
     pushHistory();
     if (type === 'PEDAL') {
-        const pedal = pedalDatabase.find(p => p.id === id);
+        let pedal = pedalDatabase.find(p => p.id === id);
+        if (!pedal && typeof wishlistDatabase !== 'undefined') {
+            pedal = wishlistDatabase.find(p => p.id === id);
+        }
         if (pedal) pedal.notes = notesVal;
     } else if (type === 'POWER') {
-        const ps = powerSuppliesDatabase.find(p => p.id === id);
+        let ps = powerSuppliesDatabase.find(p => p.id === id);
+        if (!ps && typeof wishlistDatabase !== 'undefined') {
+            ps = wishlistDatabase.find(p => p.id === id);
+        }
         if (ps) ps.notes = notesVal;
     }
     saveStateToLocalStorage();
