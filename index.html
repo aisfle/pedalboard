@@ -389,6 +389,27 @@
                         <button onclick="duplicateCurrentChain()" title="Duplicar esta cadena 100% como nuevo preset" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
                             <i class="fa-solid fa-copy text-[#00A8CC]"></i> Copiar cadena
                         </button>
+                        <div class="relative inline-block flex-1 sm:flex-none">
+                            <button onclick="toggleExportChainDropdown(event)" title="Exportar ficha técnica o planilla de ruteo" class="w-full justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
+                                <i class="fa-solid fa-file-export text-[#00A8CC]"></i> Exportar Cadena <i class="fa-solid fa-chevron-down text-[10px] text-[#9CA3AF] ml-0.5"></i>
+                            </button>
+                            <div id="export-chain-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-[#1C1E24] border border-[#2A2D36] rounded-xl shadow-2xl z-50 p-1.5 space-y-1 font-sans">
+                                <button onclick="exportChainToPDF(); toggleExportChainDropdown(event);" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#121316] text-xs text-white font-semibold flex items-center gap-2.5 transition-all cursor-pointer">
+                                    <i class="fa-solid fa-file-pdf text-[#00A8CC] text-sm"></i>
+                                    <div>
+                                        <span class="block font-bold">📄 Ficha Técnica (PDF - Dark)</span>
+                                        <span class="text-[10px] text-[#9CA3AF] block font-mono">Tech rider para show / WhatsApp</span>
+                                    </div>
+                                </button>
+                                <button onclick="exportChainToExcel(); toggleExportChainDropdown(event);" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#121316] text-xs text-white font-semibold flex items-center gap-2.5 transition-all cursor-pointer">
+                                    <i class="fa-solid fa-file-excel text-[#10B981] text-sm"></i>
+                                    <div>
+                                        <span class="block font-bold">📊 Planilla de Ruteo (Excel .xlsx)</span>
+                                        <span class="text-[10px] text-[#9CA3AF] block font-mono">Tabulación y auditoría de energía</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
                         <div class="flex items-center gap-2 flex-1 sm:flex-none w-full sm:w-auto font-sans">
                             <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="flex-1 justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
                                 <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
@@ -1063,13 +1084,23 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "zuma-8",
         "label": "Salida 8 (Toggle)",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "zuma-9",
         "label": "Salida 9 (Toggle)",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       }
     ],
     "details": "9 salidas aisladas (7x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).",
@@ -1133,43 +1164,85 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "cioks-1",
         "label": "Salida 1",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       },
       {
         "id": "cioks-2",
         "label": "Salida 2",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       },
       {
         "id": "cioks-3",
         "label": "Salida 3",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       },
       {
         "id": "cioks-4",
         "label": "Salida 4",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       },
       {
         "id": "cioks-5",
         "label": "Salida 5",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       },
       {
         "id": "cioks-6",
         "label": "Salida 6",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       },
       {
         "id": "cioks-7",
         "label": "Salida 7",
         "voltage": "9V",
-        "maxMa": 660
+        "maxMa": 660,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "15V",
+          "18V"
+        ]
       }
     ],
     "details": "7 salidas aisladas configurables (9V/12V/15V/18V DC @ 660mA c/u).",
@@ -1225,13 +1298,23 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "lvl8-7",
         "label": "Salida 7 (Toggle)",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "lvl8-8",
         "label": "Salida 8 (Toggle)",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       }
     ],
     "details": "8 salidas aisladas (6x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).",
@@ -1299,13 +1382,25 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "m237-9",
         "label": "Salida 9 (Variable)",
         "voltage": "9V",
-        "maxMa": 250
+        "maxMa": 250,
+        "voltageOptions": [
+          "6V",
+          "9V",
+          "12V",
+          "15V"
+        ]
       },
       {
         "id": "m237-10",
         "label": "Salida 10 (Variable)",
         "voltage": "9V",
-        "maxMa": 250
+        "maxMa": 250,
+        "voltageOptions": [
+          "6V",
+          "9V",
+          "12V",
+          "15V"
+        ]
       }
     ],
     "details": "10 salidas aisladas (2x 9V @ 100mA, 2x 9V @ 300mA, 2x 9V @ 450mA, 2x 18V @ 250mA, 2x ajustables 6V-15V @ 250mA).",
@@ -1349,7 +1444,11 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "mini-5",
         "label": "Salida 5 (Toggle 9V/18V)",
         "voltage": "9V",
-        "maxMa": 800
+        "maxMa": 800,
+        "voltageOptions": [
+          "9V",
+          "18V"
+        ]
       }
     ],
     "details": "5 salidas aisladas compactas (4x 9V DC @ 300mA + 1x conmutable 9V/18V @ 800mA).",
@@ -1659,31 +1758,56 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "canvas5-1",
         "label": "Salida 1",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "canvas5-2",
         "label": "Salida 2",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "canvas5-3",
         "label": "Salida 3",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "canvas5-4",
         "label": "Salida 4",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "canvas5-5",
         "label": "Salida 5",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       }
     ],
     "details": "5 salidas aisladas de 9V DC @ 500mA (conmutables a 12V/18V).",
@@ -1739,13 +1863,23 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "canvas8-7",
         "label": "Salida 7",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "canvas8-8",
         "label": "Salida 8",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       }
     ],
     "details": "8 salidas aisladas de 9V DC @ 500mA (2x conmutables 9V/12V/18V).",
@@ -1885,13 +2019,23 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
         "id": "canvas22-21",
         "label": "Salida 21",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       },
       {
         "id": "canvas22-22",
         "label": "Salida 22",
         "voltage": "9V",
-        "maxMa": 500
+        "maxMa": 500,
+        "voltageOptions": [
+          "9V",
+          "12V",
+          "18V"
+        ]
       }
     ],
     "details": "22 salidas aisladas independientes (20x 9V DC @ 500mA + 2x seleccionables 9V/12V/18V DC @ 500mA).",
@@ -2267,7 +2411,11 @@ function renderDashboardStats() {
                             return s + (p ? p.maWithMargin : 0);
                         }, 0);
                         if (sumMa > out.maxMa) overloadedOutlets++;
-                        if (out.voltage !== '9V' && assigned.length > 0) voltageWarnings++;
+                        const isConflict = assigned.some(id => {
+                            const p = pedalDatabase.find(x => x.id === id);
+                            return p && (p.voltage || '9V').trim() !== out.voltage;
+                        });
+                        if (isConflict) voltageWarnings++;
                     });
                 }
             });
@@ -7222,8 +7370,17 @@ function syncSavedItemsWithMasterCatalog() {
                 if (master.imageUrl && !ps.customPhotoUrl && (!ps.imageUrl || ps.imageUrl !== master.imageUrl)) {
                     ps.imageUrl = master.imageUrl;
                 }
-                if (master.outlets && (!ps.outlets || ps.outlets.length === 0)) {
-                    ps.outlets = master.outlets;
+                if (master.outlets && Array.isArray(master.outlets)) {
+                    if (!ps.outlets || ps.outlets.length === 0) {
+                        ps.outlets = JSON.parse(JSON.stringify(master.outlets));
+                    } else {
+                        ps.outlets.forEach(o => {
+                            const masterOut = master.outlets.find(mo => mo.id === o.id || mo.label === o.label);
+                            if (masterOut && masterOut.voltageOptions && !o.voltageOptions) {
+                                o.voltageOptions = masterOut.voltageOptions;
+                            }
+                        });
+                    }
                 }
             }
         };
@@ -7397,7 +7554,8 @@ function computePowerSupplyStats(psId) {
             usedMa += pedal.maWithMargin;
             if (assignment.outletId && ps.outlets) {
                 const outlet = ps.outlets.find(o => o.id === assignment.outletId);
-                if (outlet && outlet.voltage !== '9V') {
+                const pedalVoltage = (pedal.voltage || '9V').trim();
+                if (outlet && pedalVoltage !== outlet.voltage) {
                     hasConflict = true;
                 }
             }
@@ -8964,6 +9122,50 @@ function inspectPowerSupply(psId) {
     renderInspector(psId);
 }
 
+function getOutletVoltageOptions(ps, out) {
+    if (out && out.voltageOptions && Array.isArray(out.voltageOptions)) {
+        return out.voltageOptions;
+    }
+    const psId = (ps.id || '').toLowerCase();
+    const lbl = (out.label || '').toLowerCase();
+
+    if (psId.includes('zuma') || psId.includes('lvl8') || psId.includes('canvas')) {
+        if (lbl.includes('toggle') || lbl.includes('variable') || lbl.includes('salida 8') || lbl.includes('salida 9') || lbl.includes('salida 7')) {
+            return ['9V', '12V', '18V'];
+        }
+    }
+    if (psId.includes('cioks')) {
+        return ['9V', '12V', '15V', '18V'];
+    }
+    if (psId.includes('mini')) {
+        if (lbl.includes('toggle') || lbl.includes('conmutable')) return ['9V', '18V'];
+    }
+    if (psId.includes('m237')) {
+        if (lbl.includes('variable') || lbl.includes('sag')) return ['6V', '9V', '12V', '15V'];
+    }
+    if (lbl.includes('toggle') || lbl.includes('variable')) {
+        return ['9V', '12V', '18V'];
+    }
+    return null;
+}
+
+function updateOutletVoltage(psId, outletId, newVoltage) {
+    pushHistory();
+    const ps = powerSuppliesDatabase.find(p => p.id === psId);
+    if (ps && ps.outlets) {
+        const out = ps.outlets.find(o => o.id === outletId);
+        if (out) {
+            out.voltage = newVoltage;
+            saveStateToLocalStorage();
+            renderPowerSupplies();
+            renderSignalChain();
+            renderChainPowerSupplies();
+            if (activeInspectorId === psId) renderInspector(psId);
+            if (typeof renderDashboardStats === 'function') renderDashboardStats();
+        }
+    }
+}
+
 function assignPedalToOutlet(psId, outletId, pedalId) {
     powerAssignmentError = null;
     activeSplitOutletId = null;
@@ -8973,8 +9175,9 @@ function assignPedalToOutlet(psId, outletId, pedalId) {
     const psObj = powerSuppliesDatabase.find(p => p.id === psId);
     const outletObj = psObj?.outlets?.find(o => o.id === outletId);
     if (outletObj) {
-        if (outletObj.voltage !== '9V') {
-            powerAssignmentError = `⚠️ ¡Error! El pedal "${pedal.name}" no es compatible con la salida de ${outletObj.voltage}.`;
+        const pedalRequiredVoltage = (pedal.voltage || '9V').trim();
+        if (pedalRequiredVoltage !== outletObj.voltage) {
+            powerAssignmentError = `⚠️ ¡Peligro! El pedal "${pedal.name}" requiere ${pedalRequiredVoltage}, pero la ${outletObj.label} está configurada en ${outletObj.voltage}. Cambia el voltaje de la salida o asigna otra salida.`;
             renderInspector(psId);
             return;
         }
@@ -9388,11 +9591,24 @@ function renderInspector(itemId, currentSlotMode = null) {
                 const maSum = assignedPedals.reduce((sum, p) => sum + p.maWithMargin, 0);
                 const isOver = maSum > out.maxMa;
                 const isVoltageAlert = out.voltage !== '9V' && assignedPedals.length > 0;
+                const vOpts = getOutletVoltageOptions(ps, out);
+                let voltSelectorHtml = `<span class="text-[#FFFFFF]">${out.voltage}</span>`;
+                if (vOpts && Array.isArray(vOpts)) {
+                    voltSelectorHtml = `
+                        <select onchange="updateOutletVoltage('${ps.id}', '${out.id}', this.value)" class="bg-[#1C1E24] text-[#00A8CC] border border-[#00A8CC]/40 rounded px-1.5 py-0.5 text-xs font-mono font-bold focus:outline-none cursor-pointer">
+                            ${vOpts.map(v => `<option value="${v}" ${out.voltage === v ? 'selected' : ''}>${v}</option>`).join('')}
+                        </select>
+                    `;
+                }
+
                 if (!isTabChain) {
                     return `
                         <div class="bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36] font-mono text-xs flex justify-between items-center">
                             <span class="text-[#00A8CC] font-bold">${out.label}</span>
-                            <span class="text-[#FFFFFF]">${out.voltage} @ ${out.maxMa} mA</span>
+                            <div class="flex items-center gap-1.5">
+                                ${voltSelectorHtml}
+                                <span class="text-[#FFFFFF]">@ ${out.maxMa} mA</span>
+                            </div>
                         </div>
                     `;
                 }
@@ -10726,6 +10942,235 @@ document.addEventListener('keydown', (e) => {
 });
 
 
+
+function toggleExportChainDropdown(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('export-chain-dropdown');
+    if (dropdown) dropdown.classList.toggle('hidden');
+}
+
+document.addEventListener('click', () => {
+    const dropdown = document.getElementById('export-chain-dropdown');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+    }
+});
+
+function exportChainToPDF() {
+    const activePedalsInChain = currentChainIds.filter(id => id && id !== 'EMPTY').map(id => pedalDatabase.find(p => p.id === id)).filter(Boolean);
+    if (activePedalsInChain.length === 0) {
+        alert("⚠️ No hay pedales en la cadena activa para exportar.");
+        return;
+    }
+
+    const modal = document.getElementById('tech-rider-modal');
+    const contentArea = document.getElementById('tech-rider-content-area');
+    if (!modal || !contentArea) return;
+
+    let totalMa = 0;
+    activePedalsInChain.forEach(p => totalMa += p.maWithMargin);
+    const totalVal = activePedalsInChain.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
+    const activePowersInChain = powerSuppliesDatabase.filter(ps => currentChainPowerSupplyIds.includes(ps.id));
+    const todayStr = new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const audioListHtml = activePedalsInChain.map((p, idx) => {
+        const modeStr = p.isStereo ? 'Stereo I/O' : 'Mono I/O';
+        const effCat = getEffectCategory(p);
+        return `
+            <div class="flex items-center justify-between bg-[#1C1E24] p-2.5 rounded-xl border border-[#2A2D36] text-xs font-mono">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="font-bold text-[#F15A24] shrink-0">${idx + 1}.</span>
+                    <span class="text-white font-bold truncate">${p.brand} - ${p.name}</span>
+                    <span class="text-[10px] text-[#9CA3AF] bg-[#121316] px-2 py-0.5 rounded border border-[#2A2D36] shrink-0">${effCat}</span>
+                </div>
+                <span class="text-[11px] font-bold ${p.isStereo ? 'text-[#8B5CF6]' : 'text-[#00A8CC]'} shrink-0 ml-2">${modeStr}</span>
+            </div>
+        `;
+    }).join('');
+
+    const powerTableHtml = activePedalsInChain.map((p, idx) => {
+        const assign = getPedalPowerAssignment(p.id);
+        const psObj = powerSuppliesDatabase.find(x => x.id === assign.psId);
+        const outletObj = psObj?.outlets?.find(o => o.id === assign.outletId);
+
+        const psName = psObj ? `${psObj.brand} ${psObj.model}` : 'Sin asignar';
+        const outletLabel = outletObj ? outletObj.label : 'Sin salida';
+        const voltage = outletObj ? outletObj.voltage : '9V';
+        const pedalVoltage = (p.voltage || '9V').trim();
+        const isConflict = outletObj && pedalVoltage !== outletObj.voltage;
+        const statusHtml = isConflict ? '<span class="text-[#F15A24] font-bold">⚠️ Conflicto</span>' : '<span class="text-[#10B981] font-bold">✅ OK</span>';
+
+        return `
+            <tr class="border-b border-[#2A2D36] text-xs font-mono">
+                <td class="py-2 px-3 text-[#F15A24] font-bold">${idx + 1}</td>
+                <td class="py-2 px-3 text-white font-bold">${p.brand} ${p.name}</td>
+                <td class="py-2 px-3 text-[#00A8CC]">${psName}</td>
+                <td class="py-2 px-3 text-[#9CA3AF]">${outletLabel}</td>
+                <td class="py-2 px-3 text-white font-bold">${voltage}</td>
+                <td class="py-2 px-3 text-[#00A8CC]">${p.maWithMargin} mA</td>
+                <td class="py-2 px-3">${statusHtml}</td>
+            </tr>
+        `;
+    }).join('');
+
+    contentArea.innerHTML = `
+        <div class="space-y-4 p-4 font-sans bg-[#121316] rounded-xl text-white">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#2A2D36] pb-3 gap-2">
+                <div>
+                    <span class="text-[10px] font-mono font-bold text-[#8B5CF6] uppercase tracking-widest block">MY PEDAL RIG • TECH RIDER</span>
+                    <h2 class="text-lg font-black text-white tracking-tight mt-0.5">Cadena Activa de Escenario</h2>
+                    <p class="text-xs text-[#9CA3AF] mt-0.5">Ficha técnica oficial de ruteo de audio, alimentación y requerimientos eléctricos.</p>
+                </div>
+                <div class="text-right text-xs font-mono text-[#9CA3AF] shrink-0">
+                    <div>${todayStr}</div>
+                    <div class="text-[#00A8CC] font-bold text-[11px] mt-0.5">${activePedalsInChain.length} pedales • ${activePowersInChain.length} fuentes</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 text-xs font-mono">
+                <div class="bg-[#1C1E24] p-3 rounded-xl border border-[#2A2D36]">
+                    <span class="text-[10px] text-[#9CA3AF] block">Pedales en cadena:</span>
+                    <strong class="text-[#F15A24] text-sm block mt-0.5">${activePedalsInChain.length} unidades</strong>
+                </div>
+                <div class="bg-[#1C1E24] p-3 rounded-xl border border-[#2A2D36]">
+                    <span class="text-[10px] text-[#9CA3AF] block">Consumo acumulado:</span>
+                    <strong class="text-[#00A8CC] text-sm block mt-0.5">${totalMa} mA (+30% seg)</strong>
+                </div>
+                <div class="bg-[#1C1E24] p-3 rounded-xl border border-[#2A2D36]">
+                    <span class="text-[10px] text-[#9CA3AF] block">Valoración del Rig:</span>
+                    <strong class="text-[#8B5CF6] text-sm block mt-0.5">$ ${totalVal.toLocaleString('en-US')} USD</strong>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <div class="text-[11px] font-mono text-[#F15A24] uppercase font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-diagram-project text-xs"></i> 1. RUTEO DE SEÑAL DE AUDIO (ORDEN DE CADENA)
+                </div>
+                <div class="space-y-1.5">
+                    ${audioListHtml}
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-3 border-t border-[#2A2D36]">
+                <div class="text-[11px] font-mono text-[#00A8CC] uppercase font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt text-xs"></i> 2. MATRIZ DE ALIMENTACIÓN ELÉCTRICA & VOLTAJES
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-[#2A2D36] text-[10px] font-mono text-[#9CA3AF] uppercase">
+                                <th class="py-2 px-3">#</th>
+                                <th class="py-2 px-3">Pedal</th>
+                                <th class="py-2 px-3">Fuente</th>
+                                <th class="py-2 px-3">Salida</th>
+                                <th class="py-2 px-3">Voltaje</th>
+                                <th class="py-2 px-3">Consumo</th>
+                                <th class="py-2 px-3">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${powerTableHtml}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+
+    modal.classList.remove('hidden');
+}
+
+function closeTechRiderModal() {
+    const modal = document.getElementById('tech-rider-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function printTechRiderPDF() {
+    window.print();
+}
+
+function exportChainToExcel() {
+    const activePedalsInChain = currentChainIds.filter(id => id && id !== 'EMPTY').map(id => pedalDatabase.find(p => p.id === id)).filter(Boolean);
+    if (activePedalsInChain.length === 0) {
+        alert("⚠️ No hay pedales en la cadena activa para exportar.");
+        return;
+    }
+
+    const todayStr = new Date().toLocaleDateString('es-AR');
+    let totalMa = 0;
+    activePedalsInChain.forEach(p => totalMa += p.maWithMargin);
+    const totalVal = activePedalsInChain.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
+
+    let csv = `"\uFEFF=== MY PEDAL RIG - PLANILLA DE RUTEO Y CONSUMOS ==="\n`;
+    csv += `"Fecha: ${todayStr}","Pedales: ${activePedalsInChain.length}","Consumo Total: ${totalMa} mA","Valor Total Rig: $ ${totalVal} USD"\n\n`;
+
+    csv += `"--- 1. RUTEO DE SEÑAL DE AUDIO ---"\n`;
+    csv += `"Posición","Marca","Modelo","Categoría","Tipo E/S","Valor (USD)"\n`;
+
+    activePedalsInChain.forEach((p, idx) => {
+        const mode = p.isStereo ? 'Stereo I/O' : 'Mono I/O';
+        const cat = getEffectCategory(p);
+        csv += `"${idx + 1}","${p.brand}","${p.name}","${cat}","${mode}","$ ${p.priceUsd || 0}"\n`;
+    });
+
+    csv += `\n"--- 2. MATRIZ DE ALIMENTACIÓN ELÉCTRICA ---"\n`;
+    csv += `"Posición","Pedal","Fuente Asignada","Salida Física","Voltaje Configurado","Consumo Base (mA)","Margen Recomendado (+30% mA)","Estado Seguridad"\n`;
+
+    activePedalsInChain.forEach((p, idx) => {
+        const assign = getPedalPowerAssignment(p.id);
+        const psObj = powerSuppliesDatabase.find(x => x.id === assign.psId);
+        const outletObj = psObj?.outlets?.find(o => o.id === assign.outletId);
+
+        const psName = psObj ? `${psObj.brand} ${psObj.model}` : 'Sin asignar';
+        const outletLabel = outletObj ? outletObj.label : 'Sin salida';
+        const voltage = outletObj ? outletObj.voltage : '9V';
+        const pedalVoltage = (p.voltage || '9V').trim();
+        const isConflict = outletObj && pedalVoltage !== outletObj.voltage;
+        const status = isConflict ? 'Conflicto de Voltaje' : '100% Seguro';
+
+        csv += `"${idx + 1}","${p.brand} ${p.name}","${psName}","${outletLabel}","${voltage}","${p.maBase} mA","${p.maWithMargin} mA","${status}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ruteo_cadena_${Date.now()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 </script>
+
+<div id="tech-rider-modal" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto font-sans">
+    <div class="bg-[#1C1E24] border-2 border-[#8B5CF6] rounded-2xl max-w-3xl w-full p-6 space-y-6 shadow-2xl relative text-white my-auto max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-[#2A2D36] pb-4 print:hidden">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 flex items-center justify-center text-[#8B5CF6]">
+                    <i class="fa-solid fa-file-pdf text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono">Ficha Técnica & Tech Rider de Escenario</h3>
+                    <p class="text-[11px] text-[#9CA3AF]">Vista previa en Dark Mode lista para guardar en PDF o compartir.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="printTechRiderPDF()" class="bg-[#00A8CC] hover:bg-[#0092b3] text-white font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95">
+                    <i class="fa-solid fa-print"></i> Guardar PDF / Imprimir
+                </button>
+                <button onclick="closeTechRiderModal()" class="text-[#9CA3AF] hover:text-white bg-[#121316] p-2 rounded-xl border border-[#2A2D36] text-xs cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="tech-rider-content-area" class="space-y-6 p-2 bg-[#121316] rounded-xl border border-[#2A2D36]">
+            <!-- Rendered dynamically -->
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
