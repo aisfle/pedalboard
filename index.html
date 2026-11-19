@@ -165,16 +165,37 @@
                 </div>
 
                 <!-- DEDICATED FINANCIAL SUMMARY BAR -->
-                <div class="border-t border-[#2A2D36] pt-3 mt-1 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-                    <div class="flex items-center gap-2 text-[#8B5CF6] font-bold uppercase tracking-wider text-[11px]">
-                        <i class="fa-solid fa-sack-dollar text-[#8B5CF6]"></i> Valoración Financiera e Inversión:
+                <div class="border-t border-[#2A2D36] pt-3.5 mt-1 space-y-2.5">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <div class="flex items-center gap-2 text-[#8B5CF6] font-bold text-xs">
+                            <i class="fa-solid fa-sack-dollar text-[#8B5CF6]"></i>
+                            <span>Valoración financiera e inversión</span>
+                        </div>
+                        <div class="text-xs font-mono text-[#9CA3AF]">
+                            Valor total de colección: <strong id="fin-summary-total" class="text-white font-bold text-sm">$0 USD</strong>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-4 flex-wrap text-xs">
-                        <span class="text-[#9CA3AF]">Colección Activa: <strong id="fin-summary-col" class="text-[#F15A24] font-bold">$0 USD</strong></span>
-                        <span class="text-[#2A2D36]">|</span>
-                        <span class="text-[#9CA3AF]">En Venta: <strong id="fin-summary-sale" class="text-[#EAB308] font-bold">$0 USD</strong></span>
-                        <span class="text-[#2A2D36]">|</span>
-                        <span class="text-[#9CA3AF]">Presupuesto Wishlist: <strong id="fin-summary-wish" class="text-[#8B5CF6] font-bold">$0 USD</strong></span>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 pt-1 text-xs font-mono">
+                        <div class="bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36]">
+                            <span class="text-[#9CA3AF] text-[11px] block">Pedales en colección</span>
+                            <strong id="fin-summary-pedals" class="text-[#F15A24] font-bold text-xs mt-0.5 block">$0 USD</strong>
+                        </div>
+                        <div class="bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36]">
+                            <span class="text-[#9CA3AF] text-[11px] block">Fuentes en colección</span>
+                            <strong id="fin-summary-powers" class="text-[#00A8CC] font-bold text-xs mt-0.5 block">$0 USD</strong>
+                        </div>
+                        <div class="bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36]">
+                            <span class="text-[#9CA3AF] text-[11px] block">Costo promedio pedal</span>
+                            <strong id="fin-summary-avg" class="text-white font-bold text-xs mt-0.5 block">$0 USD / pedal</strong>
+                        </div>
+                        <div class="bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36]">
+                            <span class="text-[#9CA3AF] text-[11px] block">En venta (recuperable)</span>
+                            <strong id="fin-summary-sale" class="text-[#EAB308] font-bold text-xs mt-0.5 block">$0 USD</strong>
+                        </div>
+                        <div class="bg-[#121316] p-2.5 rounded-xl border border-[#2A2D36] col-span-2 sm:col-span-1">
+                            <span class="text-[#9CA3AF] text-[11px] block">Presupuesto wishlist</span>
+                            <strong id="fin-summary-wish" class="text-[#8B5CF6] font-bold text-xs mt-0.5 block">$0 USD</strong>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,6 +221,17 @@
                     </div>
                     <div id="chart-brands-container" class="space-y-3 pt-2"></div>
                 </div>
+            </div>
+
+            <!-- TOP 3 PEDALES DE MAYOR VALOR (JOYAS DEL RIG) -->
+            <div class="bg-[#1C1E24] border border-[#2A2D36] p-5 rounded-2xl space-y-4 shadow-xl">
+                <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wide">
+                        <i class="fa-solid fa-gem text-[#8B5CF6]"></i> Top 3 pedales de mayor valor
+                    </h3>
+                    <span class="text-[10px] font-mono text-[#9CA3AF]">Colección activa</span>
+                </div>
+                <div id="explore-top-val-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
             </div>
 
             <!-- PANEL DE DIAGNÓSTICO Y ALERTAS DEL RIG -->
@@ -2026,14 +2058,17 @@ function renderDashboardStats() {
     const wishlistCount = wishlistPedals.length;
 
     const forSalePedals = pedalDatabase ? pedalDatabase.filter(p => p.forSale) : [];
-    const forSalePowers = (typeof powerSuppliesDatabase !== 'undefined' && powerSuppliesDatabase) ? powerSuppliesDatabase.filter(ps => ps.forSale) : [];
+    const forSalePowers = (typeof powerSuppliesDatabase !== 'undefined' && powerSuppliesDatabase) ? powerSuppliesDatabase.filter(ps => !ps.forSale) : [];
     const forSaleCount = forSalePedals.length + forSalePowers.length;
 
     const chainsCount = (typeof favoriteChains !== 'undefined' && favoriteChains) ? favoriteChains.length : 0;
 
     // Calculate Financial Values (USD)
-    const colValueUsd = activeCollectionPedals.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0) +
-                        activeCollectionPowers.reduce((sum, ps) => sum + (Number(ps.priceUsd) || 0), 0);
+    const pedalValUsd = activeCollectionPedals.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
+    const powerValUsd = activeCollectionPowers.reduce((sum, ps) => sum + (Number(ps.priceUsd) || 0), 0);
+    const colValueUsd = pedalValUsd + powerValUsd;
+
+    const avgPedalPriceUsd = activeCollectionPedals.length > 0 ? Math.round(pedalValUsd / activeCollectionPedals.length) : 0;
 
     const wishValueUsd = wishlistPedals.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
 
@@ -2054,7 +2089,10 @@ function renderDashboardStats() {
     const elSaleVal = document.getElementById('stat-forsale-val');
     const elRigVal = document.getElementById('stat-rig-total-val');
 
-    const elFinCol = document.getElementById('fin-summary-col');
+    const elFinTotal = document.getElementById('fin-summary-total');
+    const elFinPedals = document.getElementById('fin-summary-pedals');
+    const elFinPowers = document.getElementById('fin-summary-powers');
+    const elFinAvg = document.getElementById('fin-summary-avg');
     const elFinSale = document.getElementById('fin-summary-sale');
     const elFinWish = document.getElementById('fin-summary-wish');
 
@@ -2068,7 +2106,10 @@ function renderDashboardStats() {
     if (elSaleVal) elSaleVal.textContent = fmtSale;
     if (elRigVal) elRigVal.textContent = fmtRig;
 
-    if (elFinCol) elFinCol.textContent = fmtCol;
+    if (elFinTotal) elFinTotal.textContent = fmtCol;
+    if (elFinPedals) elFinPedals.textContent = `$ ${pedalValUsd.toLocaleString('en-US')} USD (${activeCollectionPedals.length} u)`;
+    if (elFinPowers) elFinPowers.textContent = `$ ${powerValUsd.toLocaleString('en-US')} USD (${activeCollectionPowers.length} u)`;
+    if (elFinAvg) elFinAvg.textContent = `$ ${avgPedalPriceUsd.toLocaleString('en-US')} USD / pedal`;
     if (elFinSale) elFinSale.textContent = fmtSale;
     if (elFinWish) elFinWish.textContent = fmtWish;
 
@@ -2110,133 +2151,242 @@ function renderDashboardStats() {
         }).join('');
     }
 
-    // Render DIAGNOSTICS PANEL
-    renderExploreDiagnostics(collectionCount, colValueUsd, wishlistCount, wishValueUsd, forSaleCount, saleValueUsd);
-}
-
-function renderExploreDiagnostics(colCount, colValueUsd, wishlistCount, wishValueUsd, forSaleCount, saleValueUsd) {
-    const diagGrid = document.getElementById('explore-diagnostics-grid');
-    if (!diagGrid) return;
-
-    // 1. Electrical Diagnostics for active chain
-    const activeChainPedalIds = (typeof currentChainIds !== 'undefined' && currentChainIds) ? currentChainIds.filter(id => id && id !== 'EMPTY') : [];
-    let elecStatusHtml = '';
-    let elecBadgeClass = '';
-    let elecIcon = '';
-    let elecTitle = '';
-
-    if (activeChainPedalIds.length === 0) {
-        elecTitle = 'Cadena de Señal Vacía';
-        elecIcon = 'fa-circle-info text-[#00A8CC]';
-        elecBadgeClass = 'border-[#00A8CC]/40 text-[#00A8CC] bg-[#00A8CC]/10';
-        elecStatusHtml = 'No hay pedales asignados en la cadena activa. Ve a "Mis cadenas" para diseñar tu rig.';
-    } else {
-        let unassignedCount = 0;
-        let maTotalSum = 0;
-        activeChainPedalIds.forEach(pId => {
-            const p = pedalDatabase.find(x => x.id === pId);
-            if (p) {
-                maTotalSum += (p.maWithMargin || p.maBase || 20);
-                const assign = (typeof getPedalPowerAssignment === 'function') ? getPedalPowerAssignment(pId) : {};
-                if (!assign || !assign.psId) unassignedCount++;
-            }
-        });
-
-        if (unassignedCount > 0) {
-            elecTitle = 'Alerta de Alimentación';
-            elecIcon = 'fa-triangle-exclamation text-[#F15A24]';
-            elecBadgeClass = 'border-[#F15A24]/40 text-[#F15A24] bg-[#F15A24]/10';
-            elecStatusHtml = `Tienes <strong>${unassignedCount} pedal(es)</strong> en la cadena activa sin salida de fuente asignada.`;
+    // Render Top 3 Highest Value Price Tiers (Option A)
+    const topValGrid = document.getElementById('explore-top-val-grid');
+    if (topValGrid) {
+        const pricedPedals = activeCollectionPedals.filter(p => (Number(p.priceUsd) || 0) > 0);
+        if (pricedPedals.length === 0) {
+            topValGrid.innerHTML = '<span class="text-xs text-[#9CA3AF] italic col-span-full py-4 text-center block">No hay pedales con precio registrado en tu colección.</span>';
         } else {
-            elecTitle = 'Salud Eléctrica Óptima';
-            elecIcon = 'fa-circle-check text-[#10B981]';
-            elecBadgeClass = 'border-[#10B981]/40 text-[#10B981] bg-[#10B981]/10';
-            elecStatusHtml = `Todos los ${activeChainPedalIds.length} pedales activos tienen fuente asignada. Consumo total (+30%): <strong>${maTotalSum} mA</strong>.`;
+            const priceGroups = {};
+            pricedPedals.forEach(p => {
+                const pr = Number(p.priceUsd);
+                if (!priceGroups[pr]) priceGroups[pr] = [];
+                priceGroups[pr].push(p);
+            });
+            const sortedPrices = Object.keys(priceGroups).map(Number).sort((a, b) => b - a);
+            const top3Prices = sortedPrices.slice(0, 3);
+
+            const rankBadges = [
+                { label: '🥇 1º Puesto', class: 'bg-[#EAB308]/20 text-[#EAB308] border-[#EAB308]/40' },
+                { label: '🥈 2º Puesto', class: 'bg-[#9CA3AF]/20 text-white border-[#9CA3AF]/40' },
+                { label: '🥉 3º Puesto', class: 'bg-[#D97706]/20 text-[#F59E0B] border-[#D97706]/40' }
+            ];
+
+            topValGrid.innerHTML = top3Prices.map((price, idx) => {
+                const pedalsInTier = priceGroups[price];
+                const badge = rankBadges[idx] || { label: `#${idx + 1}`, class: 'bg-[#121316] text-[#9CA3AF] border-[#2A2D36]' };
+                const isTie = pedalsInTier.length > 1;
+
+                let pedalsHtml = '';
+                if (!isTie) {
+                    const pedal = pedalsInTier[0];
+                    const iconHTML = getPedalIconHTML(pedal, 'w-6 h-6');
+                    pedalsHtml = `
+                        <div class="flex items-center gap-2.5 pt-1">
+                            <div class="w-8 h-8 rounded-lg bg-[#1C1E24] border border-[#2A2D36] flex items-center justify-center shrink-0 overflow-hidden">
+                                ${iconHTML}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <span class="text-[10px] font-mono font-bold text-[#8B5CF6] uppercase block truncate">${pedal.brand}</span>
+                                <h4 class="text-xs font-bold text-white truncate" title="${pedal.name}">${pedal.name}</h4>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    pedalsHtml = `
+                        <div class="space-y-1.5 pt-1">
+                            <div class="text-[10px] font-mono text-[#9CA3AF] flex items-center gap-1">
+                                <i class="fa-solid fa-layer-group text-[#8B5CF6]"></i> ${pedalsInTier.length} pedales empatados:
+                            </div>
+                            <div class="space-y-1 max-h-36 overflow-y-auto pr-1">
+                                ${pedalsInTier.map(pedal => {
+                                    const iconHTML = getPedalIconHTML(pedal, 'w-5 h-5');
+                                    return `
+                                        <div class="flex items-center gap-2 bg-[#1C1E24] p-1.5 rounded-lg border border-[#2A2D36]">
+                                            <div class="w-7 h-7 rounded-md bg-[#121316] border border-[#2A2D36] flex items-center justify-center shrink-0 overflow-hidden">
+                                                ${iconHTML}
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <span class="text-[9px] font-mono font-bold text-[#8B5CF6] uppercase block truncate">${pedal.brand}</span>
+                                                <h4 class="text-[11px] font-bold text-white truncate" title="${pedal.name}">${pedal.name}</h4>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between shadow-sm">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2">
+                                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${badge.class}">
+                                    ${badge.label}
+                                </span>
+                                <span class="text-xs font-mono font-bold text-white">
+                                    $ ${price.toLocaleString('en-US')} USD
+                                </span>
+                            </div>
+                            ${pedalsHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
     }
 
-    // 2. Documentation Coverage (PDF Manuals)
-    const allColItems = [
-        ...pedalDatabase.filter(p => !p.forSale && !p.isWishlist),
-        ...(typeof powerSuppliesDatabase !== 'undefined' && powerSuppliesDatabase ? powerSuppliesDatabase.filter(ps => !ps.forSale) : [])
-    ];
-    const totalItems = allColItems.length;
-    const withManual = allColItems.filter(item => item.manualUrl && (item.manualUrl.startsWith('http') || item.manualUrl.startsWith('assets'))).length;
-    const missingManual = totalItems - withManual;
-    const docPct = totalItems > 0 ? Math.round((withManual / totalItems) * 100) : 0;
+    // Render Diagnostics & Alerts
+    const diagGrid = document.getElementById('explore-diagnostics-grid');
+    if (diagGrid) {
+        // Electrical / Chain Safety Status
+        const activeChainPedalIds = currentChainIds.filter(id => id && id !== 'EMPTY');
+        let elecStatusHtml = '';
+        let elecBadgeClass = 'border-[#00A8CC]/40 text-[#00A8CC] bg-[#00A8CC]/10';
+        let elecIcon = 'fa-shield-halved text-[#00A8CC]';
+        let elecTitle = 'Ruteo & Energía';
 
-    let docBadgeClass = 'border-[#8B5CF6]/40 text-[#8B5CF6] bg-[#8B5CF6]/10';
-    let docIcon = 'fa-file-pdf text-[#8B5CF6]';
-    let docTitle = 'Cobertura de Manuales';
+        if (activeChainPedalIds.length === 0) {
+            elecStatusHtml = 'No hay pedales asignados en la cadena activa.';
+        } else {
+            let unassignedCount = 0;
+            let overloadedOutlets = 0;
+            let voltageWarnings = 0;
 
-    // 3. Inventory & Financial Health
-    let invBadgeClass = 'border-[#EAB308]/40 text-[#EAB308] bg-[#EAB308]/10';
-    let invIcon = 'fa-chart-line text-[#EAB308]';
-    let invTitle = 'Resumen del Inventario';
+            activeChainPedalIds.forEach(id => {
+                const assign = getPedalPowerAssignment(id);
+                if (!assign.psId) unassignedCount++;
+            });
 
-    diagGrid.innerHTML = `
-        <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between">
-            <div class="space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid ${elecIcon}"></i> ${elecTitle}
-                    </span>
-                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${elecBadgeClass}">
-                        ${activeChainPedalIds.length} Pedales
-                    </span>
+            powerSuppliesDatabase.forEach(ps => {
+                if (ps.outlets && Array.isArray(ps.outlets)) {
+                    ps.outlets.forEach(out => {
+                        const assigned = activeChainPedalIds.filter(id => {
+                            const a = getPedalPowerAssignment(id);
+                            return a.psId === ps.id && a.outletId === out.id;
+                        });
+                        const sumMa = assigned.reduce((s, id) => {
+                            const p = pedalDatabase.find(x => x.id === id);
+                            return s + (p ? p.maWithMargin : 0);
+                        }, 0);
+                        if (sumMa > out.maxMa) overloadedOutlets++;
+                        if (out.voltage !== '9V' && assigned.length > 0) voltageWarnings++;
+                    });
+                }
+            });
+
+            if (voltageWarnings > 0) {
+                elecBadgeClass = 'border-[#F15A24] text-[#F15A24] bg-[#F15A24]/20 animate-pulse';
+                elecIcon = 'fa-triangle-exclamation text-[#F15A24]';
+                elecTitle = 'Alerta Crítica de Voltaje';
+                elecStatusHtml = `⚠️ <strong>${voltageWarnings} salida(s) con posible conflicto de voltaje.</strong> Revisá la pestaña Mis cadenas.`;
+            } else if (overloadedOutlets > 0) {
+                elecBadgeClass = 'border-[#F15A24]/80 text-[#F15A24] bg-[#F15A24]/10';
+                elecIcon = 'fa-bolt text-[#F15A24]';
+                elecTitle = 'Sobrecarga de Miliamperios';
+                elecStatusHtml = `⚠️ <strong>${overloadedOutlets} salida(s) superan su capacidad máxima de mA.</strong>`;
+            } else if (unassignedCount > 0) {
+                elecBadgeClass = 'border-[#EAB308]/40 text-[#EAB308] bg-[#EAB308]/10';
+                elecIcon = 'fa-plug text-[#EAB308]';
+                elecTitle = 'Pedales Sin Alimentación';
+                elecStatusHtml = `Tenés <strong>${unassignedCount} pedal(es)</strong> en la cadena activa sin salida asignada.`;
+            } else {
+                elecStatusHtml = '✅ <strong>100% de la cadena alimentada de forma segura.</strong> Sin conflictos de voltaje ni sobrecarga.';
+            }
+        }
+
+        // Documentation / PDF Manual Coverage
+        const collectionPedals = pedalDatabase.filter(p => !p.forSale && !p.isWishlist);
+        const collectionPowers = powerSuppliesDatabase.filter(ps => !ps.forSale);
+        const totalItems = collectionPedals.length + collectionPowers.length;
+
+        let withManual = 0;
+        collectionPedals.forEach(p => { if (isValidManualUrl(p.manualUrl)) withManual++; });
+        collectionPowers.forEach(ps => { if (isValidManualUrl(ps.manualUrl)) withManual++; });
+
+        const docPct = totalItems > 0 ? Math.round((withManual / totalItems) * 100) : 100;
+        let docBadgeClass = 'border-[#8B5CF6]/40 text-[#8B5CF6] bg-[#8B5CF6]/10';
+        let docIcon = 'fa-file-pdf text-[#8B5CF6]';
+        let docTitle = 'Manuales & Legajo PDF';
+        const missingManual = totalItems - withManual;
+
+        if (docPct < 50) {
+            docBadgeClass = 'border-[#EAB308]/40 text-[#EAB308] bg-[#EAB308]/10';
+        } else if (docPct === 100) {
+            docBadgeClass = 'border-[#10B981]/40 text-[#10B981] bg-[#10B981]/10';
+            docIcon = 'fa-circle-check text-[#10B981]';
+        }
+
+        // Inventory & Financial Health
+        let invBadgeClass = 'border-[#EAB308]/40 text-[#EAB308] bg-[#EAB308]/10';
+        let invIcon = 'fa-chart-line text-[#EAB308]';
+        let invTitle = 'Resumen del Inventario';
+
+        diagGrid.innerHTML = `
+            <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between">
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid ${elecIcon}"></i> ${elecTitle}
+                        </span>
+                        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${elecBadgeClass}">
+                            ${activeChainPedalIds.length} Pedales
+                        </span>
+                    </div>
+                    <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
+                        ${elecStatusHtml}
+                    </p>
                 </div>
-                <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
-                    ${elecStatusHtml}
-                </p>
-            </div>
-            <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
-                <span>Diagnóstico eléctrico:</span>
-                <span class="text-white font-bold">${activeChainPedalIds.length > 0 ? 'Monitoreo activo' : 'Esperando cadena'}</span>
-            </div>
-        </div>
-
-        <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between">
-            <div class="space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid ${docIcon}"></i> ${docTitle}
-                    </span>
-                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${docBadgeClass}">
-                        ${docPct}%
-                    </span>
+                <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
+                    <span>Diagnóstico eléctrico:</span>
+                    <span class="text-white font-bold">${activeChainPedalIds.length > 0 ? 'Monitoreo activo' : 'Esperando cadena'}</span>
                 </div>
-                <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
-                    <strong>${withManual} de ${totalItems} equipos</strong> cuentan con manual PDF enlazado. ${missingManual > 0 ? `Faltan ${missingManual} manuales por vincular.` : '¡Legajo técnico completo al 100%!'}
-                </p>
             </div>
-            <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
-                <span>Documentación:</span>
-                <span class="text-[#8B5CF6] font-bold">${docPct}% Auditado</span>
-            </div>
-        </div>
 
-        <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between">
-            <div class="space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid ${invIcon}"></i> ${invTitle}
-                    </span>
-                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${invBadgeClass}">
-                        ${colCount} Ítems
-                    </span>
+            <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between">
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid ${docIcon}"></i> ${docTitle}
+                        </span>
+                        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${docBadgeClass}">
+                            ${docPct}%
+                        </span>
+                    </div>
+                    <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
+                        <strong>${withManual} de ${totalItems} equipos</strong> cuentan con manual PDF enlazado. ${missingManual > 0 ? `Faltan ${missingManual} manuales por vincular.` : '¡Legajo técnico completo al 100%!'}
+                    </p>
                 </div>
-                <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
-                    Tu colección suma <strong>$${colValueUsd.toLocaleString('en-US')} USD</strong>. Tienes ${forSaleCount} equipo(s) En Venta ($${saleValueUsd.toLocaleString('en-US')} USD) y ${wishlistCount} en Wishlist ($${wishValueUsd.toLocaleString('en-US')} USD).
-                </p>
+                <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
+                    <span>Documentación:</span>
+                    <span class="text-[#8B5CF6] font-bold">${docPct}% Auditado</span>
+                </div>
             </div>
-            <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
-                <span>Valor Total Rig:</span>
-                <span class="text-[#EAB308] font-bold">$${(colValueUsd + saleValueUsd).toLocaleString('en-US')} USD</span>
+
+            <div class="bg-[#121316] border border-[#2A2D36] p-4 rounded-xl space-y-2 flex flex-col justify-between">
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid ${invIcon}"></i> ${invTitle}
+                        </span>
+                        <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded ${invBadgeClass}">
+                            ${collectionCount} Ítems
+                        </span>
+                    </div>
+                    <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
+                        Tu colección suma <strong>$${colValueUsd.toLocaleString('en-US')} USD</strong> ($${pedalValUsd.toLocaleString('en-US')} en pedales y $${powerValUsd.toLocaleString('en-US')} en fuentes). Promedio: <strong>$${avgPedalPriceUsd.toLocaleString('en-US')} USD/pedal</strong>.
+                    </p>
+                </div>
+                <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
+                    <span>Valor Total Rig:</span>
+                    <span class="text-[#EAB308] font-bold">$${(colValueUsd + saleValueUsd).toLocaleString('en-US')} USD</span>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+    }
 }
-
 // --- RENDER COLLECTION PEDALS (EFFECTS & UTILITY) ---
 
 function renderPowerSupplies() {
