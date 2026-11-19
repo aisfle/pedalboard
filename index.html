@@ -7703,7 +7703,8 @@ function pushHistory() {
         chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
         pedals: JSON.stringify(pedalDatabase),
         power: JSON.stringify(powerSuppliesDatabase),
-        wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]'
+        wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]',
+        favoriteChains: typeof favoriteChains !== 'undefined' ? JSON.stringify(favoriteChains) : '[]'
     });
     if (chainHistory.length > 30) chainHistory.shift();
     redoStack = []; // Reset redo stack on new action
@@ -7718,7 +7719,8 @@ function undoChainState() {
             chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
             pedals: JSON.stringify(pedalDatabase),
             power: JSON.stringify(powerSuppliesDatabase),
-            wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]'
+            wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]',
+            favoriteChains: typeof favoriteChains !== 'undefined' ? JSON.stringify(favoriteChains) : '[]'
         });
 
         const prev = chainHistory.pop();
@@ -7738,6 +7740,13 @@ function undoChainState() {
             const parsedWish = JSON.parse(prev.wishlist);
             wishlistDatabase.length = 0;
             parsedWish.forEach(w => wishlistDatabase.push(w));
+        }
+
+        if (prev.favoriteChains && typeof favoriteChains !== 'undefined') {
+            const parsedFav = JSON.parse(prev.favoriteChains);
+            favoriteChains.length = 0;
+            parsedFav.forEach(fav => favoriteChains.push(fav));
+            if (typeof renderFavoriteBadges === 'function') renderFavoriteBadges();
         }
 
         renderSignalChain();
@@ -7764,7 +7773,8 @@ function redoChainState() {
             chainPowerSupplies: JSON.stringify(currentChainPowerSupplyIds),
             pedals: JSON.stringify(pedalDatabase),
             power: JSON.stringify(powerSuppliesDatabase),
-            wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]'
+            wishlist: typeof wishlistDatabase !== 'undefined' ? JSON.stringify(wishlistDatabase) : '[]',
+            favoriteChains: typeof favoriteChains !== 'undefined' ? JSON.stringify(favoriteChains) : '[]'
         });
 
         const next = redoStack.pop();
@@ -7784,6 +7794,13 @@ function redoChainState() {
             const parsedWish = JSON.parse(next.wishlist);
             wishlistDatabase.length = 0;
             parsedWish.forEach(w => wishlistDatabase.push(w));
+        }
+
+        if (next.favoriteChains && typeof favoriteChains !== 'undefined') {
+            const parsedFav = JSON.parse(next.favoriteChains);
+            favoriteChains.length = 0;
+            parsedFav.forEach(fav => favoriteChains.push(fav));
+            if (typeof renderFavoriteBadges === 'function') renderFavoriteBadges();
         }
 
         renderSignalChain();
@@ -10046,6 +10063,7 @@ function setSaveFavMode(mode) {
 }
 
 function executeSaveFavorite() {
+    pushHistory();
     if (currentSaveMode === 'NEW') {
         const name = document.getElementById('fav-name-input').value.trim();
         if (!name) return;
@@ -10085,11 +10103,33 @@ function loadFavorite(index) {
     }
 }
 
-function deleteFavorite(index, e) {
-    e.stopPropagation();
-    favoriteChains.splice(index, 1);
+let presetToDeleteIndex = null;
+
+function confirmDeleteFavorite(index, e) {
+    if (e) e.stopPropagation();
+    presetToDeleteIndex = index;
     renderFavoriteBadges();
+}
+
+function cancelDeleteFavorite(e) {
+    if (e) e.stopPropagation();
+    presetToDeleteIndex = null;
+    renderFavoriteBadges();
+}
+
+function executeDeleteFavorite(index, e) {
+    if (e) e.stopPropagation();
+    if (index < 0 || index >= favoriteChains.length) return;
+    pushHistory();
+    favoriteChains.splice(index, 1);
+    presetToDeleteIndex = null;
     saveStateToLocalStorage();
+    renderFavoriteBadges();
+    if (typeof renderDashboardStats === 'function') renderDashboardStats();
+}
+
+function deleteFavorite(index, e) {
+    confirmDeleteFavorite(index, e);
 }
 
 function renderPresetTagFilters() {
@@ -10140,6 +10180,25 @@ function renderFavoriteBadges() {
 
     container.innerHTML = filteredFavs.map((fav) => {
         const i = favoriteChains.indexOf(fav);
+
+        if (presetToDeleteIndex === i) {
+            return `
+                <div onclick="event.stopPropagation()" class="bg-[#121316] border-2 border-[#F15A24] p-3 rounded-xl text-xs font-mono flex flex-col justify-between gap-2 shrink-0 group min-w-[210px] shadow-lg animate-pulse">
+                    <div class="text-[11px] font-bold text-white leading-tight">
+                        ¿Borrar "${fav.name}"?
+                    </div>
+                    <div class="flex items-center gap-2 pt-0.5">
+                        <button onclick="executeDeleteFavorite(${i}, event)" class="flex-1 bg-[#F15A24] hover:bg-[#d94d1b] text-white font-bold py-1 px-2 rounded-lg text-[11px] transition-all shadow-sm cursor-pointer whitespace-nowrap">
+                            Sí, borrar
+                        </button>
+                        <button onclick="cancelDeleteFavorite(event)" class="flex-1 bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-white border border-[#2A2D36] font-bold py-1 px-2 rounded-lg text-[11px] transition-all cursor-pointer whitespace-nowrap">
+                            No
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         const count = fav.slots ? fav.slots.filter(id => id && id !== 'EMPTY').length : 0;
         let ma = 0;
         if (fav.slots) {
@@ -10158,8 +10217,8 @@ function renderFavoriteBadges() {
             <div onclick="loadFavorite(${i})" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 p-3 rounded-xl text-xs font-mono flex flex-col justify-between gap-1.5 cursor-pointer transition-all shrink-0 group min-w-[210px] shadow-sm">
                 <div class="flex items-center justify-between gap-2">
                     <span class="font-bold text-xs text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors">${fav.name}</span>
-                    <button onclick="deleteFavorite(${i}, event)" title="Eliminar preset" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs p-0.5">
-                        <i class="fa-solid fa-xmark"></i>
+                    <button onclick="confirmDeleteFavorite(${i}, event)" title="Eliminar preset" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs p-0.5">
+                        <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
                 <div class="text-[10px] text-[#9CA3AF]">
