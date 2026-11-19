@@ -7138,6 +7138,100 @@ function saveStateToLocalStorage() {
     }
 }
 
+
+function syncSavedItemsWithMasterCatalog() {
+    function cleanStr(s) {
+        if (!s || typeof s !== 'string') return '';
+        return s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    if (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_PEDALS_FALLBACK)) {
+        const pedalMap = new Map();
+        DEFAULT_PEDALS_FALLBACK.forEach(m => {
+            if (m.id) pedalMap.set(cleanStr(m.id), m);
+            if (m.brand && m.name) {
+                const b = cleanStr(m.brand);
+                const n = cleanStr(m.name);
+                pedalMap.set(`${b}_${n}`, m);
+                const nShort = cleanStr(m.name.split('(')[0]);
+                pedalMap.set(`${b}_${nShort}`, m);
+            }
+        });
+
+        const syncPedal = (p) => {
+            if (!p) return;
+            const kId = cleanStr(p.id);
+            const kBn = cleanStr(p.brand) + '_' + cleanStr(p.name);
+            const kBnShort = cleanStr(p.brand) + '_' + cleanStr((p.name || '').split('(')[0]);
+            const master = pedalMap.get(kId) || pedalMap.get(kBn) || pedalMap.get(kBnShort);
+            if (master) {
+                if (master.manualUrl && (!p.manualUrl || p.manualUrl !== master.manualUrl)) {
+                    p.manualUrl = master.manualUrl;
+                }
+                if (master.priceUsd && (!p.priceUsd || Number(p.priceUsd) !== Number(master.priceUsd))) {
+                    p.priceUsd = master.priceUsd;
+                }
+                if (master.imageUrl && !p.customPhotoUrl && (!p.imageUrl || p.imageUrl !== master.imageUrl)) {
+                    p.imageUrl = master.imageUrl;
+                }
+                if (master.description && (!p.description || p.description !== master.description)) {
+                    p.description = master.description;
+                    p.desc = master.description;
+                }
+            }
+            normalizePedalData(p);
+        };
+
+        if (typeof pedalDatabase !== 'undefined' && Array.isArray(pedalDatabase)) {
+            pedalDatabase.forEach(syncPedal);
+        }
+        if (typeof wishlistDatabase !== 'undefined' && Array.isArray(wishlistDatabase)) {
+            wishlistDatabase.forEach(syncPedal);
+        }
+    }
+
+    if (typeof DEFAULT_POWER_SUPPLIES_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_POWER_SUPPLIES_FALLBACK)) {
+        const powerMap = new Map();
+        DEFAULT_POWER_SUPPLIES_FALLBACK.forEach(m => {
+            if (m.id) powerMap.set(cleanStr(m.id), m);
+            if (m.presetType) powerMap.set(cleanStr(m.presetType), m);
+            if (m.brand && (m.model || m.name)) {
+                const b = cleanStr(m.brand);
+                const mod = cleanStr(m.model || m.name);
+                powerMap.set(`${b}_${mod}`, m);
+                powerMap.set(`${b}_${mod.replace('iso', '')}`, m);
+            }
+        });
+
+        const syncPower = (ps) => {
+            if (!ps) return;
+            const kId = cleanStr(ps.id);
+            const kPreset = cleanStr(ps.presetType);
+            const kMod = cleanStr(ps.brand) + '_' + cleanStr(ps.model || ps.name);
+            const kModNoIso = cleanStr(ps.brand) + '_' + cleanStr(ps.model || ps.name).replace('iso', '');
+            const master = powerMap.get(kId) || powerMap.get(kPreset) || powerMap.get(kMod) || powerMap.get(kModNoIso);
+            if (master) {
+                if (master.manualUrl && (!ps.manualUrl || ps.manualUrl !== master.manualUrl)) {
+                    ps.manualUrl = master.manualUrl;
+                }
+                if (master.priceUsd && (!ps.priceUsd || Number(ps.priceUsd) !== Number(master.priceUsd))) {
+                    ps.priceUsd = master.priceUsd;
+                }
+                if (master.imageUrl && !ps.customPhotoUrl && (!ps.imageUrl || ps.imageUrl !== master.imageUrl)) {
+                    ps.imageUrl = master.imageUrl;
+                }
+                if (master.outlets && (!ps.outlets || ps.outlets.length === 0)) {
+                    ps.outlets = master.outlets;
+                }
+            }
+        };
+
+        if (typeof powerSuppliesDatabase !== 'undefined' && Array.isArray(powerSuppliesDatabase)) {
+            powerSuppliesDatabase.forEach(syncPower);
+        }
+    }
+}
+
 function loadSavedState() {
     try {
         const wDb = localStorage.getItem('wishlist_db');
@@ -7210,6 +7304,8 @@ function loadSavedState() {
         }
         const fChains = localStorage.getItem('rig_favorites');
         if (fChains) favoriteChains = JSON.parse(fChains);
+        syncSavedItemsWithMasterCatalog();
+        saveStateToLocalStorage();
     } catch (e) {
         console.error("Error al cargar localStorage", e);
     }
@@ -10510,40 +10606,9 @@ function executeRegisterNewWishlistPedal() {
     } catch(e) {}
 })();
 
-function loadSavedState() {
-    try {
-        const wDb = localStorage.getItem('wishlist_db');
-        if (wDb) {
-            wishlistDatabase.length = 0;
-            try {
-                const parsedW = JSON.parse(wDb);
-                if (Array.isArray(parsedW)) {
-                    parsedW.forEach(w => wishlistDatabase.push(w));
-                }
-            } catch(e) {
-                console.error('Error al parsear wishlist_db de localStorage:', e);
-            }
-        }
-        const pDb = localStorage.getItem('pedal_db');
-        if (pDb) {
-            pedalDatabase.length = 0;
-            const parsed = JSON.parse(pDb);
-            if (Array.isArray(parsed)) {
-                parsed.forEach(p => pedalDatabase.push(p));
-            }
-        }
-        const psDb = localStorage.getItem('power_db');
-        if (psDb) {
-            powerSuppliesDatabase.length = 0;
-            const parsed = JSON.parse(psDb);
-            if (Array.isArray(parsed)) {
-                parsed.forEach(ps => powerSuppliesDatabase.push(ps));
-            }
-        }
-    } catch (error) {
-        console.error('Error al cargar la colección personal:', error);
-    }
-}
+
+// Duplicate loadSavedState removed
+
 
 function restoreFactoryCatalog() {
     // Deprecated in V34
