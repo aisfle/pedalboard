@@ -110,11 +110,7 @@
                             Resumen analítico en tiempo real de tu equipamiento, marcas, valoración económica y salud de rig.
                         </p>
                     </div>
-                    <div class="flex items-center gap-2 text-xs font-mono bg-[#121316] px-3 py-1.5 rounded-xl border border-[#2A2D36] shrink-0 self-start md:self-auto">
-                        <i class="fa-solid fa-[#8B5CF6] fa-coins text-[#8B5CF6]"></i>
-                        <span class="text-[#9CA3AF]">Valor del Rig:</span>
-                        <strong id="stat-rig-total-val" class="text-white font-bold">$0 USD</strong>
-                    </div>
+
                 </div>
 
                 <!-- METRICS CARDS (KPIs WITH FINANCIAL VALUES) -->
@@ -167,12 +163,8 @@
                 <!-- DEDICATED FINANCIAL SUMMARY BAR -->
                 <div class="border-t border-[#2A2D36] pt-3.5 mt-1 space-y-2.5">
                     <div class="flex items-center justify-between gap-2 flex-wrap">
-                        <div class="flex items-center gap-2 text-[#8B5CF6] font-bold text-xs">
-                            <i class="fa-solid fa-sack-dollar text-[#8B5CF6]"></i>
-                            <span>Valoración financiera e inversión</span>
-                        </div>
-                        <div class="text-xs font-mono text-[#9CA3AF]">
-                            Valor total de colección: <strong id="fin-summary-total" class="text-white font-bold text-sm">$0 USD</strong>
+                        <div class="text-[11px] font-mono text-[#8B5CF6] uppercase font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-sack-dollar text-xs"></i> VALORACIÓN FINANCIERA E INVERSIÓN:
                         </div>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 pt-1 text-xs font-mono">
@@ -2058,7 +2050,7 @@ function renderDashboardStats() {
     const wishlistCount = wishlistPedals.length;
 
     const forSalePedals = pedalDatabase ? pedalDatabase.filter(p => p.forSale) : [];
-    const forSalePowers = (typeof powerSuppliesDatabase !== 'undefined' && powerSuppliesDatabase) ? powerSuppliesDatabase.filter(ps => !ps.forSale) : [];
+    const forSalePowers = (typeof powerSuppliesDatabase !== 'undefined' && powerSuppliesDatabase) ? powerSuppliesDatabase.filter(ps => ps.forSale) : [];
     const forSaleCount = forSalePedals.length + forSalePowers.length;
 
     const chainsCount = (typeof favoriteChains !== 'undefined' && favoriteChains) ? favoriteChains.length : 0;
@@ -2358,6 +2350,14 @@ function renderDashboardStats() {
                     <p class="text-xs text-[#9CA3AF] leading-relaxed font-sans pt-1">
                         <strong>${withManual} de ${totalItems} equipos</strong> cuentan con manual PDF enlazado. ${missingManual > 0 ? `Faltan ${missingManual} manuales por vincular.` : '¡Legajo técnico completo al 100%!'}
                     </p>
+                    ${missingManualItems.length > 0 ? `
+                        <div class="mt-2 pt-2 border-t border-[#2A2D36] text-[11px] font-mono">
+                            <span class="text-[#F15A24] font-bold block mb-1">Faltan manuales:</span>
+                            <div class="text-[#9CA3AF] text-xs font-sans space-y-1 max-h-24 overflow-y-auto pr-1">
+                                ${missingManualItems.map(item => `<div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-exclamation text-[10px] text-[#F15A24]"></i> ${item}</div>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="pt-2 border-t border-[#2A2D36] flex items-center justify-between text-[11px] font-mono text-[#9CA3AF]">
                     <span>Documentación:</span>
