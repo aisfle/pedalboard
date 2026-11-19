@@ -386,6 +386,9 @@
                         <button onclick="openSaveFavoriteModal()" title="Guardar preset de la cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
                             <i class="fa-solid fa-bookmark text-[#00A8CC]"></i> Guardar preset
                         </button>
+                        <button onclick="duplicateCurrentChain()" title="Duplicar esta cadena 100% como nuevo preset" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
+                            <i class="fa-solid fa-copy text-[#00A8CC]"></i> Copiar cadena
+                        </button>
                         <div class="flex items-center gap-2 flex-1 sm:flex-none w-full sm:w-auto font-sans">
                             <button onclick="undoChainState()" title="Deshacer cambio (Ctrl+Z)" class="flex-1 justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/50 px-3 py-2 rounded-xl font-semibold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
                                 <i class="fa-solid fa-rotate-left text-[#00A8CC]"></i> Undo
@@ -10103,6 +10106,59 @@ function loadFavorite(index) {
     }
 }
 
+function duplicateFavorite(index, e) {
+    if (e) e.stopPropagation();
+    if (index < 0 || index >= favoriteChains.length) return;
+
+    pushHistory();
+    const original = favoriteChains[index];
+    const copy = JSON.parse(JSON.stringify(original));
+
+    let baseName = copy.name || 'Preset';
+    let match = baseName.match(/^(.*?)\s*\(Copia(?:\s*(\d+))?\)$/i);
+    if (match) {
+        const root = match[1].trim();
+        const num = match[2] ? parseInt(match[2]) + 1 : 2;
+        copy.name = `${root} (Copia ${num})`;
+    } else {
+        copy.name = `${baseName} (Copia)`;
+    }
+
+    favoriteChains.splice(index + 1, 0, copy);
+    saveStateToLocalStorage();
+    renderFavoriteBadges();
+    if (typeof renderDashboardStats === 'function') renderDashboardStats();
+}
+
+function duplicateCurrentChain() {
+    const activePedals = currentChainIds.filter(id => id && id !== 'EMPTY');
+    const activePowers = currentChainPowerSupplyIds.filter(id => id && id !== 'EMPTY');
+
+    if (activePedals.length < 2 || activePowers.length < 1) {
+        let msg = "⚠️ No se puede copiar la cadena activa:\n\n";
+        if (activePedals.length < 2) msg += "• Debes incorporar al menos 2 pedales en tu cadena.\n";
+        if (activePowers.length < 1) msg += "• Debes agregar al menos 1 fuente de alimentación.\n";
+        alert(msg);
+        return;
+    }
+
+    pushHistory();
+    let newName = `Preset ${favoriteChains.length + 1} (Copia)`;
+    favoriteChains.push({
+        name: newName,
+        slots: [...currentChainIds],
+        slotModes: JSON.parse(JSON.stringify(chainSlotModes)),
+        powerAssignments: JSON.parse(JSON.stringify(currentPowerAssignments)),
+        chainPowerSupplies: [...currentChainPowerSupplyIds],
+        tags: []
+    });
+
+    saveStateToLocalStorage();
+    renderFavoriteBadges();
+    if (typeof renderDashboardStats === 'function') renderDashboardStats();
+    alert(`¡Cadena duplicada al 100%! Se creó el preset "${newName}".`);
+}
+
 let presetToDeleteIndex = null;
 
 function confirmDeleteFavorite(index, e) {
@@ -10217,9 +10273,14 @@ function renderFavoriteBadges() {
             <div onclick="loadFavorite(${i})" class="bg-[#121316] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#F15A24]/50 p-3 rounded-xl text-xs font-mono flex flex-col justify-between gap-1.5 cursor-pointer transition-all shrink-0 group min-w-[210px] shadow-sm">
                 <div class="flex items-center justify-between gap-2">
                     <span class="font-bold text-xs text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors">${fav.name}</span>
-                    <button onclick="confirmDeleteFavorite(${i}, event)" title="Eliminar preset" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs p-0.5">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="duplicateFavorite(${i}, event)" title="Duplicar preset al 100%" class="text-[#9CA3AF] hover:text-[#00A8CC] text-xs p-0.5 transition-colors cursor-pointer">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                        <button onclick="confirmDeleteFavorite(${i}, event)" title="Eliminar preset" class="text-[#9CA3AF] hover:text-[#F15A24] text-xs p-0.5 transition-colors cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="text-[10px] text-[#9CA3AF]">
                     ${count} pedales • <span class="text-[#00A8CC]">${ma} mA</span>
