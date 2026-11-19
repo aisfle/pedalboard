@@ -166,11 +166,11 @@
 
                 <!-- DEDICATED FINANCIAL SUMMARY BAR -->
                 <div class="border-t border-[#2A2D36] pt-3 mt-1 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-                    <div class="flex items-center gap-2 text-[#8B5CF6] font-bold uppercase tracking-wider text-[11px]">
+                    <div class="flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[11px]">
                         <i class="fa-solid fa-sack-dollar text-[#8B5CF6]"></i> Valoración Financiera e Inversión:
                     </div>
                     <div class="flex items-center gap-4 flex-wrap text-xs">
-                        <span class="text-[#9CA3AF]">Colección Activa: <strong id="fin-summary-col" class="text-white font-bold">$0 USD</strong></span>
+                        <span class="text-[#9CA3AF]">Colección Activa: <strong id="fin-summary-col" class="text-[#F15A24] font-bold">$0 USD</strong></span>
                         <span class="text-[#2A2D36]">|</span>
                         <span class="text-[#9CA3AF]">En Venta: <strong id="fin-summary-sale" class="text-[#EAB308] font-bold">$0 USD</strong></span>
                         <span class="text-[#2A2D36]">|</span>
@@ -571,6 +571,10 @@
 
         <!-- COMMON FIELDS -->
         <div class="space-y-3 border-t border-[#2A2D36] pt-3">
+            <div>
+                <label class="text-[11px] font-mono text-[#9CA3AF] block mb-1 font-bold">Precio / Valor estimado ($ USD) (Opcional)</label>
+                <input type="number" id="cem-price-usd" placeholder="Ej: 150" min="0" step="any" class="w-full bg-[#121316] text-white border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-3 py-2 text-xs font-mono focus:outline-none">
+            </div>
             <div>
                 <label class="text-[11px] font-mono text-[#9CA3AF] block mb-1 font-bold">PDF Manual (Opcional)</label>
                 <input type="url" id="cem-manual-url" placeholder="https://..." class="w-full bg-[#121316] text-white border border-[#2A2D36] focus:border-[#F15A24] rounded-xl px-3 py-2 text-xs font-mono focus:outline-none">
@@ -1279,7 +1283,7 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
     ],
     "details": "10 salidas aisladas (2x 9V @ 100mA, 2x 9V @ 300mA, 2x 9V @ 450mA, 2x 18V @ 250mA, 2x ajustables 6V-15V @ 250mA).",
     "manualUrl": "https://drive.google.com/file/d/1X5XQ87yIxs6B0rO759yS_4Yn8X05M_1d/view?usp=drive_link",
-    "imageUrl": "assets/img/fuentes/mxr-isobrick.jpg",
+    "imageUrl": "assets/img/fuentes/mxr-brick-m237.jpg",
     "isFactory": true,
     "priceUsd": 160
   },
@@ -2651,6 +2655,12 @@ function openCustomEquipmentModal() {
     setCemType('pedal');
     setCemDest('collection');
     generateCemOutletRows();
+    const priceEl = document.getElementById('cem-price-usd');
+    if (priceEl) priceEl.value = '';
+    const notesEl = document.getElementById('cem-notes');
+    if (notesEl) notesEl.value = '';
+    const manualEl = document.getElementById('cem-manual-url');
+    if (manualEl) manualEl.value = '';
     document.getElementById('custom-equipment-modal').classList.remove('hidden');
 }
 
@@ -2765,6 +2775,10 @@ function handleCemPhotoUpload(e) {
 }
 
 function executeSaveCustomEquipment() {
+    const priceInputEl = document.getElementById('cem-price-usd');
+    const priceVal = priceInputEl ? parseFloat(priceInputEl.value) : NaN;
+    const priceUsd = (!isNaN(priceVal) && priceVal >= 0) ? priceVal : null;
+
     if (cemType === 'pedal') {
         const brand = document.getElementById('cem-pedal-brand').value.trim();
         const model = document.getElementById('cem-pedal-model').value.trim();
@@ -2796,6 +2810,7 @@ function executeSaveCustomEquipment() {
                 p.effectCategory = category;
                 p.notes = notes;
                 p.manualUrl = manual || null;
+                p.priceUsd = priceUsd;
                 if (cemPhotoBase64) {
                     p.imageUrl = cemPhotoBase64;
                     p.customPhotoUrl = cemPhotoBase64;
@@ -2819,6 +2834,7 @@ function executeSaveCustomEquipment() {
                 effectCategory: category,
                 notes: notes,
                 manualUrl: manual || null,
+                priceUsd: priceUsd,
                 imageUrl: cemPhotoBase64,
                 customPhotoUrl: cemPhotoBase64,
                 forSale: cemDest === 'sale',
@@ -2836,6 +2852,7 @@ function executeSaveCustomEquipment() {
         const model = document.getElementById('cem-power-model').value.trim();
         const count = parseInt(document.getElementById('cem-power-outlet-count').value) || 5;
         const notes = document.getElementById('cem-notes').value.trim();
+        const manual = document.getElementById('cem-manual-url') ? document.getElementById('cem-manual-url').value.trim() : '';
 
         if (!brand || !model) {
             alert('Por favor completá la Marca y el Modelo de la fuente.');
@@ -2856,6 +2873,8 @@ function executeSaveCustomEquipment() {
             outletCount: count,
             outlets: outlets,
             notes: notes,
+            manualUrl: manual || null,
+            priceUsd: priceUsd,
             customPhotoUrl: cemPhotoBase64,
             forSale: cemDest === 'sale'
         };
@@ -7046,8 +7065,17 @@ function handlePedalImgError(img) {
 
 function handlePowerSupplyImgError(img) {
     if (!img) return;
+    if (!img.dataset.triedPng && img.src && img.src.includes('.jpg')) {
+        img.dataset.triedPng = 'true';
+        img.src = img.src.replace('.jpg', '.png');
+        return;
+    }
     img.style.display = 'none';
-    const fallback = img.nextElementSibling;
+    const zoomOverlay = img.nextElementSibling;
+    if (zoomOverlay && zoomOverlay.classList.contains('group-hover/zoom:opacity-100')) {
+        zoomOverlay.style.display = 'none';
+    }
+    const fallback = img.parentElement ? img.parentElement.querySelector('.ps-svg-fallback') : null;
     if (fallback) {
         fallback.classList.remove('hidden');
         fallback.style.display = 'flex';
@@ -7966,7 +7994,7 @@ function addPresetPowerSupply(presetType) {
             ],
             details: '10 salidas aisladas (2x 9V @ 100mA, 2x 9V @ 300mA, 2x 9V @ 450mA, 2x 18V @ 250mA, 2x SAG 6V-15V @ 250mA).',
             manualUrl: 'https://drive.google.com/file/d/1VU_C4favW_M5Bt-31DMLl8n-rTp2f2Nj/view?usp=drive_link',
-            imageUrl: 'assets/img/fuentes/mxr-isobrick-m237.jpg',
+            imageUrl: 'assets/img/fuentes/mxr-brick-m237.jpg',
             isFactory: true,
             notes: ''
         };
@@ -9393,6 +9421,9 @@ function openEditPedalModal(id) {
     
     const manualEl = document.getElementById('cem-manual-url');
     if (manualEl) manualEl.value = pedal.manualUrl || '';
+
+    const priceEl = document.getElementById('cem-price-usd');
+    if (priceEl) priceEl.value = (pedal.priceUsd !== undefined && pedal.priceUsd !== null && pedal.priceUsd !== '') ? pedal.priceUsd : '';
     
     cemPhotoBase64 = pedal.customPhotoUrl || pedal.imageUrl || null;
     const photoPreview = document.getElementById('cem-photo-preview');
