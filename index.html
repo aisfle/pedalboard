@@ -2295,8 +2295,21 @@ function renderDashboardStats() {
         const totalItems = collectionPedals.length + collectionPowers.length;
 
         let withManual = 0;
-        collectionPedals.forEach(p => { if (isValidManualUrl(p.manualUrl)) withManual++; });
-        collectionPowers.forEach(ps => { if (isValidManualUrl(ps.manualUrl)) withManual++; });
+        const missingManualItems = [];
+        collectionPedals.forEach(p => {
+            if (isValidManualUrl(p.manualUrl)) {
+                withManual++;
+            } else {
+                missingManualItems.push(`${p.brand} ${p.name}`);
+            }
+        });
+        collectionPowers.forEach(ps => {
+            if (isValidManualUrl(ps.manualUrl)) {
+                withManual++;
+            } else {
+                missingManualItems.push(`${ps.brand} ${ps.name || ps.model}`);
+            }
+        });
 
         const docPct = totalItems > 0 ? Math.round((withManual / totalItems) * 100) : 100;
         let docBadgeClass = 'border-[#8B5CF6]/40 text-[#8B5CF6] bg-[#8B5CF6]/10';
@@ -2547,8 +2560,8 @@ function renderCollectionForSale() {
             </div>
             <div class="mt-3 pt-2 border-t border-[#2A2D36] flex items-center justify-start">
                 <div class="flex items-center gap-2 self-start flex-wrap">
-                    <button onclick="event.stopPropagation(); restorePowerSupplyFromForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-rotate-left text-xs"></i> Vuelta a colección</button>
-                    <button onclick="event.stopPropagation(); executeDeleteForSaleItem('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-check text-xs"></i> ¡Vendido!</button>
+                    <button onclick="event.stopPropagation(); restorePowerSupplyFromForSale('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-rotate-left text-xs text-[#00A8CC]"></i> Vuelta a colección</button>
+                    <button onclick="event.stopPropagation(); executeDeleteForSaleItem('${ps.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-check text-xs text-[#F15A24]"></i> ¡Vendido!</button>
                 </div>
             </div>
         `;
@@ -2578,12 +2591,12 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
     if (sectionType === 'effects' || sectionType === 'utility') {
         actionBtnHtml = `<button onclick="event.stopPropagation(); movePedalToForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#EAB308]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-tag text-xs text-[#EAB308]"></i> Vender</button>`;
     } else if (sectionType === 'wishlist') {
-        actionBtnHtml = `<button onclick="event.stopPropagation(); moveWishlistToCollection('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#8B5CF6] border border-[#2A2D36] hover:border-[#8B5CF6]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-cart-shopping text-xs"></i> ¡Lo compré!</button>`;
+        actionBtnHtml = `<button onclick="event.stopPropagation(); moveWishlistToCollection('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#8B5CF6]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer self-start"><i class="fa-solid fa-cart-shopping text-xs text-[#8B5CF6]"></i> ¡Lo compré!</button>`;
     } else if (sectionType === 'forsale') {
         actionBtnHtml = `
             <div class="flex items-center gap-2 self-start flex-wrap">
-                <button onclick="event.stopPropagation(); restorePedalFromForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-rotate-left text-xs"></i> Vuelta a colección</button>
-                <button onclick="event.stopPropagation(); executeDeleteForSaleItem('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#F15A24] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-check text-xs"></i> ¡Vendido!</button>
+                <button onclick="event.stopPropagation(); restorePedalFromForSale('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-rotate-left text-xs text-[#00A8CC]"></i> Vuelta a colección</button>
+                <button onclick="event.stopPropagation(); executeDeleteForSaleItem('${pedal.id}')" class="bg-[#121316] hover:bg-[#20232B] text-[#9CA3AF] border border-[#2A2D36] hover:border-[#F15A24]/40 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"><i class="fa-solid fa-check text-xs text-[#F15A24]"></i> ¡Vendido!</button>
             </div>`;
     }
 
