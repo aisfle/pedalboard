@@ -11006,8 +11006,19 @@ document.addEventListener('click', () => {
 });
 
 function exportChainToPDF() {
-    const activePedalsInChain = currentChainIds.filter(id => id && id !== 'EMPTY').map(id => pedalDatabase.find(p => p.id === id)).filter(Boolean);
-    if (activePedalsInChain.length === 0) {
+    const activeSlots = [];
+    currentChainIds.forEach((pedalId, index) => {
+        if (pedalId && pedalId !== 'EMPTY') {
+            const pedal = pedalDatabase.find(p => p.id === pedalId);
+            if (pedal) {
+                const isMonoOnly = pedal.isStereo === false;
+                const slotMode = isMonoOnly ? 'MONO' : (chainSlotModes[index] || 'MONO');
+                activeSlots.push({ pedal, index, slotMode });
+            }
+        }
+    });
+
+    if (activeSlots.length === 0) {
         alert("⚠️ No hay pedales en la cadena activa para exportar.");
         return;
     }
@@ -11017,13 +11028,15 @@ function exportChainToPDF() {
     if (!modal || !contentArea) return;
 
     let totalMa = 0;
-    activePedalsInChain.forEach(p => totalMa += p.maWithMargin);
-    const totalVal = activePedalsInChain.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
+    activeSlots.forEach(item => totalMa += item.pedal.maWithMargin);
+    const totalVal = activeSlots.reduce((sum, item) => sum + (Number(item.pedal.priceUsd) || 0), 0);
     const activePowersInChain = powerSuppliesDatabase.filter(ps => currentChainPowerSupplyIds.includes(ps.id));
     const todayStr = new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const audioListHtml = activePedalsInChain.map((p, idx) => {
-        const modeStr = p.isStereo ? 'Stereo I/O' : 'Mono I/O';
+    const audioListHtml = activeSlots.map((item, idx) => {
+        const p = item.pedal;
+        const isStereoMode = item.slotMode === 'STEREO';
+        const modeStr = isStereoMode ? 'Stereo I/O' : 'Mono I/O';
         const effCat = getEffectCategory(p);
         return `
             <div class="flex items-center justify-between bg-[#1C1E24] p-2.5 rounded-xl border border-[#2A2D36] text-xs font-mono">
@@ -11032,12 +11045,13 @@ function exportChainToPDF() {
                     <span class="text-white font-bold truncate">${p.brand} - ${p.name}</span>
                     <span class="text-[10px] text-[#9CA3AF] bg-[#121316] px-2 py-0.5 rounded border border-[#2A2D36] shrink-0">${effCat}</span>
                 </div>
-                <span class="text-[11px] font-bold ${p.isStereo ? 'text-[#8B5CF6]' : 'text-[#00A8CC]'} shrink-0 ml-2">${modeStr}</span>
+                <span class="text-[11px] font-bold ${isStereoMode ? 'text-[#8B5CF6]' : 'text-[#00A8CC]'} shrink-0 ml-2">${modeStr}</span>
             </div>
         `;
     }).join('');
 
-    const powerTableHtml = activePedalsInChain.map((p, idx) => {
+    const powerTableHtml = activeSlots.map((item, idx) => {
+        const p = item.pedal;
         const assign = getPedalPowerAssignment(p.id);
         const psObj = powerSuppliesDatabase.find(x => x.id === assign.psId);
         const outletObj = psObj?.outlets?.find(o => o.id === assign.outletId);
@@ -11139,25 +11153,37 @@ function printTechRiderPDF() {
 }
 
 function exportChainToExcel() {
-    const activePedalsInChain = currentChainIds.filter(id => id && id !== 'EMPTY').map(id => pedalDatabase.find(p => p.id === id)).filter(Boolean);
-    if (activePedalsInChain.length === 0) {
+    const activeSlots = [];
+    currentChainIds.forEach((pedalId, index) => {
+        if (pedalId && pedalId !== 'EMPTY') {
+            const pedal = pedalDatabase.find(p => p.id === pedalId);
+            if (pedal) {
+                const isMonoOnly = pedal.isStereo === false;
+                const slotMode = isMonoOnly ? 'MONO' : (chainSlotModes[index] || 'MONO');
+                activeSlots.push({ pedal, index, slotMode });
+            }
+        }
+    });
+
+    if (activeSlots.length === 0) {
         alert("⚠️ No hay pedales en la cadena activa para exportar.");
         return;
     }
 
     const todayStr = new Date().toLocaleDateString('es-AR');
     let totalMa = 0;
-    activePedalsInChain.forEach(p => totalMa += p.maWithMargin);
-    const totalVal = activePedalsInChain.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
+    activeSlots.forEach(item => totalMa += item.pedal.maWithMargin);
+    const totalVal = activeSlots.reduce((sum, item) => sum + (Number(item.pedal.priceUsd) || 0), 0);
 
     let csv = "\uFEFF"; // UTF-8 BOM for Excel
     csv += `"MY PEDAL RIG - PLANILLA DE RUTEO Y CONSUMOS ELÉCTRICOS";"";"";"";"";"";"";"";"";"";"";""\n`;
-    csv += `"Fecha de Exportación: ${todayStr}";"Pedales Activos: ${activePedalsInChain.length}";"Consumo Total: ${totalMa} mA";"Valor Total Rig: $ ${totalVal} USD";"";"";"";"";"";"";"";""\n\n`;
+    csv += `"Fecha de Exportación: ${todayStr}";"Pedales Activos: ${activeSlots.length}";"Consumo Total: ${totalMa} mA";"Valor Total Rig: $ ${totalVal} USD";"";"";"";"";"";"";"";""\n\n`;
 
     csv += `"Posición";"Marca";"Modelo";"Categoría";"Tipo E/S";"Fuente Asignada";"Salida Física";"Voltaje Configurado";"Consumo Base (mA)";"Margen (+30% mA)";"Estado Seguridad";"Valor (USD)"\n`;
 
-    activePedalsInChain.forEach((p, idx) => {
-        const mode = p.isStereo ? 'Stereo I/O' : 'Mono I/O';
+    activeSlots.forEach((item, idx) => {
+        const p = item.pedal;
+        const mode = item.slotMode === 'STEREO' ? 'Stereo I/O' : 'Mono I/O';
         const cat = getEffectCategory(p);
         const assign = getPedalPowerAssignment(p.id);
         const psObj = powerSuppliesDatabase.find(x => x.id === assign.psId);
