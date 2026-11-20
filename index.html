@@ -442,20 +442,14 @@
                             <button onclick="toggleExportChainDropdown(event)" title="Exportar ficha técnica o planilla de ruteo" class="w-full justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
                                 <i class="fa-solid fa-file-export text-[#00A8CC]"></i> Exportar Cadena <i class="fa-solid fa-chevron-down text-[10px] text-[#9CA3AF] ml-0.5"></i>
                             </button>
-                            <div id="export-chain-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-[#1C1E24] border border-[#2A2D36] rounded-xl shadow-2xl z-50 p-1.5 space-y-1 font-sans">
-                                <button onclick="exportChainToPDF(); toggleExportChainDropdown(event);" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#121316] text-xs text-white font-semibold flex items-center gap-2.5 transition-all cursor-pointer">
+                            <div id="export-chain-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#1C1E24] border border-[#2A2D36] rounded-xl shadow-2xl z-50 p-1.5 space-y-1 font-sans">
+                                <button onclick="exportChainToPDF(); toggleExportChainDropdown(event);" class="w-full text-left px-3 py-2 rounded-lg hover:bg-[#121316] text-xs text-white font-semibold flex items-center gap-2.5 transition-all cursor-pointer">
                                     <i class="fa-solid fa-file-pdf text-[#00A8CC] text-sm"></i>
-                                    <div>
-                                        <span class="block font-bold">📄 Ficha Técnica (PDF - Dark)</span>
-                                        <span class="text-[10px] text-[#9CA3AF] block font-mono">Tech rider para show / WhatsApp</span>
-                                    </div>
+                                    <span class="font-bold">📄 Ficha Técnica (PDF)</span>
                                 </button>
-                                <button onclick="exportChainToExcel(); toggleExportChainDropdown(event);" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[#121316] text-xs text-white font-semibold flex items-center gap-2.5 transition-all cursor-pointer">
+                                <button onclick="exportChainToExcel(); toggleExportChainDropdown(event);" class="w-full text-left px-3 py-2 rounded-lg hover:bg-[#121316] text-xs text-white font-semibold flex items-center gap-2.5 transition-all cursor-pointer">
                                     <i class="fa-solid fa-file-excel text-[#10B981] text-sm"></i>
-                                    <div>
-                                        <span class="block font-bold">📊 Planilla de Ruteo (Excel .xlsx)</span>
-                                        <span class="text-[10px] text-[#9CA3AF] block font-mono">Tabulación y auditoría de energía</span>
-                                    </div>
+                                    <span class="font-bold">📊 Planilla de Ruteo (Excel .xlsx)</span>
                                 </button>
                             </div>
                         </div>
@@ -8989,6 +8983,9 @@ function openAddPowerSupplyToChainModal() {
         });
     }
     modal.classList.remove('hidden');
+    setTimeout(() => {
+        window.print();
+    }, 250);
 }
 
 function closeAddPowerSupplyToChainModal() {
