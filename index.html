@@ -8665,43 +8665,25 @@ function renderSignalChain() {
 
     if (currentChainArchitecture === 'PARALLEL') {
         const parBanner = document.createElement('div');
-        parBanner.className = 'col-span-full bg-[#1C1E24] border-2 border-[#8B5CF6] rounded-2xl p-4 mb-3 shadow-xl font-sans';
+        parBanner.className = 'col-span-full bg-[#1C1E24] border-2 border-[#8B5CF6] rounded-2xl p-3.5 mb-3 shadow-xl font-sans';
         parBanner.innerHTML = `
-            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#2A2D36] pb-3 mb-3">
+            <div class="flex items-center justify-between gap-3">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 flex items-center justify-center text-[#8B5CF6]">
                         <i class="fa-solid fa-code-fork text-sm"></i>
                     </div>
                     <div>
                         <span class="text-[10px] font-mono font-bold text-[#8B5CF6] uppercase tracking-widest block">ARQUITECTURA PARALELA</span>
-                        <h3 class="text-sm font-bold text-white">📦 Bucle Paralelo (Splitter ➔ Mixer)</h3>
+                        <h3 class="text-xs font-bold text-white font-mono">Bucle paralelo</h3>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="toggleParallelPhase()" title="Invertir fase eléctrica 180°" class="px-2.5 py-1 bg-[#121316] border ${parallelPhaseInverted ? 'border-[#F15A24] text-[#F15A24]' : 'border-[#2A2D36] text-[#9CA3AF]'} rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 hover:border-[#8B5CF6] transition-all cursor-pointer">
-                        <i class="fa-solid fa-arrows-rotate"></i> Fase Ø: ${parallelPhaseInverted ? '180° (Invertida)' : '0° (Normal)'}
-                    </button>
-                    <div class="flex items-center gap-1 bg-[#121316] px-2.5 py-1 rounded-lg border border-[#2A2D36] text-xs font-mono font-bold text-[#8B5CF6]">
-                        <span>Mezcla A/B:</span>
-                        <select onchange="setParallelMixRatio(this.value)" class="bg-[#1C1E24] text-white border border-[#2A2D36] rounded px-1.5 py-0.5 text-xs font-bold focus:outline-none cursor-pointer">
-                            <option value="50" ${parallelMixRatio === 50 ? 'selected' : ''}>50% A / 50% B</option>
-                            <option value="70" ${parallelMixRatio === 70 ? 'selected' : ''}>70% A / 30% B</option>
-                            <option value="30" ${parallelMixRatio === 30 ? 'selected' : ''}>30% A / 70% B</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center justify-between text-xs font-mono">
                 <div class="flex items-center gap-3">
-                    <span class="text-[#00A8CC] font-bold flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i> Ruta A (Vía 1)</span>
-                    <span class="text-[#8B5CF6] font-bold flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i> Ruta B (Vía 2)</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="addParallelSlot('ROUTE_A')" class="px-2 py-1 bg-[#00A8CC]/20 hover:bg-[#00A8CC]/30 border border-[#00A8CC]/40 text-[#00A8CC] rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer">
-                        + Slot Ruta A
-                    </button>
-                    <button onclick="addParallelSlot('ROUTE_B')" class="px-2 py-1 bg-[#8B5CF6]/20 hover:bg-[#8B5CF6]/30 border border-[#8B5CF6]/40 text-[#8B5CF6] rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer">
-                        + Slot Ruta B
+                    <div class="hidden sm:flex items-center gap-3 text-xs font-mono">
+                        <span class="text-[#00A8CC] font-bold flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i> Ruta A</span>
+                        <span class="text-[#8B5CF6] font-bold flex items-center gap-1"><i class="fa-solid fa-circle text-[8px]"></i> Ruta B</span>
+                    </div>
+                    <button onclick="toggleParallelPhase()" title="Invertir fase eléctrica 180°" class="px-2.5 py-1 bg-[#121316] border ${parallelPhaseInverted ? 'border-[#F15A24] text-[#F15A24]' : 'border-[#2A2D36] text-[#9CA3AF]'} rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 hover:border-[#8B5CF6] transition-all cursor-pointer">
+                        <i class="fa-solid fa-arrows-rotate"></i> Fase Ø: ${parallelPhaseInverted ? '180° (invertida)' : '0° (normal)'}
                     </button>
                 </div>
             </div>
@@ -11429,28 +11411,28 @@ function addParallelSlot(route) {
         </div>
 
         <div class="space-y-3">
-            <!-- Opción 1: Cadena en Serie -->
+            <!-- Opción 1: Cadena en serie -->
             <button onclick="selectChainArchitecture('SERIES')" class="w-full text-left p-4 rounded-xl bg-[#121316] hover:bg-[#20232B] border border-[#2A2D36] hover:border-[#00A8CC] transition-all group flex items-start gap-3.5 cursor-pointer">
                 <div class="w-10 h-10 rounded-xl bg-[#00A8CC]/10 border border-[#00A8CC]/30 flex items-center justify-center text-[#00A8CC] shrink-0 group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-arrow-right-long text-base"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-sm text-white group-hover:text-[#00A8CC] transition-colors">Cadena en Serie</span>
+                        <span class="font-bold text-sm text-white group-hover:text-[#00A8CC] transition-colors">Cadena en serie</span>
                         <span class="text-[10px] font-mono text-[#00A8CC] bg-[#00A8CC]/10 px-2 py-0.5 rounded border border-[#00A8CC]/20">Lineal</span>
                     </div>
                     <p class="text-xs text-[#9CA3AF] mt-1 font-mono">Ruteo tradicional lineal</p>
                 </div>
             </button>
 
-            <!-- Opción 2: Cadena en Paralelo -->
+            <!-- Opción 2: Cadena en paralelo -->
             <button onclick="selectChainArchitecture('PARALLEL')" class="w-full text-left p-4 rounded-xl bg-[#121316] hover:bg-[#20232B] border border-[#2A2D36] hover:border-[#8B5CF6] transition-all group flex items-start gap-3.5 cursor-pointer">
                 <div class="w-10 h-10 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6] shrink-0 group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-code-fork text-base"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-sm text-white group-hover:text-[#8B5CF6] transition-colors">Cadena en Paralelo</span>
+                        <span class="font-bold text-sm text-white group-hover:text-[#8B5CF6] transition-colors">Cadena en paralelo</span>
                         <span class="text-[10px] font-mono text-[#8B5CF6] bg-[#8B5CF6]/10 px-2 py-0.5 rounded border border-[#8B5CF6]/20">Split A/B</span>
                     </div>
                     <p class="text-xs text-[#9CA3AF] mt-1 font-mono">Señal dividida en 2 vías (A/B)</p>
