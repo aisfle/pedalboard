@@ -8754,13 +8754,18 @@ function renderSignalChain() {
                             <option value="MONO" ${slotMode === 'MONO' ? 'selected' : ''}>MONO</option>
                             <option value="STEREO" ${slotMode === 'STEREO' ? 'selected' : ''}>STEREO</option>
                         </select>
-                        ${currentChainArchitecture === 'PARALLEL' ? `
-                        <select onchange="changeSlotRoute(${index}, this.value)" onclick="event.stopPropagation()" class="bg-[#121316] ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_B' ? 'text-[#8B5CF6] border-[#8B5CF6]' : ((chainSlotRoutes[index] || 'ROUTE_A') === 'MAIN' ? 'text-white border-[#2A2D36]' : 'text-[#00A8CC] border-[#00A8CC]')} rounded border px-1 py-0.5 text-[9px] font-mono font-bold">
-                            <option value="ROUTE_A" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_A' ? 'selected' : ''}>🅰️ Ruta A</option>
-                            <option value="ROUTE_B" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_B' ? 'selected' : ''}>🅱️ Ruta B</option>
-                            <option value="MAIN" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'MAIN' ? 'selected' : ''}>🔗 Directa</option>
-                        </select>
-                        ` : ''}
+                    </div>
+                </div>
+                ${currentChainArchitecture === 'PARALLEL' ? `
+                <div class="mb-2 flex items-center justify-between text-[10px] font-mono bg-[#121316] px-2 py-1 rounded-lg border border-[#2A2D36]">
+                    <span class="text-[#9CA3AF] font-bold">Ruta:</span>
+                    <select onchange="changeSlotRoute(${index}, this.value)" onclick="event.stopPropagation()" class="bg-[#121316] ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_B' ? 'text-[#8B5CF6] border-[#8B5CF6]' : ((chainSlotRoutes[index] || 'ROUTE_A') === 'MAIN' ? 'text-white border-[#2A2D36]' : 'text-[#00A8CC] border-[#00A8CC]')} rounded border px-1.5 py-0.5 text-[10px] font-mono font-bold focus:outline-none cursor-pointer">
+                        <option value="ROUTE_A" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_A' ? 'selected' : ''}>Ruta A</option>
+                        <option value="ROUTE_B" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_B' ? 'selected' : ''}>Ruta B</option>
+                        <option value="MAIN" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'MAIN' ? 'selected' : ''}>Directa</option>
+                    </select>
+                </div>
+                ` : ''}
                     </div>
                 </div>
                 <div class="my-3 text-center">
@@ -8817,6 +8822,16 @@ function renderSignalChain() {
                         </select>
                     </div>
                 </div>
+                ${currentChainArchitecture === 'PARALLEL' ? `
+                <div class="mb-2 flex items-center justify-between text-[10px] font-mono bg-[#121316] px-2 py-1 rounded-lg border border-[#2A2D36]">
+                    <span class="text-[#9CA3AF] font-bold">Ruta:</span>
+                    <select onchange="changeSlotRoute(${index}, this.value)" onclick="event.stopPropagation()" class="bg-[#121316] ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_B' ? 'text-[#8B5CF6] border-[#8B5CF6]' : ((chainSlotRoutes[index] || 'ROUTE_A') === 'MAIN' ? 'text-white border-[#2A2D36]' : 'text-[#00A8CC] border-[#00A8CC]')} rounded border px-1.5 py-0.5 text-[10px] font-mono font-bold focus:outline-none cursor-pointer">
+                        <option value="ROUTE_A" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_A' ? 'selected' : ''}>Ruta A</option>
+                        <option value="ROUTE_B" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'ROUTE_B' ? 'selected' : ''}>Ruta B</option>
+                        <option value="MAIN" ${(chainSlotRoutes[index] || 'ROUTE_A') === 'MAIN' ? 'selected' : ''}>Directa</option>
+                    </select>
+                </div>
+                ` : ''}
                 <div class="flex items-center gap-2.5 my-1">
                     ${photoTag}
                     <div class="space-y-0.5 min-w-0 flex-1">
