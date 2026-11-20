@@ -50,7 +50,58 @@
         .cursor-grab { cursor: grab !important; }
         .cursor-grabbing { cursor: grabbing !important; }
 
-    </style>
+ 
+        @media print {
+            body > * {
+                display: none !important;
+            }
+            body > #tech-rider-modal,
+            #tech-rider-modal {
+                display: block !important;
+                position: static !important;
+                background: #121316 !important;
+                backdrop-filter: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                box-shadow: none !important;
+            }
+            #tech-rider-modal > div {
+                max-height: none !important;
+                overflow: visible !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #121316 !important;
+            }
+            .print\:hidden {
+                display: none !important;
+            }
+            #tech-rider-content-area {
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: #121316 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            @page {
+                size: auto;
+                margin: 10mm;
+            }
+        }
+   </style>
 </head>
 <body class="bg-[#121316] text-[#FFFFFF] font-sans antialiased h-screen flex flex-col overflow-hidden">
 
@@ -386,9 +437,7 @@
                         <button onclick="openSaveFavoriteModal()" title="Guardar preset de la cadena" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap">
                             <i class="fa-solid fa-bookmark text-[#00A8CC]"></i> Guardar preset
                         </button>
-                        <button onclick="duplicateCurrentChain()" title="Duplicar esta cadena 100% como nuevo preset" class="flex-1 sm:flex-none justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
-                            <i class="fa-solid fa-copy text-[#00A8CC]"></i> Copiar cadena
-                        </button>
+
                         <div class="relative inline-block flex-1 sm:flex-none">
                             <button onclick="toggleExportChainDropdown(event)" title="Exportar ficha técnica o planilla de ruteo" class="w-full justify-center bg-[#1C1E24] hover:bg-[#20232B] text-[#FFFFFF] border border-[#2A2D36] hover:border-[#00A8CC]/40 px-3.5 py-2 rounded-xl font-bold font-sans flex items-center gap-1.5 transition-all active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
                                 <i class="fa-solid fa-file-export text-[#00A8CC]"></i> Exportar Cadena <i class="fa-solid fa-chevron-down text-[10px] text-[#9CA3AF] ml-0.5"></i>
@@ -11101,22 +11150,15 @@ function exportChainToExcel() {
     activePedalsInChain.forEach(p => totalMa += p.maWithMargin);
     const totalVal = activePedalsInChain.reduce((sum, p) => sum + (Number(p.priceUsd) || 0), 0);
 
-    let csv = `"\uFEFF=== MY PEDAL RIG - PLANILLA DE RUTEO Y CONSUMOS ==="\n`;
-    csv += `"Fecha: ${todayStr}","Pedales: ${activePedalsInChain.length}","Consumo Total: ${totalMa} mA","Valor Total Rig: $ ${totalVal} USD"\n\n`;
+    let csv = "\uFEFF"; // UTF-8 BOM for Excel
+    csv += `"MY PEDAL RIG - PLANILLA DE RUTEO Y CONSUMOS ELÉCTRICOS";"";"";"";"";"";"";"";"";"";"";""\n`;
+    csv += `"Fecha de Exportación: ${todayStr}";"Pedales Activos: ${activePedalsInChain.length}";"Consumo Total: ${totalMa} mA";"Valor Total Rig: $ ${totalVal} USD";"";"";"";"";"";"";"";""\n\n`;
 
-    csv += `"--- 1. RUTEO DE SEÑAL DE AUDIO ---"\n`;
-    csv += `"Posición","Marca","Modelo","Categoría","Tipo E/S","Valor (USD)"\n`;
+    csv += `"Posición";"Marca";"Modelo";"Categoría";"Tipo E/S";"Fuente Asignada";"Salida Física";"Voltaje Configurado";"Consumo Base (mA)";"Margen (+30% mA)";"Estado Seguridad";"Valor (USD)"\n`;
 
     activePedalsInChain.forEach((p, idx) => {
         const mode = p.isStereo ? 'Stereo I/O' : 'Mono I/O';
         const cat = getEffectCategory(p);
-        csv += `"${idx + 1}","${p.brand}","${p.name}","${cat}","${mode}","$ ${p.priceUsd || 0}"\n`;
-    });
-
-    csv += `\n"--- 2. MATRIZ DE ALIMENTACIÓN ELÉCTRICA ---"\n`;
-    csv += `"Posición","Pedal","Fuente Asignada","Salida Física","Voltaje Configurado","Consumo Base (mA)","Margen Recomendado (+30% mA)","Estado Seguridad"\n`;
-
-    activePedalsInChain.forEach((p, idx) => {
         const assign = getPedalPowerAssignment(p.id);
         const psObj = powerSuppliesDatabase.find(x => x.id === assign.psId);
         const outletObj = psObj?.outlets?.find(o => o.id === assign.outletId);
@@ -11128,7 +11170,7 @@ function exportChainToExcel() {
         const isConflict = outletObj && pedalVoltage !== outletObj.voltage;
         const status = isConflict ? 'Conflicto de Voltaje' : '100% Seguro';
 
-        csv += `"${idx + 1}","${p.brand} ${p.name}","${psName}","${outletLabel}","${voltage}","${p.maBase} mA","${p.maWithMargin} mA","${status}"\n`;
+        csv += `"${idx + 1}";"${p.brand}";"${p.name}";"${cat}";"${mode}";"${psName}";"${outletLabel}";"${voltage}";"${p.maBase}";"${p.maWithMargin}";"${status}";"${p.priceUsd || 0}"\n`;
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
