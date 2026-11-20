@@ -549,8 +549,8 @@
 
 
 <!-- CUSTOM EQUIPMENT MODAL (UNIFIED REGISTER) -->
-<div id="custom-equipment-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-xl w-full p-6 relative space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+<div id="custom-equipment-modal" onclick="closeCustomEquipmentModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-xl w-full p-6 relative space-y-4 shadow-2xl overflow-y-auto max-h-[90vh] cursor-default">
         <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
                 <i class="fa-solid fa-plus text-[#F15A24]"></i> Cargar equipo personalizado
@@ -752,8 +752,8 @@
     </div>
 </div>
 
-<div id="new-pedal-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+<div id="new-pedal-modal" onclick="closeNewPedalModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh] cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
                 <i class="fa-solid fa-sliders text-[#F15A24]"></i>
@@ -789,8 +789,8 @@
         </div>
 </div></div>
 
-<div id="save-fav-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+<div id="save-fav-modal" onclick="closeSaveFavoriteModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
                 <i class="fa-solid fa-bookmark text-[#F15A24]"></i> Guardar Cadena Favorita / Preset
@@ -838,8 +838,8 @@
     </div>
 </div>
 
-<div id="add-ps-to-chain-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+<div id="add-ps-to-chain-modal" onclick="closeAddPsToChainModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
                 <i class="fa-solid fa-bolt text-[#00A8CC]"></i> Agregar Fuente a la Cadena
@@ -858,8 +858,8 @@
     </div>
 </div>
 
-<div id="new-power-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+<div id="new-power-modal" onclick="closeNewPowerSupplyModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
                 <i class="fa-solid fa-bolt text-[#00A8CC]"></i> Creador Custom de Fuente de Alimentación
@@ -895,8 +895,8 @@
         </div>
 </div></div>
 
-<div id="edit-manual-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+<div id="edit-manual-modal" onclick="closeEditManualModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
                 <i class="fa-solid fa-file-pdf text-[#00A8CC]"></i> Enlazar Manual / Documentación
@@ -920,8 +920,8 @@
     </div>
 </div>
 
-<div id="delete-pedal-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+<div id="delete-pedal-modal" onclick="closeDeletePedalModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#F15A24] flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation"></i> Confirmar Eliminación
@@ -945,8 +945,8 @@
     </div>
 </div>
 
-<div id="delete-power-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+<div id="delete-power-modal" onclick="closeDeletePowerSupplyModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#F15A24] flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation"></i> Confirmar Eliminación
@@ -996,8 +996,8 @@
             </div>
 </div></div></div>
 
-<div id="new-wishlist-modal" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+<div id="new-wishlist-modal" onclick="closeNewWishlistPedalModal()" class="hidden fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#8B5CF6] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh] cursor-default">
         <div class="flex justify-between items-center border-b border-[#2A2D36] pb-3">
             <h3 class="text-base font-bold text-[#FFFFFF] flex items-center gap-2">
                 <i class="fa-solid fa-gift text-[#8B5CF6]"></i>
@@ -1034,7 +1034,7 @@
 </div></div>
 
 <div id="image-zoom-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeImageZoomModal(event)">
-        <div class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl" onclick="event.stopPropagation()">
+        <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border border-[#2A2D36] rounded-2xl max-w-lg w-full p-4 relative space-y-3 shadow-2xl cursor-default" onclick="event.stopPropagation()">
             <div class="flex items-center justify-between border-b border-[#2A2D36] pb-2.5">
                 <h3 id="image-zoom-title" class="text-sm font-bold text-[#FFFFFF] truncate max-w-[85%]">Vista Previa del Pedal</h3>
                 <button onclick="closeImageZoomModal()" title="Cerrar vista previa" class="text-[#9CA3AF] hover:text-[#FFFFFF] hover:bg-[#2A2D36] p-1.5 rounded-lg transition-all text-sm font-bold">
@@ -11649,8 +11649,8 @@ function addParallelSlot(route) {
 }
 </script>
 
-<div id="tech-rider-modal" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto font-sans">
-    <div class="bg-[#1C1E24] border-2 border-[#8B5CF6] rounded-2xl max-w-3xl w-full p-6 space-y-6 shadow-2xl relative text-white my-auto max-h-[90vh] overflow-y-auto">
+<div id="tech-rider-modal" onclick="closeTechRiderModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto font-sans cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border-2 border-[#8B5CF6] rounded-2xl max-w-3xl w-full p-6 space-y-6 shadow-2xl relative text-white my-auto max-h-[90vh] overflow-y-auto cursor-default">
         <div class="flex items-center justify-between border-b border-[#2A2D36] pb-4 print:hidden">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-lg bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 flex items-center justify-center text-[#8B5CF6]">
@@ -11679,8 +11679,8 @@ function addParallelSlot(route) {
 
 
 <!-- Modal Elegir Arquitectura de Nueva Cadena -->
-<div id="new-chain-arch-modal" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 font-sans">
-    <div class="bg-[#1C1E24] border-2 border-[#00A8CC] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative text-white my-auto">
+<div id="new-chain-arch-modal" onclick="closeNewChainArchitectureModal()" class="hidden fixed inset-0 bg-[#121316]/90 backdrop-blur-md z-50 flex items-center justify-center p-4 font-sans cursor-pointer">
+    <div onclick="event.stopPropagation()" class="bg-[#1C1E24] border-2 border-[#00A8CC] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative text-white my-auto cursor-default">
         <div class="flex items-center justify-between border-b border-[#2A2D36] pb-3">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-lg bg-[#00A8CC]/20 border border-[#00A8CC]/40 flex items-center justify-center text-[#00A8CC]">
