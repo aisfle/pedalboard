@@ -14320,7 +14320,9 @@ function syncSavedItemsWithMasterCatalog() {
                 if (master.manualUrl && (!p.manualUrl || p.manualUrl !== master.manualUrl || p.manualUrl === 'Sin Manual' || p.manualUrl === 'null')) {
                     p.manualUrl = master.manualUrl;
                 }
-                if (master.priceUsd !== undefined && master.priceUsd !== null) {
+                if (p.customPriceUsd !== undefined && p.customPriceUsd !== null && p.customPriceUsd !== '') {
+                    p.priceUsd = Number(p.customPriceUsd);
+                } else if (master.priceUsd !== undefined && master.priceUsd !== null) {
                     p.priceUsd = master.priceUsd;
                 }
                 if (master.imageUrl && !p.customPhotoUrl && (!p.imageUrl || p.imageUrl !== master.imageUrl)) {
@@ -14369,7 +14371,9 @@ function syncSavedItemsWithMasterCatalog() {
                 if (master.manualUrl && (!ps.manualUrl || ps.manualUrl !== master.manualUrl || ps.manualUrl === 'Sin Manual' || ps.manualUrl === 'null')) {
                     ps.manualUrl = master.manualUrl;
                 }
-                if (master.priceUsd !== undefined && master.priceUsd !== null) {
+                if (ps.customPriceUsd !== undefined && ps.customPriceUsd !== null && ps.customPriceUsd !== '') {
+                    ps.priceUsd = Number(ps.customPriceUsd);
+                } else if (master.priceUsd !== undefined && master.priceUsd !== null) {
                     ps.priceUsd = master.priceUsd;
                 }
                 if (master.imageUrl && !ps.customPhotoUrl && (!ps.imageUrl || ps.imageUrl !== master.imageUrl)) {
@@ -16340,6 +16344,103 @@ function closeInspector() {
 }
 
 
+
+function getDefaultCatalogPrice(item, itemType = 'PEDAL') {
+    if (!item) return 0;
+    function cleanStr(s) { return s ? String(s).toLowerCase().replace(/[^a-z0-9]/g, '') : ''; }
+
+    if (itemType === 'POWER' || item.outlets) {
+        if (typeof DEFAULT_POWER_SUPPLIES_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_POWER_SUPPLIES_FALLBACK)) {
+            const kId = cleanStr(item.id);
+            const kPreset = cleanStr(item.presetType);
+            const kName = cleanStr((item.brand || '') + (item.model || item.name || ''));
+            const match = DEFAULT_POWER_SUPPLIES_FALLBACK.find(m => cleanStr(m.id) === kId || cleanStr(m.presetType) === kPreset || cleanStr(m.brand + m.model) === kName || cleanStr(m.model) === kName);
+            if (match && match.priceUsd !== undefined) return Number(match.priceUsd);
+        }
+        return Number(item.priceUsd) || 0;
+    } else {
+        if (typeof DEFAULT_PEDALS_FALLBACK !== 'undefined' && Array.isArray(DEFAULT_PEDALS_FALLBACK)) {
+            const kId = cleanStr(item.id);
+            const kBn = cleanStr(item.brand) + '_' + cleanStr(item.name);
+            const match = DEFAULT_PEDALS_FALLBACK.find(m => cleanStr(m.id) === kId || (cleanStr(m.brand) + '_' + cleanStr(m.name)) === kBn || cleanStr(m.name) === cleanStr(item.name));
+            if (match && match.priceUsd !== undefined) return Number(match.priceUsd);
+        }
+        return Number(item.priceUsd) || 0;
+    }
+}
+
+function toggleInspectorPriceEditBox(itemType, id) {
+    const box = document.getElementById('insp-price-edit-box-' + id);
+    if (box) box.classList.toggle('hidden');
+}
+
+function saveInspectorPrice(itemType, id) {
+    let item = null;
+    if (itemType === 'POWER') {
+        item = powerSuppliesDatabase.find(ps => ps.id === id);
+    } else {
+        item = pedalDatabase.find(p => p.id === id);
+        if (!item && typeof wishlistDatabase !== 'undefined') {
+            item = wishlistDatabase.find(p => p.id === id);
+        }
+        if (!item && typeof forsaleDatabase !== 'undefined') {
+            item = forsaleDatabase.find(p => p.id === id);
+        }
+    }
+    if (!item) return;
+
+    const input = document.getElementById('insp-price-input-' + id);
+    const defaultPrice = getDefaultCatalogPrice(item, itemType);
+
+    if (input) {
+        const valStr = input.value.trim();
+        if (valStr === '' || valStr === null) {
+            delete item.customPriceUsd;
+            item.priceUsd = defaultPrice;
+        } else {
+            const numVal = parseFloat(valStr);
+            if (!isNaN(numVal) && numVal >= 0) {
+                if (numVal === defaultPrice) {
+                    delete item.customPriceUsd;
+                    item.priceUsd = defaultPrice;
+                } else {
+                    item.customPriceUsd = numVal;
+                    item.priceUsd = numVal;
+                }
+            }
+        }
+    }
+
+    saveStateToLocalStorage();
+    if (typeof renderDashboardStats === "function") renderDashboardStats();
+    renderInspector(id);
+}
+
+function resetInspectorPrice(itemType, id) {
+    let item = null;
+    if (itemType === 'POWER') {
+        item = powerSuppliesDatabase.find(ps => ps.id === id);
+    } else {
+        item = pedalDatabase.find(p => p.id === id);
+        if (!item && typeof wishlistDatabase !== 'undefined') {
+            item = wishlistDatabase.find(p => p.id === id);
+        }
+        if (!item && typeof forsaleDatabase !== 'undefined') {
+            item = forsaleDatabase.find(p => p.id === id);
+        }
+    }
+    if (!item) return;
+
+    const defaultPrice = getDefaultCatalogPrice(item, itemType);
+    delete item.customPriceUsd;
+    item.priceUsd = defaultPrice;
+
+    saveStateToLocalStorage();
+    if (typeof renderDashboardStats === "function") renderDashboardStats();
+    renderInspector(id);
+}
+
+
 function renderInspector(itemId, currentSlotMode = null) {
     const container = document.getElementById('inspector-content');
     if (!container) return;
@@ -16408,19 +16509,29 @@ function renderInspector(itemId, currentSlotMode = null) {
             </div>
             `;
 
-            let manualButtonHtml = '';
+            let             manualButtonHtml = '';
             if (isValidManualUrl(pedal.manualUrl)) {
-                manualButtonHtml = `
-                    <div class="pt-1 flex items-center gap-2">
-                        <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
-                            <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
-                        </a>
-                        <button onclick="openEditManualModal('${isWishlist ? 'WISHLIST' : 'PEDAL'}', '${pedal.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs cursor-pointer">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                    </div>
-                `;
-            } else {
+                if (isFactory) {
+                    manualButtonHtml = `
+                        <div class="pt-1">
+                            <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                                <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    manualButtonHtml = `
+                        <div class="pt-1 flex items-center gap-2">
+                            <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                                <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
+                            </a>
+                            <button onclick="openEditManualModal('${isWishlist ? 'WISHLIST' : 'PEDAL'}', '${pedal.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs cursor-pointer">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+            } else if (!isFactory) {
                 manualButtonHtml = `
                     <div class="pt-1">
                         <button onclick="openEditManualModal('${isWishlist ? 'WISHLIST' : 'PEDAL'}', '${pedal.id}')" class="w-full bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/50 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer">
@@ -16521,7 +16632,11 @@ function renderInspector(itemId, currentSlotMode = null) {
                 badgeClass = 'bg-[#EAB308]/10 text-[#EAB308] border border-[#EAB308]/30';
             }
 
-            const maBase = pedal.maBase || pedal.maDraw || 20;
+                        const defaultPedalPrice = getDefaultCatalogPrice(pedal, 'PEDAL');
+            const isCustomPedalPrice = (pedal.customPriceUsd !== undefined && pedal.customPriceUsd !== null && pedal.customPriceUsd !== '' && Number(pedal.customPriceUsd) !== defaultPedalPrice);
+            const displayPedalPrice = isCustomPedalPrice ? Number(pedal.customPriceUsd) : (pedal.priceUsd !== undefined && pedal.priceUsd !== null ? Number(pedal.priceUsd) : defaultPedalPrice);
+
+const maBase = pedal.maBase || pedal.maDraw || 20;
             const maSafety = pedal.maWithMargin || pedal.maSafety || Math.round(maBase * 1.3);
             const effCat = getEffectCategory(pedal);
 
@@ -16548,19 +16663,29 @@ function renderInspector(itemId, currentSlotMode = null) {
             </div>
             `;
 
-            let manualButtonHtml = '';
+            let             manualButtonHtml = '';
             if (isValidManualUrl(pedal.manualUrl)) {
-                manualButtonHtml = `
-                    <div class="pt-1 flex items-center gap-2">
-                        <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
-                            <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
-                        </a>
-                        <button onclick="openEditManualModal('${isWishlist ? 'WISHLIST' : 'PEDAL'}', '${pedal.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs cursor-pointer">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                    </div>
-                `;
-            } else {
+                if (isFactory) {
+                    manualButtonHtml = `
+                        <div class="pt-1">
+                            <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                                <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    manualButtonHtml = `
+                        <div class="pt-1 flex items-center gap-2">
+                            <a href="${pedal.manualUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 text-[#00A8CC] bg-[#00A8CC]/10 hover:bg-[#00A8CC]/20 border border-[#00A8CC]/30 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95">
+                                <i class="fa-solid fa-file-pdf"></i> Abrir Manual PDF
+                            </a>
+                            <button onclick="openEditManualModal('${isWishlist ? 'WISHLIST' : 'PEDAL'}', '${pedal.id}')" title="Editar URL del Manual" class="bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-[#FFFFFF] border border-[#2A2D36] p-2.5 rounded-xl text-xs cursor-pointer">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+            } else if (!isFactory) {
                 manualButtonHtml = `
                     <div class="pt-1">
                         <button onclick="openEditManualModal('${isWishlist ? 'WISHLIST' : 'PEDAL'}', '${pedal.id}')" class="w-full bg-[#121316] hover:bg-[#20232B] text-[#00A8CC] border border-[#2A2D36] hover:border-[#00A8CC]/50 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer">
@@ -16616,6 +16741,30 @@ function renderInspector(itemId, currentSlotMode = null) {
                                 ${pedal.voltage || '9V'} • ${pedal.isStereo ? 'Stereo I/O' : 'Mono I/O'}
                             </div>
                         </div>
+                        <div class="pt-2.5 border-t border-[#2A2D36] font-mono space-y-1.5 text-xs">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[#9CA3AF] text-[11px] uppercase font-bold flex items-center gap-1.5">
+                                    <i class="fa-solid fa-tag text-xs"></i> VALOR ESTIMADO ($ USD):
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <span id="insp-price-val-${pedal.id}" class="font-bold text-sm ${isCustomPedalPrice ? 'text-[#F15A24]' : 'text-white'}">
+                                        $ ${displayPedalPrice} USD
+                                    </span>
+                                    <button onclick="toggleInspectorPriceEditBox('PEDAL', '${pedal.id}')" title="Modificar valor" class="text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#1C1E24] transition-all cursor-pointer">
+                                        <i class="fa-solid fa-pen text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="insp-price-edit-box-${pedal.id}" class="hidden pt-1.5 flex items-center gap-2">
+                                <input type="number" id="insp-price-input-${pedal.id}" value="${pedal.customPriceUsd !== undefined && pedal.customPriceUsd !== null ? pedal.customPriceUsd : ''}" placeholder="Default: $${defaultPedalPrice}" min="0" step="any" class="flex-1 bg-[#1C1E24] text-white border border-[#2A2D36] focus:border-[#F15A24] rounded-lg px-2.5 py-1.5 text-xs font-mono focus:outline-none" onkeydown="if(event.key==='Enter') saveInspectorPrice('PEDAL', '${pedal.id}')">
+                                <button onclick="saveInspectorPrice('PEDAL', '${pedal.id}')" class="px-3 py-1.5 bg-[#F15A24] hover:bg-[#d94d1b] text-white font-bold rounded-lg text-xs font-mono transition-all cursor-pointer shadow-sm">
+                                    Guardar
+                                </button>
+                                <button onclick="resetInspectorPrice('PEDAL', '${pedal.id}')" title="Restablecer al precio default del catálogo" class="px-2.5 py-1.5 bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-white border border-[#2A2D36] rounded-lg text-xs font-mono transition-all cursor-pointer">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 ${manualButtonHtml}
@@ -16633,6 +16782,11 @@ function renderInspector(itemId, currentSlotMode = null) {
             `;
         }
     } else if (ps) {
+        const defaultPsPrice = getDefaultCatalogPrice(ps, 'POWER');
+        const isCustomPsPrice = (ps.customPriceUsd !== undefined && ps.customPriceUsd !== null && ps.customPriceUsd !== '' && Number(ps.customPriceUsd) !== defaultPsPrice);
+        const displayPsPrice = isCustomPsPrice ? Number(ps.customPriceUsd) : (ps.priceUsd !== undefined && ps.priceUsd !== null ? Number(ps.priceUsd) : defaultPsPrice);
+
+
         const isTabChain = activeTab === 'chain';
         const isFactoryPs = isFactoryPowerSupply(ps);
         const psPhotoSection = ps.imageUrl ? `
@@ -16846,6 +17000,40 @@ function renderInspector(itemId, currentSlotMode = null) {
                     ${outletsListHtml}
                 </div>
             </div>
+            ${!isTabChain ? `
+            <div class="space-y-2 pt-1 border-t border-[#2A2D36]">
+                <label class="text-xs font-mono font-bold block uppercase tracking-wider text-[#00A8CC]">DESCRIPCIÓN & VALOR ($ USD)</label>
+                <div class="bg-[#121316] border border-[#2A2D36] p-3.5 rounded-xl space-y-3 font-sans text-xs">
+                    <p class="text-xs text-[#FFFFFF] leading-relaxed font-sans">
+                        ${ps.details || 'Sin detalles especificados.'}
+                    </p>
+                    <div class="pt-2.5 border-t border-[#2A2D36] font-mono space-y-1.5 text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[#9CA3AF] text-[11px] uppercase font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-tag text-xs"></i> VALOR ESTIMADO ($ USD):
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <span id="insp-price-val-${ps.id}" class="font-bold text-sm ${isCustomPsPrice ? 'text-[#F15A24]' : 'text-white'}">
+                                    $ ${displayPsPrice} USD
+                                </span>
+                                <button onclick="toggleInspectorPriceEditBox('POWER', '${ps.id}')" title="Modificar valor" class="text-[#9CA3AF] hover:text-[#F15A24] p-1.5 rounded-lg hover:bg-[#1C1E24] transition-all cursor-pointer">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="insp-price-edit-box-${ps.id}" class="hidden pt-1.5 flex items-center gap-2">
+                            <input type="number" id="insp-price-input-${ps.id}" value="${ps.customPriceUsd !== undefined && ps.customPriceUsd !== null ? ps.customPriceUsd : ''}" placeholder="Default: $${defaultPsPrice}" min="0" step="any" class="flex-1 bg-[#1C1E24] text-white border border-[#2A2D36] focus:border-[#F15A24] rounded-lg px-2.5 py-1.5 text-xs font-mono focus:outline-none" onkeydown="if(event.key==='Enter') saveInspectorPrice('POWER', '${ps.id}')">
+                            <button onclick="saveInspectorPrice('POWER', '${ps.id}')" class="px-3 py-1.5 bg-[#F15A24] hover:bg-[#d94d1b] text-white font-bold rounded-lg text-xs font-mono transition-all cursor-pointer shadow-sm">
+                                Guardar
+                            </button>
+                            <button onclick="resetInspectorPrice('POWER', '${ps.id}')" title="Restablecer al precio default del catálogo" class="px-2.5 py-1.5 bg-[#1C1E24] hover:bg-[#20232B] text-[#9CA3AF] hover:text-white border border-[#2A2D36] rounded-lg text-xs font-mono transition-all cursor-pointer">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ` : ''}
             ${psManualButtonHtml}
             <div class="space-y-2 border-t border-[#2A2D36] pt-4">
                 <h4 class="text-xs font-semibold text-[#FFFFFF] uppercase tracking-wider flex items-center justify-between">
