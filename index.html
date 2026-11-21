@@ -3653,6 +3653,17 @@ function renderCollectionWishlist() {
     if (!grid) return;
 
     let list = wishlistDatabase || [];
+    if (currentBrandFilter && currentBrandFilter !== 'ALL') {
+        list = list.filter(item => item.brand === currentBrandFilter);
+    }
+    if (currentCategoryFilter && currentCategoryFilter !== 'ALL') {
+        list = list.filter(item => getEffectCategory(item) === currentCategoryFilter);
+    }
+    if (collectionSearchQuery) {
+        const q = collectionSearchQuery.toLowerCase();
+        list = list.filter(item => (item.name || '').toLowerCase().includes(q) || (item.brand || '').toLowerCase().includes(q));
+    }
+
     if (counter) counter.textContent = `${list.length} equipo${list.length !== 1 ? 's' : ''}`;
     grid.innerHTML = list.length === 0 ? '<span class="text-xs text-[#9CA3AF] italic col-span-full">No hay equipos en tu lista de deseos.</span>' : '';
 
@@ -3851,6 +3862,8 @@ function moveWishlistToCollection(id) {
 }
 
 function refreshAllCollectionViews() {
+    renderBrandFilters();
+    renderCategoryFilters();
     renderCollectionPedals();
     renderCollectionPower();
     renderCollectionWishlist();
@@ -3882,15 +3895,33 @@ function renderBrandFilters() {
     const container = document.getElementById('brand-filters');
     if (!container) return;
 
-    const brandSet = new Set(['Boss', 'Strymon', 'Chase Bliss', 'EarthQuaker Devices', 'Electro-Harmonix', 'Ibanez', 'MXR', 'Walrus Audio']);
-    pedalDatabase.forEach(p => p.brand && brandSet.add(p.brand));
-    powerSuppliesDatabase.forEach(ps => ps.brand && brandSet.add(ps.brand));
+    const brandSet = new Set();
+    if (typeof pedalDatabase !== 'undefined' && Array.isArray(pedalDatabase)) {
+        pedalDatabase.forEach(p => p && p.brand && brandSet.add(p.brand.trim()));
+    }
+    if (typeof powerSuppliesDatabase !== 'undefined' && Array.isArray(powerSuppliesDatabase)) {
+        powerSuppliesDatabase.forEach(ps => ps && ps.brand && brandSet.add(ps.brand.trim()));
+    }
+    if (typeof wishlistDatabase !== 'undefined' && Array.isArray(wishlistDatabase)) {
+        wishlistDatabase.forEach(w => w && w.brand && brandSet.add(w.brand.trim()));
+    }
 
-    const brands = Array.from(brandSet).sort();
-    let html = `<button onclick="filterCatalog('ALL')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentBrandFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">Todas las marcas</button>`;
+    const brands = Array.from(brandSet).sort((a, b) => a.localeCompare(b));
+
+    if (currentBrandFilter !== 'ALL' && !brandSet.has(currentBrandFilter)) {
+        currentBrandFilter = 'ALL';
+    }
+
+    if (brands.length === 0) {
+        container.innerHTML = '<span class="text-xs text-[#9CA3AF] italic">No hay marcas registradas en tu colección.</span>';
+        return;
+    }
+
+    let html = `<button onclick="filterCatalog('ALL')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentBrandFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">Todas las marcas (${brands.length})</button>`;
 
     brands.forEach(b => {
-        html += `<button onclick="filterCatalog('${b}')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentBrandFilter === b ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">${b}</button>`;
+        const safeBrand = b.replace(/'/g, "\\'");
+        html += `<button onclick="filterCatalog('${safeBrand}')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentBrandFilter === b ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">${b}</button>`;
     });
 
     container.innerHTML = html;
@@ -3900,22 +3931,40 @@ function renderCategoryFilters() {
     const container = document.getElementById('category-filters');
     if (!container) return;
 
-    const categories = [
-        'Dinámica & modelado',
-        'Saturación & ganancia',
-        'Pitch & sintetizador',
-        'Modulación',
-        'Delay & eco',
-        'Reverberación & espacio',
-        'Lo-Fi, glitch & texturas',
-        'Loopers de frase',
-        'Utilidad & ruteo'
-    ];
+    const categorySet = new Set();
+    if (typeof pedalDatabase !== 'undefined' && Array.isArray(pedalDatabase)) {
+        pedalDatabase.forEach(p => {
+            if (p) {
+                const cat = getEffectCategory(p);
+                if (cat) categorySet.add(cat.trim());
+            }
+        });
+    }
+    if (typeof wishlistDatabase !== 'undefined' && Array.isArray(wishlistDatabase)) {
+        wishlistDatabase.forEach(w => {
+            if (w) {
+                const cat = getEffectCategory(w);
+                if (cat) categorySet.add(cat.trim());
+            }
+        });
+    }
 
-    let html = `<button onclick="filterCatalogByCategory('ALL')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentCategoryFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">Todas las categorías</button>`;
+    const categories = Array.from(categorySet).sort((a, b) => a.localeCompare(b));
+
+    if (currentCategoryFilter !== 'ALL' && !categorySet.has(currentCategoryFilter)) {
+        currentCategoryFilter = 'ALL';
+    }
+
+    if (categories.length === 0) {
+        container.innerHTML = '<span class="text-xs text-[#9CA3AF] italic">No hay categorías registradas en tu colección.</span>';
+        return;
+    }
+
+    let html = `<button onclick="filterCatalogByCategory('ALL')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentCategoryFilter === 'ALL' ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">Todas las categorías (${categories.length})</button>`;
 
     categories.forEach(c => {
-        html += `<button onclick="filterCatalogByCategory('${c}')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentCategoryFilter === c ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">${c}</button>`;
+        const safeCat = c.replace(/'/g, "\\'");
+        html += `<button onclick="filterCatalogByCategory('${safeCat}')" class="px-3 py-1 rounded-lg transition-all font-mono font-semibold cursor-pointer ${currentCategoryFilter === c ? 'bg-[#F15A24] text-white border border-[#F15A24]' : 'bg-[#121316] text-[#9CA3AF] hover:text-white border border-[#2A2D36]'}">${c}</button>`;
     });
 
     container.innerHTML = html;
@@ -13970,7 +14019,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "name": "Defiant Jazz",
         "category": "Dinámica & modelado",
         "subType": "Dinámica & modelado",
-        "maDraw": 25.0,
+        "maDraw": 20,
         "maSafety": 32.5,
         "io": "Mono I/O",
         "inputConfig": "MONO_TS",
@@ -13978,7 +14027,7 @@ const DEFAULT_PEDALS_FALLBACK = [
         "imageUrl": "assets/img/pedales/ye-defiant-jazz.jpg",
         "manualUrl": "https://drive.google.com/file/d/1r3nDbwGJLhr-6Rcmti42Upa1kKKpWLFa/view?usp=drive_link",
         "description": "Pre-amp analógico inspirado en Roland JC-120.",
-        "maBase": 25.0,
+        "maBase": 20,
         "maWithMargin": 32.5,
         "isStereo": false,
         "priceUsd": 250.0
