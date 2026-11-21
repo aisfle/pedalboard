@@ -1143,7 +1143,7 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
     "presetType": "cioks-4",
     "brand": "CIOKS",
     "model": "CIOKS 4",
-    "name": "CIOKS CIOKS 4",
+    "name": "CIOKS 4",
     "outlets": [
       {
         "id": "cioks-4-1",
@@ -1183,7 +1183,7 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
     "presetType": "cioks-7",
     "brand": "CIOKS",
     "model": "CIOKS 7",
-    "name": "CIOKS CIOKS 7",
+    "name": "CIOKS 7",
     "outlets": [
       {
         "id": "cioks-7-1",
@@ -1241,7 +1241,7 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
     "presetType": "cioks-8",
     "brand": "CIOKS",
     "model": "CIOKS 8",
-    "name": "CIOKS CIOKS 8",
+    "name": "CIOKS 8",
     "outlets": [
       {
         "id": "cioks-8-1",
@@ -1305,7 +1305,7 @@ const DEFAULT_POWER_SUPPLIES_FALLBACK = [
     "presetType": "cioks-sol",
     "brand": "CIOKS",
     "model": "CIOKS SOL",
-    "name": "CIOKS CIOKS SOL",
+    "name": "CIOKS SOL",
     "outlets": [
       {
         "id": "cioks-sol-1",
@@ -3658,7 +3658,7 @@ function renderCollectionPower() {
                 <div class="flex items-center gap-2.5 my-1.5">
                     ${photoHtml}
                     <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-sm text-white group-hover:text-[#F15A24] transition-colors truncate">${ps.name}</h4>
+                        <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-[#F15A24] transition-colors line-clamp-2 leading-tight" title="${(ps.brand ? ps.brand + ' - ' : '') + (ps.model || ps.name)}">${getCleanItemDisplayName(ps)}</h4>
                         <p class="text-[10px] text-[#9CA3AF] truncate">${outletCount} salidas aisladas</p>
                     </div>
                 </div>
@@ -3737,7 +3737,7 @@ function renderCollectionForSale() {
                 <div class="flex items-center gap-2.5 my-1.5">
                     ${photoHtml}
                     <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-sm text-white group-hover:text-[#EAB308] transition-colors truncate">${ps.name}</h4>
+                        <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-[#EAB308] transition-colors line-clamp-2 leading-tight" title="${(ps.brand ? ps.brand + ' - ' : '') + (ps.model || ps.name)}">${getCleanItemDisplayName(ps)}</h4>
                         <p class="text-[10px] text-[#9CA3AF] truncate">${outletCount} salidas aisladas</p>
                     </div>
                 </div>
@@ -3797,7 +3797,7 @@ function createPedalCatalogCard(pedal, sectionType = 'effects') {
             <div class="flex items-center gap-2.5 my-1.5">
                 ${photoTag}
                 <div class="min-w-0 flex-1">
-                    <h4 class="font-bold text-sm text-white group-hover:text-[#F15A24] transition-colors truncate">${pedal.name}</h4>
+                    <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-[#F15A24] transition-colors line-clamp-2 leading-tight" title="${(pedal.brand ? pedal.brand + ' - ' : '') + pedal.name}">${getCleanItemDisplayName(pedal)}</h4>
                     <p class="text-[10px] text-[#9CA3AF] truncate">${categoryText}</p>
                 </div>
             </div>
@@ -4390,7 +4390,7 @@ function renderMasterCatalog() {
                     <div class="flex items-center gap-2.5 my-1.5">
                         ${photoHtml}
                         <div class="min-w-0 flex-1">
-                            <h4 class="font-bold text-sm text-white group-hover:text-[#00A8CC] transition-colors truncate">${ps.name}</h4>
+                            <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-[#00A8CC] transition-colors line-clamp-2 leading-tight" title="${(ps.brand ? ps.brand + ' - ' : '') + (ps.model || ps.name)}">${getCleanItemDisplayName(ps)}</h4>
                             <p class="text-[10px] text-[#9CA3AF] truncate">Fuente de alimentación</p>
                         </div>
                     </div>
@@ -4447,7 +4447,7 @@ function renderMasterCatalog() {
                 <div class="flex items-center gap-2.5 my-1.5">
                     ${photoHtml}
                     <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-sm text-white group-hover:text-[#F15A24] transition-colors truncate">${pedal.name}</h4>
+                        <h4 class="font-bold text-xs sm:text-sm text-white group-hover:text-[#F15A24] transition-colors line-clamp-2 leading-tight" title="${(pedal.brand ? pedal.brand + ' - ' : '') + pedal.name}">${getCleanItemDisplayName(pedal)}</h4>
                         <p class="text-[10px] text-[#9CA3AF] truncate">${categoryText}</p>
                     </div>
                 </div>
@@ -16440,6 +16440,35 @@ function resetInspectorPrice(itemType, id) {
     saveStateToLocalStorage();
     if (typeof renderDashboardStats === "function") renderDashboardStats();
     renderInspector(id);
+}
+
+
+
+function getCleanItemDisplayName(item) {
+    if (!item) return '';
+    let brand = (item.brand || '').trim();
+    let name = (item.name || item.model || '').trim();
+    if (!brand || !name) return name;
+
+    const bLower = brand.toLowerCase();
+    let nLower = name.toLowerCase();
+
+    // 1. Remove double brand repetition e.g. "CIOKS CIOKS SOL" -> "CIOKS SOL"
+    const doubleBrand = (brand + ' ' + brand).toLowerCase();
+    if (nLower.startsWith(doubleBrand)) {
+        name = name.substring(doubleBrand.length).trim();
+        nLower = name.toLowerCase();
+    }
+
+    // 2. If name starts with brand e.g. "Fender Engine Room LVL12" -> "Engine Room LVL12"
+    if (nLower.startsWith(bLower + ' ')) {
+        const stripped = name.substring(brand.length).trim();
+        if (stripped) {
+            name = stripped;
+        }
+    }
+    name = name.replace(/^[:-]\s*/, '').trim();
+    return name || (item.name || item.model || '');
 }
 
 
