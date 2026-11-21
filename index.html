@@ -16453,7 +16453,16 @@ function getCleanItemDisplayName(item) {
     const bLower = brand.toLowerCase();
     let nLower = name.toLowerCase();
 
-    // 1. Remove double brand repetition e.g. "CIOKS CIOKS SOL" -> "CIOKS SOL"
+    // Special rule for CIOKS: retain "CIOKS 4", "CIOKS 7", "CIOKS 8", "CIOKS SOL"
+    if (bLower === 'cioks') {
+        const doubleBrand = 'cioks cioks';
+        if (nLower.startsWith(doubleBrand)) {
+            name = name.substring('cioks '.length).trim();
+        }
+        return name;
+    }
+
+    // 1. Remove double brand repetition e.g. "Brand Brand Model" -> "Brand Model"
     const doubleBrand = (brand + ' ' + brand).toLowerCase();
     if (nLower.startsWith(doubleBrand)) {
         name = name.substring(doubleBrand.length).trim();
