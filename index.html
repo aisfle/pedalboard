@@ -14583,7 +14583,7 @@ function checkGlobalElectricalSafety() {
     activePowerSuppliesInChain.forEach(ps => {
         const stats = computePowerSupplyStats(ps.id);
         if (stats.isOverloaded) {
-            criticalAlerts.push(`⚠️ <strong>Capacidad Total Excedida en ${ps.brand} ${ps.model}:</strong> El consumo acumulado (${stats.usedMa} mA) supera la capacidad máxima total de la fuente (${stats.totalCapacity} mA).`);
+            criticalAlerts.push(`⚠️ <strong>Capacidad Total Excedida en ${(ps.brand && !getCleanItemDisplayName(ps).toLowerCase().includes(ps.brand.toLowerCase())) ? ps.brand + ' - ' + getCleanItemDisplayName(ps) : getCleanItemDisplayName(ps)}:</strong> El consumo acumulado (${stats.usedMa} mA) supera la capacidad máxima total de la fuente (${stats.totalCapacity} mA).`);
         }
     });
 
@@ -16017,7 +16017,7 @@ function openAddPowerSupplyToChainModal() {
                 <div class="flex items-center gap-3 min-w-0">
                     ${photoTag}
                     <div class="min-w-0 flex-1">
-                        <h4 class="font-bold text-sm text-[#FFFFFF] truncate">${ps.brand} ${ps.model}</h4>
+                        <h4 class="font-bold text-xs sm:text-sm text-[#FFFFFF] line-clamp-2 leading-tight" title="${(ps.brand ? ps.brand + ' - ' : '') + (ps.model || ps.name)}">${getCleanItemDisplayName(ps)}</h4>
                         <p class="text-[10px] text-[#9CA3AF] font-mono">${outletCount} Salidas físicas disponibles</p>
                     </div>
                 </div>
@@ -16108,7 +16108,7 @@ function renderChainPowerSupplies() {
                 <div class="flex items-center gap-2.5 my-1.5">
                     ${photoTag}
                     <div class="min-w-0 flex-1">
-                        <h3 class="font-bold text-sm text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors truncate">${ps.brand} ${ps.model}</h3>
+                        <h3 class="font-bold text-xs sm:text-sm text-[#FFFFFF] group-hover:text-[#F15A24] transition-colors line-clamp-2 leading-tight" title="${(ps.brand ? ps.brand + ' - ' : '') + (ps.model || ps.name)}">${getCleanItemDisplayName(ps)}</h3>
                         <p class="text-[10px] text-[#9CA3AF] font-mono">${ps.outlets ? ps.outlets.length : 0} Salidas</p>
                     </div>
                 </div>
@@ -16157,7 +16157,8 @@ function renderEnergySummaryTable() {
             const outlet = ps?.outlets?.find(o => o.id === assign.outletId);
             
             if (ps && outlet) {
-                psName = `${ps.brand} ${ps.model}`;
+                const cleanPsName = getCleanItemDisplayName(ps);
+                psName = (ps.brand && !cleanPsName.toLowerCase().includes(ps.brand.toLowerCase())) ? `${ps.brand} - ${cleanPsName}` : cleanPsName;
                 outletName = outlet.label;
                 
                 const outletPedals = pedalDatabase.filter(op => {
